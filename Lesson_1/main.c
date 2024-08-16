@@ -4,10 +4,10 @@
   // constant expression
 
   int x = 5;
-  int y = x + 3;  // syntax error : expression must have a constant value
+  int y = x + 3;  // syntax error
+  // output -> expression must have a constant value
 
-  int main(void)
-  {
+  int main(void){
 
   }
 */

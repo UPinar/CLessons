@@ -31,9 +31,9 @@ C++ and Objective-C languages have been created by using
 C language.
 
 
-                ---------------
-                | C Standarts |
-                ---------------
+                        ---------------
+                        | C Standarts |
+                        ---------------
 
 C89/C90     first standart
 C95         minor
@@ -42,15 +42,15 @@ C11         minor
 C17         minor
 C23     
 
-                -------------
-                | C program |
-                -------------
+                        -------------
+                        | C program |
+                        -------------
 ----> check c_program.png <----
 
 1.  text editor
-2.  preprocessor (onislemci)    -> preprocessing phase
+2.  preprocessor (önişlemci)    -> preprocessing phase
 3.  compiler (derleyici)        -> compilation phase 
-4.  linker (baglayici)          -> linking phase
+4.  linker (bağlayıcı)          -> linking phase
 
 -----------
 text file : extension is only for user to find the file easily, 
@@ -86,13 +86,13 @@ b. compile time
 c. link time
 d. run time
 
-              ------------------------
-              | compiler - derleyici |
-              ------------------------
+                  ------------------------
+                  | compiler - derleyici |
+                  ------------------------
 1. tokenizing / lexical analysis
   -> is the code have a valid syntax rules ?
     syntax error (diagnostic)(bulgu iletisi)
-    invalid code (gecersiz kod) - valid code
+    invalid code (geçersiz kod) - valid code
     illegal code - legal code
 
 2. optimizer (compiler optimizations)
@@ -111,9 +111,9 @@ d. run time
 * static code analyzer tools job is, finding logic errors 
 in the code not compiling!
 
-            ----------------------------------
-            | tokenizing(atomlarina ayirmak) |
-            ----------------------------------
+                  ----------------------------------
+                  | tokenizing(atomlarina ayirmak) |
+                  ----------------------------------
 * every token has a category
   1. keyword (anahtar sozcuk)     
   2. identifier/name (isim)
@@ -157,15 +157,15 @@ example --> "x = a + b;"
 "x = a + b;" --> string literal
 
 
-              --------------
-              | some terms |
-              --------------
+                      --------------
+                      | some terms |
+                      --------------
 
 statement (deyim) -> sentences in C language called statement.
 ; -> semicolon (terminator token)
 
-decleration -> is used for identifying identifiers 
-  ismi tanitan cumlelere decleration(decleration statement) 
+declaration -> is used for identifying identifiers 
+  ismi tanıtan cümlelere declaration(declaration statement) 
   deniliyor.
 
 name lookup(isim arama) -> this phase has been done for 
@@ -183,10 +183,10 @@ expression (ifade) ->
   When terminator operator(;) has been added to those 
   expressions, they will become expression statements
 
-object (degisken) -> 
+object (değişken) -> 
   objects have types(data types).
   objects have storage(yer).
-type (tur) ->
+type (tür) ->
   1. basic types (fundemental types) (built-in types) 
   2. user-defined type
 
@@ -218,10 +218,10 @@ octal system        (sekizlik)
 hexadecimal system  (onaltilik)
 binary system       (ikilik)
 
-unsigned binary system  (isaretsiz ikilik sayi sistemi)
-  only positive -> sadece pozitif sayilar
-signed binary system    (isaretli ikilik sayi sistemi)
-  both negative and positive -> hem negatif hem pozitif sayilar
+unsigned binary system  (işaretsiz ikilik sayi sistemi)
+  only positive -> sadece pozitif sayılar
+signed binary system    (işaretli ikilik sayi sistemi)
+  both negative and positive -> hem negatif hem pozitif sayılar
 
 ----> check memory_units.png <----
 binary digit(bit)   1 bit
@@ -298,9 +298,9 @@ F   1111
 
 A2C1 -> 1010'0010'1100'0001
 
-              --------------
-              | characters |
-              --------------
+                      --------------
+                      | characters |
+                      --------------
 
 alfabetic characters + numeric characters = 
                                     alfanumeric characters
