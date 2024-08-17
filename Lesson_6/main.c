@@ -1,3 +1,4 @@
+#include <stdio.h>
 /*
                   ----------------------------
                   | functions (fonksiyonlar) |
@@ -519,8 +520,6 @@
 */
 
 /*
-  #include <stdio.h>
-
   int main(void){
     int x = 56;
     int y = 10;
@@ -572,8 +571,6 @@
 */
 
 /*
-  #include <stdio.h>
-
   int main(void){
     
     FILE* f = fopen("dataxyz.dat", "rb");
@@ -591,16 +588,225 @@
   // main functions return value will return to operating system
 */
 
+/*
+                -------------------------------------
+                | test functions (query, predicate) |
+                -------------------------------------
+*/
 
+/*
+  int isprime(int); // returns 0 or non-zero values
 
+  int main()
+  {
+    int x;
 
+    // <--- Check Lesson_14 if statements --->
+    if (isprime(x));  // if the number is prime 
+    if (!isprime(x));  // if the number is NOT prime
+  }
+*/
 
+/*
+  int isprime(int); // returns 0 or non-zero values
 
+  int main()
+  {
+    int x, y;
 
+    // <--- Check Lesson_14 if statements --->
+    if (!!isprime(x) == !!isprime(y));  
+    // because of there is no guarantee what isprime function
+    // will return as non-zero numbers better using !! 
+    // to check if return value's logical values are same
+  }
+*/
 
+/*
+  int iseven(int x){ return x % 2 == 0; }
+  int isodd(int x){ return x % 2 != 0; }
+*/
 
+/*
+  // leap year test (artık yıl testi)
+  // divisible by 4 AND (not divisible by 100 OR divisible by 400)
 
+  int isleap(int y)
+  {
+    return y % 4 == 0 && (y % 100 != 0 || y % 400 == 0);
+  }
+*/
 
+/*
+  // perfect number  
+  // positive integer that is equal to the sum of its proper divisors
+  // 6        1 + 2 + 3           = 6
+  // 28       1 + 2 + 4 + 7 + 14  = 28
 
+  int isperfect(int x)
+  {
+    int sum_div = 0;
 
+    for (int i = 1; i <= x / 2; ++i)
+      if (x % i == 0)
+        sum_div += i;
+
+    return x == sum_div;
+  }
+
+  int main(void){
+    for (int i = 1; i < 10000; ++i)
+      if (isperfect(i))
+        printf("%d ", i);
+
+    // output -> 6 28 496 8128
+  }
+*/
+
+/*
+                  --------------------------
+                  | ctype <ctype.h> module |
+                  --------------------------
+*/
+
+/*
+  Character test functions
+    -> int isupper(int c)   -> (A-Z)    
+    -> int islower(int c)   -> (a-z)
+    -> int isalpha(int c)   -> (A-Z || a-z)
+    -> int isdigit(int c)   -> (0-9)
+    -> int isalnum(int c)   -> (0-9 || A-Z || a-z) [alphanumeric]
+    -> int isxdigit(int c)  -> (0-9 || A-F || a-f)
+    -> int isspace(int c)   -> new-line, carriage return, 
+      vertical && horizontal tab, form feed, space
+    -> int isblank(int c)   -> space(' ') and horizontal tab('\t')
+    -> int ispunct(int c)   -> printable - !alphanumeric
+    -> int isprint(int c)   -> printable include space (' ')
+    -> int isgraph(int c)   -> printable - exclude space(' ')
+    -> int iscntrl(int c)   -> control characters
+*/
+
+/*
+  #include <ctype.h>
+
+  int main(void){
+
+    // isupper()
+    printf("isupper : ");
+    for (int i = 0; i < 128; ++i){
+    if (isupper(i))
+      printf("%c", i);
+    }
+    putchar('\n');
+
+    // islower()
+    printf("islower : ");
+    for (int i = 0; i < 128; ++i){
+    if (islower(i))
+      printf("%c", i);
+    }
+    putchar('\n');
+
+    // isalpha()
+    printf("isalpha : ");
+    for (int i = 0; i < 128; ++i){
+    if (isalpha(i))
+      printf("%c", i);
+    }
+    putchar('\n');
+
+    // isdigit()
+    printf("isdigit : ");
+    for (int i = 0; i < 128; ++i){
+    if (isdigit(i))
+      printf("%c", i);
+    }
+    putchar('\n');
+
+    // isalnum()
+    printf("isalnum : ");
+    for (int i = 0; i < 128; ++i){
+    if (isalnum(i))
+      printf("%c", i);
+    }
+    putchar('\n');
+
+    // isxdigit()
+    printf("isxdigit : ");
+    for (int i = 0; i < 128; ++i){
+    if (isxdigit(i))
+      printf("%c", i);
+    }
+    putchar('\n');
+    
+    // ispunct()
+    printf("ispunct : ");
+    for (int i = 0; i < 128; ++i){
+    if (ispunct(i))
+      printf("%c", i);
+    }
+    putchar('\n');
+
+    // isspace() -> they are not visible 
+    // will print their character codes
+    printf("isspace : ");
+    for (int i = 0; i < 128; ++i){
+    if (isspace(i))
+      printf("%d ", i);
+    }
+    putchar('\n');
+
+    // isblank() -> they are not visible 
+    // will print their character codes
+    printf("isblank : ");
+    for (int i = 0; i < 128; ++i){
+    if (isblank(i))
+      printf("%d ", i);
+    }
+    putchar('\n');
+
+    // isprint() -> includes 32 character code space(' ')
+    printf("isprint : ");
+    for (int i = 0; i < 128; ++i){
+    if (isprint(i))
+      printf("%c", i);
+    }
+    putchar('\n');
+
+    // isgraph() -> DO NOT include 32 character code space(' ')
+    printf("isgraph : ");
+    for (int i = 0; i < 128; ++i){
+    if (isgraph(i))
+      printf("%c", i);
+    }
+    putchar('\n');
+
+    // iscntrl() -> these characters are not visible
+    // will print their character codes
+    printf("iscntrl : ");
+    for (int i = 0; i < 128; ++i){
+    if (iscntrl(i))
+      printf("%d ", i);
+    }
+    putchar('\n');
+  }
+
+  // output ->
+  //  isupper : ABCDEFGHIJKLMNOPQRSTUVWXYZ
+  //  islower : abcdefghijklmnopqrstuvwxyz
+  //  isalpha : ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
+  //  isdigit : 0123456789
+  //  isalnum : 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ
+  //   abcdefghijklmnopqrstuvwxyz
+  //  isxdigit : 0123456789ABCDEFabcdef
+  //  ispunct : !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~
+  //  isspace : 9 10 11 12 13 32
+  //  isblank : 9 32
+  //  isprint :  !"#$%&'()*+,-./0123456789:;<=>?@
+  //   ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+  //  isgraph : !"#$%&'()*+,-./0123456789:;<=>?@
+  //   ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+  //  iscntrl : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
+  //      20 21 22 23 24 25 26 27 28 29 30 31 127
+*/
 

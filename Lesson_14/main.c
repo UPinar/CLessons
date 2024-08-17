@@ -107,3 +107,134 @@
   if (fabs(dval) - 0.65412 < 0.0001)
 */
 
+/*
+  int main(void){
+    int x = 5;
+
+    if (x > 10);
+      printf("TRUE\n"); 
+
+    // because of there is a terminator token at the end of the if 
+    // statements paranthesis it will exactly be like
+
+    if (x > 10)
+      ; // null statement
+    printf("TRUE\n");
+  }
+*/
+
+/*
+  int main(void){
+    int x = 10;
+
+    if (x > 10) // syntax error : expected expression before 'else'
+    else 
+      printf("FALSE\n");
+
+    
+    // <--- FIRST WAY --->
+    if (x > 10) 
+      ;
+    else 
+      printf("FALSE\n");
+
+    
+    // <--- SECOND WAY --->
+    if (x > 10)
+    {}
+    else
+      printf("FALSE\n");
+
+    // <--- BETTER WAY --->
+    if (x <= 10)  // if (!(x > 10))
+      printf("FALSE\n");
+  }
+*/
+
+/*
+  if (i < size && a[i] != 0)  
+    using short curcuit behaviour in if statement for 
+    not getting undefined behaviour in a[i] expression.
+
+
+  if (foo() && bar() && baz() && i > 0)
+    (i > 0) condition is much more cheaper than function calls
+  if (i > 0 && foo() && bar() && baz())     BETTER
+*/
+
+/*
+  dangling else
+  -------------
+
+  if (x > 10)
+    if (y > 20)
+      ++x;
+  else
+    ++y;
+
+  else belongs to inner if so it should be written like
+  for human readability, but both ways will act same.
+  Because C is an atomic language
+  
+  if (x > 10)
+    if (y > 20)
+      ++x;
+    else
+      ++y;
+*/
+
+/*
+  else if ladder 
+  cascaded if 
+  ---------------
+
+  if (exp1)
+    ++a;
+  else
+    if (exp2)
+      ++b;
+    else
+      if (exp3)
+        ++c;
+      else
+        if (exp4)
+          ++d;
+        else
+          ++e;
+
+  C is an atomic language and this can be written as
+
+  if (exp1)
+    ++a;          -> exp1 TRUE
+  else if (exp2)      
+    ++b;          -> exp1 FALSE - exp2 TRUE
+  else if (exp3)
+    ++c;          -> exp1, exp2 FALSE - exp3 TRUE
+  else if (exp4)
+    ++d;          -> exp1, exp2, exp3 FALSE - exp4 TRUE
+  else
+    ++e;          -> exp1, exp2, exp3, exp4 FALSE
+*/
+
+/*
+  #include <math.h>
+
+  int main(void){
+    int a = 5, b = 4, c = 2;
+    double delta = b * b - 4 * a * c;
+
+    if (delta < 0){
+      printf("no real root \n");
+    }
+    else if (delta == 0){
+      printf("there is one root : %f\n", -b / (2 * a));
+    }
+    else{
+      printf("two real root\n");
+
+      double root_delta = sqrt(delta);
+      printf("root1 = %f\n", (-b - root_delta) / (2 * a));
+      printf("root2 = %f\n", (-b + root_delta) / (2 * a));
+    }
+  }
+*/

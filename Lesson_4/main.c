@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 /*
                   -------------------------
                   | traditional enterence |
@@ -840,21 +842,3 @@
   -> do not use similar names in different variables
   -> use more descriptive names when the scope of the variable is wide
 */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
