@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+// <---- READ notes.txt ---->
+
 /*
   // constant expression
 

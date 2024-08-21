@@ -1,9 +1,9 @@
  #include <stdio.h>
 
 /*
-                  ----------------------
+                  ======================
                   | standart C library |
-                  ----------------------
+                  ======================
 */
 
 /*
@@ -46,9 +46,9 @@
 */
 
 /*
-          ------------------------------------------------
+          ================================================
           | call(pass) by value, call(pass) by reference |
-          ------------------------------------------------
+          ================================================
 */
 
 /*
@@ -172,9 +172,9 @@
 */
 
 /*
-                  ------------------------
+                  ========================
                   | constants (sabitler) |
-                  ------------------------
+                  ========================
 */
 
 /*
@@ -246,7 +246,7 @@
 */
 
 /*
-  <-- check what_constants_become_standart.png -->
+  <-- Check what_constants_become_standart.png -->
 
   #include <limits.h>
 
@@ -303,20 +303,25 @@
   56  8     -> 0011'1000  5th and 6th bit is set, lower 4 bit = 8
   57  9     -> 0011'1001  5th and 6th bit is set, lower 4 bit = 9
   ...
-  65  'A'   -> 0100'0001  when 5th bit is set, will become lowercase 'a'
-  66  'B'   -> 0100'0010  when 5th bit is set, will become lowercase 'b'
+  65  'A'   -> 0100'0001  when 5th bit is set, 
+                          will become lowercase 'a'
+  66  'B'   -> 0100'0010  when 5th bit is set, 
+                          will become lowercase 'b'
   ...
   90  'Z'
   ...
-  97  'a'   -> 0110'0001 when 5th bit is clear, will become uppercase 'A'
-  98  'b'   -> 0110'0010 when 5th bit is clear, will become uppercase 'B'
+  97  'a'   -> 0110'0001 when 5th bit is clear, 
+                        will become uppercase 'A'
+  98  'b'   -> 0110'0010 when 5th bit is clear, 
+                        will become uppercase 'B'
   ...
 
   first 32(0-31) and the last character(127) are control characters
 */
 
 /*
-  <-- check chars.txt -->
+  // <---- Check chars.txt ---->
+
   #include <ctype.h>
 
   int main(void){
@@ -450,13 +455,13 @@
 
 
 /*
-                  -----------------------------
+                  =============================
                   | Input & Output Operations |
-                  -----------------------------
+                  =============================
 */
 
 /*
-  <-- check input_output_stream.png -->
+  <-- Check input_output_stream.png -->
 
   when a program starts some streams automatically created by system
     1. standart input stream    -> keyboard(default)
@@ -470,7 +475,7 @@
   -> 00000000'00010110'00111010'11100111 
 
   if we give those exact 4 byte to stream, that will called 
-  not formatted 
+  unformatted 
 
   if we give bytes of the character codes of 1'456'87, it will be 
   formatted.
@@ -578,7 +583,8 @@
     printf("hello");  // we are sending an address of the char array
 
     "hello\nworld\n"; // '\n' characters length is 1
-    // {'h', 'e', 'l', 'l', 'o', '\n', 'w', 'o','r', 'l', 'd', '\n', '\0'}
+    // {'h', 'e', 'l', 'l', 'o', '\n', 
+    //    'w', 'o','r', 'l', 'd', '\n', '\0'}
   }
 */
 

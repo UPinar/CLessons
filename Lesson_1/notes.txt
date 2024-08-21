@@ -1,7 +1,7 @@
                 ------------------------------
                 | C language characteristics |
                 ------------------------------
-----> check c_language_charecteristics.png <----
+----> Check c_language_charecteristics.png <----
 
 * C is an IMPERATIVE language.
 
@@ -45,7 +45,7 @@ C23
                         -------------
                         | C program |
                         -------------
-----> check c_program.png <----
+----> Check c_program.png <----
 
 1.  text editor
 2.  preprocessor (önişlemci)    -> preprocessing phase
@@ -86,9 +86,11 @@ b. compile time
 c. link time
 d. run time
 
+
                   ------------------------
                   | compiler - derleyici |
                   ------------------------
+
 1. tokenizing / lexical analysis
   -> is the code have a valid syntax rules ?
     syntax error (diagnostic)(bulgu iletisi)
@@ -111,9 +113,11 @@ d. run time
 * static code analyzer tools job is, finding logic errors 
 in the code not compiling!
 
+
                   ----------------------------------
                   | tokenizing(atomlarina ayirmak) |
                   ----------------------------------
+
 * every token has a category
   1. keyword (anahtar sozcuk)     
   2. identifier/name (isim)
@@ -223,7 +227,7 @@ unsigned binary system  (işaretsiz ikilik sayi sistemi)
 signed binary system    (işaretli ikilik sayi sistemi)
   both negative and positive -> hem negatif hem pozitif sayılar
 
-----> check memory_units.png <----
+----> Check memory_units.png <----
 binary digit(bit)   1 bit
 nibble              4 bit
 byte                8 bit (1 byte)
@@ -231,7 +235,7 @@ word                2 byte
 double word DWORD   4 byte
 quad word   QWORD   8 byte 
 
-----> check unsigned_binary_calc.png <----
+----> Check unsigned_binary_calc.png <----
 0101'0001   = (1 * 2^0) + (1 * 2^4) + (1 * 2^6) 
             = 1 + 16 + 64 
             = 81
@@ -297,6 +301,7 @@ E   1110
 F   1111
 
 A2C1 -> 1010'0010'1100'0001
+
 
                       --------------
                       | characters |

@@ -11,7 +11,7 @@
 
   -> to define a function (function definition)
   -> to call a function (function call)
-  -> to declare a function (function decleration - function prototype)
+  -> to declare a function (function declaration - function prototype)
 */
 
 /*
@@ -28,10 +28,10 @@
 */
 
 /*
-  // return value type
-  // identifier
-  // parameter paranthesis
-  // parameter variable(s)
+  // return value type      --> double
+  // identifier             --> get_circle_area
+  // parameter paranthesis  --> ()
+  // parameter variable(s)  --> double radius
 
   double get_circle_area(double radius)
   {
@@ -107,7 +107,7 @@
 */
 
 /*
-  // function overloading is NOT VALID in C, but valid in C++
+  // function overloading is NOT VALID in C
 
   void func(int x)
   {
@@ -263,8 +263,8 @@
     return max;
   }
 
-  // Those functions are pure functions, no state change will 
-  // happen in the program
+  // Those functions are pure functions, 
+  // There won't be any state change happen in the program
 */
 
 /*
@@ -285,23 +285,23 @@
 */
 
 /*
-  1. The reason for the existence of the function is to calculate 
-  a value and the return value is the calculated value.
+  1. The reason for the existence of those functions is, 
+  to calculate a value and the return value is that calculated value.
   Ex : get_circle_area, get_abs, get_max ...
 
-  2. The reason for the existance of the function is answering
-  a question(yes-no, true-false, valid-invalid)
-  -> test, query, predicate function
+  2. The reason for the existance of those functions is,
+  answering a question (yes-no, true-false, valid-invalid)
+    -> test, query, predicate function
   Ex : isprime, iseven, isodd, hasattribute ...
 */
 
 /*
-  // <---- check boolean_int_function.png ---->
+  // <---- Check boolean_int_function.png ---->
   
   int isprime(int x)
   {
-    // if not prime return 0
-    // else return non-zero (1, -1..)
+    // if not prime -> return 0
+    // if prime     -> return non-zero (1, -1..)
 
     // when the number is prime function will return non-zero
     // when the number is not prime function will return 0
@@ -329,7 +329,7 @@
                   -----------------
                   | function call |
                   -----------------
-  function call is an expression (ifade)
+          function call is an expression (ifade)
 */
 
 /*
@@ -465,9 +465,7 @@
     int z = foo(x) + bar(y) * 5;
     // Question: foo or bar function will be called before ?
     // Answer: it depends on the compiler 
-    // This situation has been called UNSPECIFIED BEHAVIOUR
-
-    
+    // This situation is being called UNSPECIFIED BEHAVIOUR
   }
 */
 
@@ -810,3 +808,153 @@
   //      20 21 22 23 24 25 26 27 28 29 30 31 127
 */
 
+/*
+  // those are not character control functions, 
+  // those two are character modify functions
+  int toupper(int c);
+  int tolower(int c); 
+*/
+
+/*
+  #include <ctype.h>
+
+  int main(void){
+    int ch;
+    printf("Write a character: ");
+    ch = getchar();
+
+    int cx = toupper(ch);
+    printf("(%c - %d) ==> (%c - %d)\n", ch, ch, cx, cx);
+
+    // input -> Write a character: a
+    // output -> (a - 97) ==> (A - 65)
+
+    // input -> Write a character: A
+    // output -> (A - 65) ==> (A - 65)
+
+    // if a character is lowercase, toupper() function will return
+    // lowercase, if character is uppercase toupper() function
+    // returns the same character.
+  }
+*/
+
+/*
+  #include <ctype.h>
+
+  int main(void){
+    int ch;
+    printf("Write a character: ");
+    ch = getchar();
+
+    int cx = tolower(ch);
+    printf("(%c - %d) ==> (%c - %d)\n", ch, ch, cx, cx);
+
+    // input -> Write a character: a
+    // output -> (a - 97) ==> (a - 97)
+
+    // input -> Write a character: A
+    // output -> (A - 65) ==> (a - 97)
+  }
+*/
+
+/*
+  #include <ctype.h>
+
+  int main(void){
+    int c1, c2;
+
+    printf("Write 2 characters : ");
+
+    c1 = getchar();
+    c2 = getchar();
+
+    if (c1 == c2)
+      printf("%c and %c are same characters\n", c1, c2);
+    else
+      printf("%c and %c are different characters\n", c1, c2);
+
+    // input -> Write 2 characters : ye
+    // output -> y and e are different characters
+
+    // input -> Write 2 characters : aa
+    // output -> a and a are same characters
+  }
+*/
+
+/*
+  #include <ctype.h>
+
+  int main(void){
+    int c1, c2;
+
+    printf("Write 2 characters : ");
+
+    c1 = getchar();
+    c2 = getchar();
+
+    if (c1 == c2)
+      printf("%c and %c are same characters\n", c1, c2);
+    else
+      printf("%c and %c are different characters\n", c1, c2);
+
+    // input -> Write 2 characters : ye
+    // output -> y and e are different characters
+
+    // input -> Write 2 characters : aa
+    // output -> a and a are same characters
+
+    // input -> Write 2 characters : bB
+    // output -> b and B are different characters
+  }
+*/
+
+/*
+  #include <ctype.h>
+
+  int main(void){
+    int c1, c2;
+
+    printf("Write 2 characters : ");
+
+    c1 = getchar();
+    c2 = getchar();
+
+    if (toupper(c1) == toupper(c2))
+      printf("toupper - %c and %c are same characters\n", c1, c2);
+    else
+      printf("toupper - %c and %c are different characters\n", c1, c2);
+
+    if (tolower(c1) == tolower(c2))
+      printf("tolower - %c and %c are same characters\n", c1, c2);
+    else
+      printf("tolower - %c and %c are different characters\n", c1, c2);
+
+    // input -> Write 2 characters : aA
+    // output -> 
+    //  toupper - a and A are same characters
+    //  tolower - a and A are same characters
+  }
+*/
+
+/*
+  #include <stdlib.h>
+
+  int main(void){
+
+    while(1){
+      int ch = rand() % 128;  // ch's value is a valid ASCII code.
+
+      if (isupper(ch))
+        putchar(ch);
+        // output -> CZTKEPIIODPDSVVWIMQOJWSKIUTHSYDPTZTNF ...
+    }
+
+    while(1){
+      int ch = rand() % 128; 
+
+      if (isxdigit(ch))
+        putchar(ch);
+        // output -> CBb5aBa9EF0be82D0cFBfb64b2c88b6B33A1D5B0 ...
+    }
+  }
+*/

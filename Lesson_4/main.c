@@ -23,17 +23,19 @@
 /*
   function -> fonksiyon (işlev, yordam)
 
-  <---- check global_local_namespaces.png ---->
+  <---- Check global_local_namespaces.png ---->
   global namespace  -> includes everything 
   local namespace   -> a space inside functions
 
   -> to define a function   (fonksiyonu tanimlamak) 
-    function definition : writing the code of the function
+  function definition : writing the code of the function
+
   -> to call a function     (fonksiyonu cagirmak)   
-    function call : such an expression that runs the code of the function
+  function call : such an expression that runs the code of the function
+  
   -> to declare a function  (fonksiyonu bildirmek)
-    function decleration - function prototype : 
-      for compiler to know the identifier of the function
+  function declaration - function prototype : 
+    for compiler to know the identifier of the function
 */
 
 /*
@@ -59,7 +61,7 @@
   #include <stdio.h>
 
   int printf(const char*, ...); 
-  // printf function decleration is coming from stdio.h
+  // printf function declaration is coming from stdio.h
 
   int main(void)    // function definition 
   {
@@ -74,7 +76,7 @@
 */
 
 /*
-  <---- check basic_types_c.png ---->
+  <---- Check basic_types_c.png ---->
 
   _Bool type (1 byte)
 
@@ -137,6 +139,7 @@
     printf("sizeof(int) = %zu\n", sizeof(int));
     printf("sizeof(long) = %zu\n", sizeof(long));
     printf("sizeof(long long) = %zu\n", sizeof(long long));
+
     // output -> compiled with gcc compiler
     // sizeof(char)       = 1
     // sizeof(_Bool)      = 1
@@ -175,13 +178,12 @@
 */
 
 /*
-  #include <stdio.h>
-
   int main(void)
   {
     printf("sizeof(float) = %zu\n", sizeof(float)); 
     printf("sizeof(double) = %zu\n", sizeof(double));
     printf("sizeof(long double) = %zu\n", sizeof(long double));
+
     // output -> compiled with gcc compiler
     //  sizeof(float) = 4
     //  sizeof(double) = 8
@@ -191,28 +193,31 @@
 
 /*
           ---------------------------------------------------
-          | decleration(bildirim) and definition(tanimlama) |
+          | declaration(bildirim) and definition(tanimlama) |
           ---------------------------------------------------
 */
 
 /*
-  -> If a decleration makes compiler to allocate space for an 
-  object, it has also been called definition.
-  -> If compiler is not allocating a space for an object in decleration
-  it has been called non-defining decleration
-  -> All definitions are declerations but not all declearations 
-  are definitions.
+  -> If a declaration makes compiler to allocate space for an 
+    object, it will also be called definition.
+
+  -> If compiler is NOT allocating space for an object 
+    in a declaration, it has been called non-defining declaration
+
+  -> All definitions are declarations but not all declarations 
+    are definitions.
 */
 
 /*
   int main(void)
   {
     a = 5
-    // Question : When does the compiler understands "a" is an identifier?
+    // Question : When does the compiler understands 
+      "a" is an identifier?
     // Answer : In tokenizing phase (Lexical analysis)
 
     // When compiler finds out that an identifier has been used 
-    // in expression, it has to understand, which object(entity)
+    // in an expression, it has to understand which object(entity)
     // is that identifier has been related to. 
     // This phase is called name lookup
 
@@ -225,20 +230,20 @@
   int main(void)
   {
     int x = 6;  // this is not an assignment -> initialization
-    x = 12;     // this is assignment 
+    x = 12;     // this is an assignment 
   }
 */
 
 /*
   int main(void)
   {
-    double dval;    // definition of dval but not initialized
-    int ival = 123; // definition with initialization
+    double dval;      // definition of dval but not initialized
+    int ival = 123;   // definition with initialization
   }
 */
 
 /*
-  Those keyword or keywords can be used in type declerations
+  Those keyword or keywords can be used in type declarations
   ----------------------------------------------------------
   signed 
   unsigned 
@@ -313,7 +318,7 @@
     int x, y, z; // comma seperated list
 
     int a, double b, c; // syntax error 
-    // all types should be same in comma seperated list
+    // all types must be same in comma seperated list
   }
 */
 
@@ -344,8 +349,6 @@
 */
 
 /*
-  #include <stdio.h>
-
   int global_x; 
 
   int main(void)
@@ -359,16 +362,14 @@
   }
 
   // variables which have static storage duration and 
-  // did not initialized when defined will have a value of 0.
+  // is not initialized when defined, will have a value of 0.
 */
 
 /*
-  #include <stdio.h>
-
   int main(void)
   {
     int x;  // local variable -> automatic storage duration
-    // starts its life with indeterminate(garbage) value
+    // starts its life with an indeterminate(garbage) value
   }
 */
 
@@ -389,8 +390,8 @@
 */
 
 /*
-  undefined behaviour (tanimsiz davranis)
-    There is no guarantee in run-time what will happen in the program.
+  undefined behaviour (tanımsız davranış)
+    There is no guarantee in run-time, what will happen in the program.
     -> using indeterminate value
     -> overflow and underflow in signed integer types
     -> dividing by 0
@@ -406,7 +407,7 @@
     int a;
     int b = 0;
 
-    int y = a / b; // if b = 0 -> undefined behaviour
+    int y = a / b;  // if b = 0 -> undefined behaviour
 
     // always false condition
     if (b == 0){  
@@ -428,8 +429,8 @@
     static int s_l = k; // syntax error
   }
 
-  // static storage duration variables can only be initialized with
-  // constant expression
+  // static storage duration variables can only be initialized 
+  // with constant expression
 */
 
 /*
@@ -447,8 +448,6 @@
 */
 
 /*
-  #include <stdio.h>
-
   int g_z = 5;
 
   void func(void)
@@ -465,16 +464,16 @@
 
   int main(void)
   {
-    func(); //  x = 5, y = 5, g_z = 5
-    func(); //  x = 5, y = 6, g_z = 6
-    func(); //  x = 5, y = 7, g_z = 7
+    func();   //  x = 5, y = 5, g_z = 5
+    func();   //  x = 5, y = 6, g_z = 6
+    func();   //  x = 5, y = 7, g_z = 7
   }
 */
 
 /*
-  -----------------------------------
-  | scope (kapsam - faaliyet alani) |
-  -----------------------------------
+                -----------------------------------
+                | scope (kapsam - faaliyet alani) |
+                -----------------------------------
   -> Scope is a concept about identifiers, not variables
   -> Every identifier have a scope 
   -> Scope is a compile time concept
@@ -536,7 +535,7 @@
 
 /*
   x = 20; // NOT VALID, 
-  // x identifier has been used before its decleration
+  // x identifier has been used before its declaration
   // name lookup will fail
 
   int x = 10;     // syntax error : redefinition of 'x'
@@ -607,10 +606,14 @@
     }
   }
 
-  // a, b, c identifiers are in block scope but their scopes are not same
-  // If two identifier are in the same block scope, their scopes 
-  // are in opening and closing braces of that block
-  // c, d identifiers are both in block scope and their scopes are same.
+  // a, b, c identifiers are in block scope 
+  // but their scopes are not same
+
+  // If two identifier are in the same block scope, their scopes are 
+  // in opening and closing braces of that block
+
+  // c, d identifiers are both in block scope 
+  // and their scopes are same.
 */
 
 /*
@@ -705,7 +708,7 @@
 */
 
 /*
-  //5 file scope
+  // 5 file scope
   int main()
   {
     // 4 - enclosing block scope
@@ -721,10 +724,10 @@
     }
   }
 
-  // name lookup will happen from 1 to 5.
-  // once its find the identifier, name lookup phase is DONE.
-  // it will continue with context control, name lookup will never
-  // start again.
+  // name lookup will be done from 1 to 5.
+  // Once its find the identifier, name lookup phase is DONE.
+  // It will continue with context control, 
+  // name lookup will NEVER start again.
 */
 
 /*
@@ -776,8 +779,6 @@
 */
 
 /*
-  #include <stdio.h>
-
   int x = 111;
 
   int main(void)
@@ -832,8 +833,8 @@
 */
 
 /*
-  -> variables will not be ALLCAPS, generally it has been used in
-  preprocessor program.
+  -> variables should not be named ALLCAPS, 
+  generally it has been used in preprocessor program.
   
   snake case -> tax_increase_rate
   camel case -> taxIncreaseRate
