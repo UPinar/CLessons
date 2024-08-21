@@ -70,9 +70,9 @@
 */
 
 /*
-                  -----------------------------
+                  =============================
                   | basic types of C language |
-                  -----------------------------
+                  =============================
 */
 
 /*
@@ -320,6 +320,12 @@
     int a, double b, c; // syntax error 
     // all types must be same in comma seperated list
   }
+*/
+
+/*
+                  --------------------
+                  | storage duration |
+                  --------------------
 */
 
 /*
@@ -828,7 +834,7 @@
 
 /*
                   --------------------------------
-                  | naming  - naming conventions |
+                  | naming - naming conventions |
                   --------------------------------
 */
 
