@@ -49,6 +49,6 @@
   - how to get out of a loop (bir döngüden nasıl çıkılır?)
   - infinite loop (sonsuz döngü)
   - break statement
-  - 'conio.h' header for Microsoft Compiler _getch() and _getche() functions
+  - <conio.h> header for Microsoft Compiler `_getch()` and `_getche()` functions
   - continue statement
   - do while statement
