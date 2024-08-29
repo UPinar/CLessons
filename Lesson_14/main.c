@@ -703,3 +703,549 @@
     // output -> number = 1'518'331
   }
 */
+
+/*  
+  How to get out of a loop (bir döngüden nasıl çıkılır?)
+    1. when control expression is wrong
+    2. return statement
+    3. break statement
+    4. goto statement
+    5. exit() / abort() functions
+*/ 
+
+/*
+  int return_func(int x){
+    // code 
+
+    while(1){
+      if (expr)
+        return x + 56;  
+        // return statement will also ends functions execution
+    }
+  }
+
+  int break_func(int x){
+    // code 
+
+    while(1){
+      if (expr)
+        break;
+    }
+    // function will continue its execution from here
+  }
+
+  int goto_func(int x){
+    // code 
+
+    while(1){
+      if (expr)
+        goto out;
+    }
+    
+  out:
+    // function will continue its execution from here
+  }
+*/
+
+/*
+                --------------------------------
+                | infinite loop (sonsuz döngü) |
+                --------------------------------
+*/
+
+/*
+  int main(void){
+    int i = 5;
+
+    while(i < 26){
+      if (i % 5 == 0){
+        printf("%d", i);
+        ++i;
+      }
+    }
+  }
+  // output -> 5 -> infinite loop
+*/
+
+/*
+  int main(void){
+    int i = 5;
+
+    while(i < 26){
+      if (i % 5 == 0)
+        printf("%d ", i);
+        ++i;
+    }
+  }
+  // output -> 5 10 15 20 25
+
+  int main_act(void){
+    int i = 5;
+
+    while(i < 26){
+      if (i % 5 == 0)
+        printf("%d ", i);
+
+      ++i;
+    }
+  }
+*/
+
+/*
+  int main(void){
+    int i = 5;
+
+    while(i < 26)
+      if (i % 5 == 0)
+        printf("%d ", i);
+        ++i;
+    
+  }
+  // output -> 5 5 5 5 5 ...... infinite loop
+
+  int main_act(void){
+    int i = 5;
+
+    while(i < 26)
+      if (i % 5 == 0)
+        printf("%d ", i);
+
+    ++i;
+  }
+*/
+
+/*
+  while(1){
+    // idiomatic way for infinite loop
+  }
+*/
+
+/*
+                  -------------------
+                  | break statement |
+                  -------------------
+*/
+
+/*
+  int main(void){
+    break;  // syntax error
+    // break statement not within loop or switch
+  }
+*/
+
+/*
+  // <---- Check break_statement.png ---->
+
+  while (control_expr1){
+    // statement 1
+    // statement 2
+    // statement 3
+    if (control_expr2)
+      break;
+    // statement 4
+    // statement 5
+  }
+  // statement x;
+
+  // when if statement is true, statement 1 - 2 - 3 - x 
+  // when if statement is false, statement 1 - 2 - 3 - 4 - 5 
+*/
+
+/*
+  while (expr1){
+    // statement 1
+    // statement 2
+    // statement 3
+  }
+
+  while (1){
+    if (!expr1){
+      break;
+    }
+    // statement 1
+    // statement 2
+    // statement 3
+  }
+
+  // Those 2 while loops are same
+*/
+
+/*
+  while (1){
+    // statement 1
+    // statement 2
+    // statement 3
+    if (!expr1){
+      break;
+    }
+  }
+
+  do {
+    // statement 1
+    // statement 2
+    // statement 3
+  } while(expr1);
+
+  // Those 2 loops are same
+*/
+
+/*
+  // compiled with Microsoft (R) C/C++ Optimizing Compiler 
+
+  #include <conio.h>
+
+  int getchar(void);  // echoing, lined buffer
+
+  // those functions are for MSVC compiler NOT C Standart functions
+  int _getch(void);   // not echoing, not lined buffer(new line need)
+  int _getche(void);  // echoing, not lined buffer
+
+  int main(void){
+    printf("Istanbul(i) or Ankara(a) : ");
+    int ch = getchar();
+
+    if (ch == 'i')
+      printf("Istanbul it is\n");
+    else if (ch = 'a')
+      printf("Ankara it is\n");
+    else
+      printf("Invalid\n");
+
+    // output -> 
+    //  Istanbul(i) or Ankara(a) : a
+    //  Ankara it is
+
+    printf("Istanbul(i) or Ankara(a) : ");
+    ch = _getch();
+
+    if (ch == 'i')
+      printf("Istanbul it is\n");
+    else if (ch = 'a')
+      printf("Ankara it is\n");
+    else
+      printf("Invalid\n");
+
+    // output -> Istanbul(i) or Ankara(a) : Ankara it is 
+    // when "a" entered in console, 
+    // did not echo and did not want new line
+
+    printf("Istanbul(i) or Ankara(a) : ");
+    ch = _getche();
+
+    if (ch == 'i')
+      printf("Istanbul it is\n");
+    else if (ch = 'a')
+      printf("Ankara it is\n");
+    else
+      printf("Invalid\n");
+
+    // output -> Istanbul(i) or Ankara(a) : iIstanbul it is
+    // when "i" entered in console, 
+    // it echoed but did not want new line
+  }
+*/
+
+/*
+  #include <conio.h>
+
+  int main(void){
+    printf("Write your 4 digit passcode: ");
+    int c1 = _getch();  putchar('*');
+    int c2 = _getch();  putchar('*');
+    int c3 = _getch();  putchar('*');
+    int c4 = _getch();  putchar('*');
+
+    printf("\npasscode for debug %c%c%c%c\n", c1, c2, c3, c4);
+
+    // output -> 
+    //  Write your 4 digit passcode: ****
+    //  passcode for debug 1234
+  }
+*/
+
+/*
+  // to lock keyboard for only hexadecimal numbers
+
+  #include <ctype.h>
+
+  int main(void){
+    int cnt = 5;
+
+    printf("Write 5 hex characters: ");
+    int ch;
+
+    while(cnt--){
+      while(1){
+        ch = _getch();
+        if (isxdigit(ch))
+          break;
+      }
+      putchar(ch);
+    }
+    // output -> Write 5 hex characters: 1aC87
+  }
+*/
+
+/*
+  // to lock keyboard for only hexadecimal numbers (IDIOMATIC WAY)
+
+  #include <ctype.h>
+
+  int main(void){
+    int cnt = 5;
+
+    printf("Write 5 hex characters: ");
+    int ch;
+
+    while(cnt--){
+      while(!isxdigit(ch = _getch()))
+        ; // null statement
+      putchar(ch);
+    }
+    // output -> Write 5 hex characters: 12ACc
+  }
+*/
+
+/*
+  #include <conio.h>
+  #include <stdlib.h>
+
+  int main(void){
+
+    int ch;
+    int val;
+    int cnt = 0;
+    int sum = 0;
+    int min, max;
+
+    while (1){
+      printf("integer or not (i) (n) : ");
+
+      while ((ch = _getch()) != 'i' && ch != 'n')
+        ;
+      printf("%c\n", ch);
+
+      if (ch == 'n')
+        break;
+
+      val = (rand() % 2  ? 1 : -1) * rand();
+      printf("%d\n", val);
+
+      if (cnt == 0)
+        min = max = val;
+      else
+        if (val < min)
+          min = val;
+        else
+          max = val;
+
+      ++cnt;
+      sum += val;
+    }
+
+    if (cnt == 0){
+      printf("no integer input\n");
+      return 0;
+    }
+    printf("count = %d\n", cnt);
+    printf("average = %d\n", sum / cnt);
+    printf("min value = %d\n", min);
+    printf("max value = %d\n", max);
+  }
+
+  // output ->
+  //  ...
+  //  integer or not (i) (n) : i
+  //  -30333
+  //  integer or not (i) (n) : i
+  //  4664
+  //  integer or not (i) (n) : i
+  //  7711
+  //  integer or not (i) (n) : i
+  //  6868
+  //  integer or not (i) (n) : n
+  //  count = 25
+  //  average = 4787
+  //  min value = -30333
+  //  max value = 6868
+*/
+
+/*
+                  ----------------------
+                  | continue statement |
+                  ----------------------
+*/
+
+/*
+  int main(void){
+    continue; // syntax error
+    // continue statement not within a loop
+  }
+*/
+
+/*
+  while(expr1){
+    statement1;
+    statement2;
+    statement3;
+    
+    if (c_ex)
+      continue;
+    statement4;
+    statement5;
+  }
+
+  while(expr1){
+    statement1;
+    statement2;
+    statement3;
+    
+    if (!c_ex){
+      statement4;
+      statement5;
+    }
+  }
+  // Those 2 loops are same
+*/
+
+/*
+                ----------------------
+                | do while statement |
+                ----------------------
+*/
+
+/*
+  int ndigit(int x){
+    if (x == 0)
+      return 1;
+
+    int digit_count = 0;
+    while(x != 0){
+      ++digit_count; 
+      x /= 10;
+    }
+    return digit_count;
+  }
+
+  int dowhile_ndigit(int x){
+    int digit_count = 0;
+
+    do {
+      ++digit_count;
+      x /= 10;
+    } while (x != 0);
+
+    return digit_count;
+  }
+*/
+
+/*
+  int main(void){
+    int x;
+    do {
+      printf("Write an integer between 0 - 100: ");
+      scanf("%d", &x);
+    } while (!(x > 0 && x < 100));
+
+    printf("x = %d\n", x);
+  }
+
+  // output ->
+  //  Write an integer between 0 - 100: 827
+  //  Write an integer between 0 - 100: -12
+  //  Write an integer between 0 - 100: 0
+  //  Write an integer between 0 - 100: 100
+  //  Write an integer between 0 - 100: 23
+  //  x = 23
+*/
+
+/*
+  <----  FIRST WAY ----> using goto statement
+
+  loop1 (){
+    statementx;
+    statementx;
+    statementx;
+
+    loop2 (){
+      statementy;
+      statementy;
+      statementy;
+      
+      loop3 (){
+        statementz;
+        statementz;
+        statementz;
+
+        if (c_exp)
+        goto out;
+          break;  // we want to go to statementk from here
+      }
+      statementy;
+      statementy;
+    }
+    statementx;
+    statementx;
+  }
+
+  out:
+    statementk
+    statementk
+
+
+  <----  SECOND WAY ----> using flag variable
+
+    int flag = 0;
+
+    loop1 (){
+    statementx;
+    statementx;
+    statementx;
+
+    loop2 (){
+      statementy;
+      statementy;
+      statementy;
+      
+      loop3 (){
+        statementz;
+        statementz;
+        statementz;
+
+        if (c_exp){
+          flag = 1;
+          break;  // we want to go to statementk from here
+        }
+      }
+      if (flag)
+        break;
+
+      statementy;
+      statementy;
+    }
+    if (flag)
+      break;
+
+    statementx;
+    statementx;
+  }
+
+  statementk
+  statementk
+*/
+
+/*
+                  -----------------
+                  | for statement |
+                  -----------------
+*/
+
+/*
+  for (;;)
+    statement;
+
+  for (ex1;;)           VALID
+  for (ex1;ex2;)        VALID
+  for (ex1; ex2; ex3)   VALID
+*/
+

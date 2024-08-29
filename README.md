@@ -44,5 +44,11 @@
 
 ### [Lesson_14_ControlStatements](https://github.com/UPinar/CLessons/tree/master/Lesson_14)
   - if statement
-  - loop statements (while, do while, for)
+  - while statement
   - n kere dönen döngü idiyomu (loop idiom that loops n times)
+  - how to get out of a loop (bir döngüden nasıl çıkılır?)
+  - infinite loop (sonsuz döngü)
+  - break statement
+  - 'conio.h' header for Microsoft Compiler _getch() and _getche() functions
+  - continue statement
+  - do while statement
