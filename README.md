@@ -41,14 +41,17 @@
   - assignment operators
   - sequence point (yan etki noktası)
   - comma operator (virgül operatörü)
+  - ternary operator (koşul operatörü)
 
 ### [Lesson_14_ControlStatements](https://github.com/UPinar/CLessons/tree/master/Lesson_14)
   - if statement
   - while statement
   - n kere dönen döngü idiyomu (loop idiom that loops n times)
   - how to get out of a loop (bir döngüden nasıl çıkılır?)
-  - infinite loop (sonsuz döngü)
+  - infinite loop (sonsuz döngü)[while]
   - break statement
   - <conio.h> header for Microsoft Compiler `_getch()` and `_getche()` functions
   - continue statement
   - do while statement
+  - for statement
+  - infinite loop idiom(sonsuz döngü)[for]

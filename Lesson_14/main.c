@@ -748,9 +748,9 @@
 */
 
 /*
-                --------------------------------
-                | infinite loop (sonsuz döngü) |
-                --------------------------------
+          --------------------------------------------
+          | infinite loop idiom(sonsuz döngü)[while] |
+          --------------------------------------------
 */
 
 /*
@@ -1249,3 +1249,487 @@
   for (ex1; ex2; ex3)   VALID
 */
 
+/*
+  int foo(void);
+  int bar(void);
+  int baz(void);
+  int bom(void);
+
+  int main(void){
+
+    for (foo(); bar(); baz())
+      bom();
+
+    // all function calls are expressions, this for loop is VALID
+  }
+*/
+
+/*
+  int main(void){
+
+    int i;
+
+    for (i = 0; i < 10; ++i)
+      printf("%d ", i);
+    // output -> 0 1 2 3 4 5 6 7 8 9
+  }
+*/
+
+/*
+  int main(void){
+
+    int i = 0;
+
+    for (; i < 10; ++i)
+      printf("%d ", i);
+    // output -> 0 1 2 3 4 5 6 7 8 9
+  }
+*/
+
+/*
+  int main(void){
+
+    int i = 0;
+
+    for (; i < 10;){
+      printf("%d ", i);
+      ++i;
+    }
+    // output -> 0 1 2 3 4 5 6 7 8 9
+  }
+*/
+
+/*
+  int main(void){
+
+    int i = 0;
+
+    for (;1;){
+      printf("%d ", i);
+      ++i;
+    }
+    // output -> 
+    //  0 1 2 3 4 5 6 7 8 9 10 11 12 
+    //  13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 
+    //  ... inifinite
+
+    for (;;){
+      printf("%d ", i);
+      ++i;
+    }
+    // output -> 
+    //  0 1 2 3 4 5 6 7 8 9 10 11 12 
+    //  13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 
+    //  ... inifinite
+
+    // If 2nd(control) expression is empty, 
+    // it will act like(same as) logic true(1)
+  }
+*/
+
+/*
+            ------------------------------------------
+            | infinite loop idiom(sonsuz döngü)[for] |
+            ------------------------------------------
+*/
+
+/*
+  int main(void){
+    for(;;)
+      printf("x-o-");
+
+    // output -> 
+    //  x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x-o-x 
+    //  ... infinite
+  }
+*/
+
+/*
+  int main(void){
+    int i;
+
+    for (i = 0; i < 10; ++i)
+      printf("%d\n", i);
+
+    i = 23;   // VALID (block scope)
+    
+
+    for (int a = 0; a < 10; ++a){
+      printf("%d\n", a);
+    }
+
+    a = 33;   // syntax error -> identifier "a" is undefined
+  }
+*/
+
+/*
+  int main(void){
+
+    for (int i = 0, k = 0; i < 10; ++i)
+      printf("%d\n", i);
+    // can define more than 1 variable with same type
+    // in for loop
+  }
+*/
+
+/*
+  int main(void){
+
+  for (int i = 0; i < 10; ++i){
+    int i = 67; // VALID 
+  }
+
+  // <-------- WHAT COMPILER SEES ------->
+  for (int i = 0; i < 10; ++i){
+    {
+      int i = 67;  
+    }  // inner i
+  } // outer i
+  // <-------- WHAT COMPILER SEES ------->
+}
+*/
+
+/*
+  int main(void){
+    for (int i = 0; i < 5; ++i){
+        int i = 67;
+        i += 2;
+    }
+  }
+
+  // compiled with x86-64 gcc 14.1 -O0 -std=c11
+  //  main:
+  //    push rbp
+  //    mov rbp, rsp
+  //    mov DWORD PTR [rbp-4], 0    -> outer : int i = 0
+  //    jmp .L2
+  //  .L3:
+  //    mov DWORD PTR [rbp-8], 67   -> inner : int i = 67
+  //    add DWORD PTR [rbp-8], 2    -> inner : i += 2;
+  //    add DWORD PTR [rbp-4], 1    -> outer : ++i
+  //  .L2:
+  //    cmp DWORD PTR [rbp-4], 4    -> outer : if (i < 5)
+  //    jle .L3
+  //    mov eax, 0
+  //    pop rbp
+  //    ret
+*/
+
+/*
+  int main(void){
+    for (int i = 0; i < 5; ++i){
+      int i = 67;
+      printf("%d ", i);
+    }
+    // output -> 67 67 67 67 67
+  }
+*/
+
+/*
+  int main(void){
+    for (int i = 1; i < 10000; i *= 2){
+      printf("%d ", i);
+    }
+    // output ->
+    //  1 2 4 8 16 32 64 128 256 512 1024 2048 4096 8192  
+  }
+*/
+
+/*
+  int foo(int);
+
+  int main(void){
+    int arr[10];
+
+    for (int k = 0; k < 10; ++k){
+      arr[k] = foo(k);
+    }
+
+    int sval = 56;
+
+    for (int i = 0; i < 10; ++i){
+      if (arr[i] == sval)
+        break;
+    }
+    // when the code comes here, we don't know how we get out of loop
+    // 1. can be equal to 10, if logical expression (i < 10) becomes 0
+    // 2. can be between 0 and 9 when arrays indexed value equals sval
+  }
+
+  // <---- FIRST WAY ---->
+  int FLAG_VARIABLE_main(void){
+    int arr[10];
+
+    for (int k = 0; k < 10; ++k){
+      arr[k] = foo(k);
+    }
+
+    int sval = 56;
+    int flag = 0; // flag variable
+
+    for (int i = 0; i < 10; ++i){
+      if (arr[i] == sval){
+        flag = 1;
+        break;
+      }
+    }
+    if (flag)
+      printf("value is inside array in %d'th index", i);
+    else
+      printf("value is not inside array");
+  }
+
+  // <---- SECOND WAY ---->
+  int LOOP_VARIABLE_main(void){
+    int arr[10];
+
+    for (int k = 0; k < 10; ++k){
+      arr[k] = foo(k);
+    }
+
+    int sval = 56;
+    
+    int i;  // loop variable 
+    for (i = 0; i < 10; ++i){
+      if (arr[i] == sval)
+        break;
+    }
+    if (i < 10)
+      printf("value is inside array in %d'th index", i);
+    else
+      printf("value is not inside array");
+  }
+
+  // <---- IDIOMATIC WAY ---->
+  int IDIOMATIC_main(void){
+    int arr[10];
+
+    for (int k = 0; k < 10; ++k){
+      arr[k] = foo(k);
+    }
+
+    int sval = 56;
+    
+    int i;
+    for (i = 0; i < 10 && arr[i] != sval; ++i)
+      ; // null statement
+
+    if (i < 10)
+      printf("value is inside array in %d'th index", i);
+    else
+      printf("value is not inside array");
+  }
+
+*/
+
+/*
+  // https://en.wikipedia.org/wiki/Collatz_conjecture
+  int main(void){
+    unsigned long long uval;
+
+    printf("first positive integer of the sequence: ");
+    scanf("%llu", &uval);
+
+    for (unsigned long long i = uval; i != 1;){
+      printf("%llu ", i);
+      if (i % 2 == 0)
+        i /= 2;
+      else
+        i = 3 * i + 1;
+    }
+
+    // input -> first positive integer of the sequence: 65
+    // output -> 
+    //  65 196 98 49 148 74 37 112 56 28 14 7 
+    //  22 11 34 17 52 26 13 40 20 10 5 16 8 4 2
+
+    // input -> first positive integer of the sequence: 6784
+    // output -> 
+    //  6784 3392 1696 848 424 212 106 53 160 80 40 20 10 5 16 8 4 2
+  }
+*/
+
+/*
+  // -> 1/0! + 1/1! + 1/2! + ...
+  // convergence to the number e (e sayısına yakınsama)
+  // https://en.wikipedia.org/wiki/E_(mathematical_constant)
+
+  int factorial(int x){
+    int result = 1;
+
+    for (int i = 1; i <= x; ++i){
+      result *= i;
+    }
+    return result;
+  }
+
+  void calculate_sum(int count){
+    double sum = 0.;
+
+    for (int i = 0; i < count; ++i)
+      sum += 1. / factorial(i);
+
+    printf("count = %2d, sum = %f\n", count, sum);
+  }
+
+  int main(void){
+    for (int i = 0; i < 13; ++i)
+      calculate_sum(i);
+    // should be max 12, 13! will overflow
+    
+    // output ->
+    //  count =  0, sum = 0.000000
+    //  count =  1, sum = 1.000000
+    //  count =  2, sum = 2.000000
+    //  count =  3, sum = 2.500000
+    //  count =  4, sum = 2.666667
+    //  count =  5, sum = 2.708333
+    //  count =  6, sum = 2.716667
+    //  count =  7, sum = 2.718056
+    //  count =  8, sum = 2.718254
+    //  count =  9, sum = 2.718279
+    //  count = 10, sum = 2.718282
+    //  count = 11, sum = 2.718282
+    //  count = 12, sum = 2.718282
+  }
+*/
+
+/*
+  // -> 1 - 1/3 + 1/5 - 1/7 + 1/9 - 1/11
+  // convergence to pi/4
+  // https://en.wikipedia.org/wiki/Pi
+
+  void calculate_sum(int count){
+    double sum = 0.;
+
+    for (int i = 0; i < count; ++i){
+      if (i % 2 == 0)
+        sum += 1. / (2 * i + 1);  
+      else
+        sum -= 1. / (2 * i + 1); 
+    }
+      
+    printf("count = %4d, sum = %f\n", count, 4 * sum);
+  }
+
+  int main(void){
+    for (int i = 0; i < 10000; ++i)
+      calculate_sum(i);
+    
+    // output ->
+    //  count =    0, sum = 0.000000
+    //  count =    1, sum = 4.000000
+    //  count =    2, sum = 2.666667
+    //  ...
+    //  count =  166, sum = 3.135569
+    //  count =  167, sum = 3.147581
+    //  count =  168, sum = 3.135640
+    //  ...
+    //  count =  995, sum = 3.142598
+    //  count =  996, sum = 3.140589
+    //  count =  997, sum = 3.142596
+    //  ...
+    //  count = 9998, sum = 3.141493
+    //  count = 9999, sum = 3.141693
+  }
+*/
+
+/*
+  int isprime(int x){
+    if (x < 2)
+      return 0;
+
+    if (x % 2 == 0) return x == 2;
+    if (x % 3 == 0) return x == 3;
+    if (x % 5 == 0) return x == 5;
+
+    for (int i  = 7; i * i <= x; i += 2){
+      if (x % i == 0)
+        return 0;
+    }
+
+    return 1;
+  }
+
+  int main(void){
+
+    int low = 0, high = 100;
+
+    for (int i = low; i < high; ++i){
+      if (isprime(i)){
+        printf("%d ", i);
+      }
+    }
+    // output -> 
+    //  2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 
+    //  59 61 67 71 73 79 83 89 97
+  }
+*/
+
+/*
+  // https://github.com/necatiergin/
+  // C_PROGRAMLAMA_DILI_ODEVLERI/blob/main/049.md
+
+  int main(void)
+  {
+    int i = 1;
+
+    do
+    {
+      printf("%d\n", i);
+      i++;
+      if (i < 15)
+        continue;
+
+      // continue statement will send program flow to HERE!!!  
+    } while (0);  
+    // output -> 1
+  }
+*/
+
+/*
+  // https://github.com/necatiergin/
+  // C_PROGRAMLAMA_DILI_ODEVLERI/blob/main/051.md
+
+  //  Aşağıdaki koda tek bir karakter ekleyeceksiniz ya da 
+  //  koddan tek bir karakteri değiştireceksiniz. 
+  //  Yapılan değişiklikten sonra oluşan C programı derlenip 
+  //  çalıştırıldığında standart çıkış akımına 5 kez 'necati' yazacak
+
+  //  Change 1 character or add 1 character, there are 3 answers.
+  // <---- CODE ---->
+  int main(void)
+  {
+    int n = 5;
+
+    for (int i = 0; i < n; i--)
+      printf("necati\n");
+  }
+
+  // <---- WAY 1 ---->
+  int main(void)
+  {
+    int n = 5;
+
+    for (int i = 0; i < n; n--)
+      printf("necati\n");
+  }
+
+  // <---- WAY 2 ---->
+  int main(void)
+  {
+    int n = 5;
+
+    for (int i = 0; -i < n; i--)
+      printf("necati\n");
+  }
+
+  // <---- WAY 3 ---->
+  int main(void)
+  {
+    int n = 5;
+
+    for (int i = 0; i + n; i--)
+      printf("necati\n");
+  }
+*/

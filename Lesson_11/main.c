@@ -1597,3 +1597,118 @@
     //  l 108
   }
 */
+
+/*
+              --------------------------------------
+              | ternary operator (koşul operatörü) |
+              --------------------------------------
+*/
+
+/*
+  op1 ? op2 : op3
+
+  if op1 logical interpretation is true(1)
+    -> ternary operator will generate op2's value as its value
+  if op1 logical interpretation is false(0)
+    -> ternary operator will generate op3's value as its value
+
+  x > 0 ? x : -x                -> absolute
+  x > y ? x : y                 -> max
+  isupper(c) ? c : toupper(c)   -> uppercase
+*/
+
+/*
+  int main(void){
+    int x = 10;
+    printf("|%d| = %d\n", x, x > 0 ? x : -x);
+    // output -> |10| = 10
+
+    x = -10;
+    printf("|%d| = %d\n", x, x > 0 ? x : -x);
+    // output -> |-10| = 10
+  }
+*/
+
+/*
+  1. to INITIALIZE a variable with one of two distinct values
+    depends on a condition
+  bir değişkene, bir koşula bağlı olarak 
+    iki ayrı değerden biri ile İLK DEĞER VERMEK
+
+  int max = x > y ? x : y;  // initialize
+
+  2. to ASSIGN a variable with one of two distinct values
+    depends on a condition 
+  bir değişkene, bir koşula bağlı olarak 
+    iki ayrı değerden birini ATAMAK
+
+  min = x < y ? x : y;      // assign
+*/
+
+/*
+  a > 5 ? b : c * 2     ->    (a > 5 ? b : c) * 2
+  if we want to use both "b" * 2 and "c" * 2 we need to use 
+  precedence bracket(öncelik parantezi)
+
+  x == y ? a : b > 0    ->    (x == y ? a : b) > 0
+*/
+
+/*
+  if (x > y)
+    i = x;
+  else
+    i = y;
+
+  // we can not use if statement in for statement
+
+  for (int i = x > y ? x : y; i < 100; ++i)
+*/
+
+/*
+  if (x > y)
+    foo(x);
+  else
+    foo(y);
+  
+  foo(x > y ? x : y);
+*/
+
+/*
+  int foo(int x){
+
+    if (x > 0)
+      return a;
+    else 
+      return b;
+
+    return x > 0 ? a : b;
+  }
+*/
+
+/*
+  n variable's value is greater than y year's day count
+  n değişkeninin değeri y yılının gün sayısından fazla ise
+
+  if (n > (isleap(y) ? 366 : 365))
+    foo();
+
+  if (isleap(y))
+    if (n > 366)
+      foo();
+  else
+    if (n > 365)
+      foo();
+*/
+
+/*
+  when we will not use generated value of ternary operator
+  better using if loop
+
+  n > 5 ? foo() : bar();    // not using the value
+
+  // better 
+  if (n > 5)    
+    foo();
+  else 
+    bar();  
+*/
