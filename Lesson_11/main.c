@@ -1712,3 +1712,50 @@
   else 
     bar();  
 */
+
+/*
+  int main(void){
+    int x = 10, y = 20, z = 30;
+
+    if (x > 5)
+      y = 0;
+    else
+      z = 0;
+
+    (x > 5 ? y : z) = 0;  // syntax error
+    // error -> lvalue required as left operand of assignment
+
+    // !!! ternary operator generates R value expression.
+  }
+*/
+
+/*
+  int main(void){
+    int x = 7;
+
+    int a = x == 5  ? 121 : 
+            x == 7  ? 93  : 
+            x == 13 ? 145 : 6;
+
+    // int a = x == 5  ? 121 : (x == 7  ? 93  : (x == 13 ? 145 : 6));
+    // ternary operator is right associative
+
+    int b;
+
+    if (x == 5)
+      b = 121;
+    else if (x == 7)
+      b = 93;
+    else if (x == 13)
+      b = 145;
+    else
+      b = 6;
+
+    printf("x = %d, a = %d, b = %d\n", x, a, b);
+    // output -> x = 5, a = 121, b = 121
+    // output -> x = 7, a = 93, b = 93
+  }
+*/
+
+/*
+*/

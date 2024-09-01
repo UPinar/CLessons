@@ -8,6 +8,9 @@
   - tokenizing(atomlarina ayirmak)
   - number systems - sayı sistemleri
   - characters
+  - header files
+  - seperate compilation model
+  - external reference
 
 ### [Lesson_4_BasicTypes](https://github.com/UPinar/CLessons/tree/master/Lesson_4)
   - basic types of C language
@@ -22,6 +25,7 @@
   - function call
   - test functions (query, predicate)
   - ctype <ctype.h> module
+  - function prototype(s) | function declaration
 
 ### [Lesson_9_InputOutput](https://github.com/UPinar/CLessons/tree/master/Lesson_9)
   - standart C library
@@ -55,3 +59,10 @@
   - do while statement
   - for statement
   - infinite loop idiom(sonsuz döngü)[for]
+
+### [Lesson_19_Preprocessor](https://github.com/UPinar/CLessons/tree/master/Lesson_19)
+  - #include
+  - conditional compiling (koşullu derleme)
+  - #define
+  - object-like macros
+  - function-like(functional) macros

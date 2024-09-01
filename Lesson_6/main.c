@@ -1,8 +1,8 @@
 #include <stdio.h>
 /*
-                  ----------------------------
+                  ============================
                   | functions (fonksiyonlar) |
-                  ----------------------------
+                  ============================
 */
 
 /*
@@ -957,4 +957,115 @@
         // output -> CBb5aBa9EF0be82D0cFBfb64b2c88b6B33A1D5B0 ...
     }
   }
+*/
+
+/*
+          ---------------------------------------------------
+          |  function prototype(s) | function declaration   |
+          |--------------------------------------------------
+          | fonksiyon prototipleri | fonksiyon bildirimleri |
+          ---------------------------------------------------
+*/
+
+/*
+  In classic C, function declarations does not have parameters
+    int func(); -> is a function declaration in classic C
+
+  In standardization, function declaration become function prototype
+    int func(int, int); -> is a function prototype 
+    double foo(void);   -> is a function prototype
+
+  Nowadays, both prototype and declaration used in the same meaning
+*/
+
+/*
+  int foo(int, int); // function prototype
+
+    compiler understands 
+    1. foo is a function identifier
+    2. foo function have 2 parameters
+    3. foo functions parameters in order int, int
+    4. foo functions return type is int 
+
+    compiler generates 
+    1. function entry codes
+    2. function exit codes 
+      when it sees a function declaration
+*/
+
+/*
+  int foo(int a, int b);  
+
+  1. "a" and "b" identifiers are inside parameter paranthesis 
+    in function declaration   
+  2. "a" and "b" identifiers's scope is function prototype scope
+  3. function prototype scope is only include parameter paranthesis
+    int func(int a, int a) -> syntax error
+
+  4. identifiers has been used in function declaration, should not be 
+    same as identifiers used in function definition
+
+    int ndigit(int x);  // function declaration
+    int ndigit(int y){  // function definition
+      // function code
+    }
+    int ndigit(int z);  // function redeclaration
+*/
+
+/*
+  int foo(int, int);
+
+  int main(void){
+    int x;
+    x = foo(10, 20);  
+    // compiler must understand what are "x" and "foo" identifiers
+    // this is called name lookup.
+
+    // if foo is a function compiler must see foo function's 
+    // declaration or foo functions definition
+
+    // when compiler sees function declaration or definition
+    // it will generate an assembly code depends on the 
+    // functions return type and its parameters count and types
+  }
+*/
+
+/*
+  // before C99    VALID -> implicitly declare int foo();  
+  // after C99     syntax error
+  //  error : implicit declaration of function 'foo'  
+
+  int main(void){
+    int x;
+    x = foo(12, 45);
+  }
+*/
+
+/*
+  int foo();  
+  // function declaration without parameter variable
+  // not giving any information about the function's parameters
+
+  int func(void);
+
+  int main(void){
+    foo(12);              // VALID
+    foo(12, 13);          // VALID
+    foo(12, 13, 14);      // VALID
+
+    func();               // VALID
+    func(12);             // syntax error
+    // error: too many arguments to function 'func'
+  }
+*/
+
+/*
+  int foo(int);
+  int foo(int);
+  // those 2 are function redeclarations
+
+  int func(int x);
+  int func(int y);
+  int func(int);
+  // those 3 are function redeclarations
 */
