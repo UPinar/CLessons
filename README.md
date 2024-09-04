@@ -62,7 +62,11 @@
 
 ### [Lesson_19_Preprocessor](https://github.com/UPinar/CLessons/tree/master/Lesson_19)
   - `#include`
-  - conditional compiling (koşullu derleme)
   - `#define`
   - object-like macros
   - function-like(functional) macros
+  - comparison between functional macros and functions
+  - preprocessor operators
+  - conditional compiling (koşullu derleme)
+  - multiple inclusion guard
+  - `#undef`
