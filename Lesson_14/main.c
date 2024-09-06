@@ -1733,3 +1733,448 @@
       printf("necati\n");
   }
 */
+
+/*
+                      --------------------
+                      | switch statement |
+                      --------------------
+*/
+
+/*
+  switch statement is an alternative to some of else if ladder
+  
+  all switch statements can be replaced with else if ladder
+  but not all else if ladders can be replaced with switch statement
+
+  -> easy to read
+  -> easy to write
+  -> compiler can optimize switch statements better(depending on the case)
+  -> decrease coding errors
+*/
+
+/*
+  switch (integer_expr) 
+  {
+    case integral_constant_expr1: 
+      statement1;
+    case integral_constant_expr2:
+      statement2;
+    case integral_constant_expr3:
+      statement3;
+    case integral_constant_expr4:
+      statement4;
+  }
+
+  when "integer_expr" value is equal to "integral_constant_expr1",
+  program will execute all of those 
+    statement1, 
+    statement2, 
+    statement3, 
+    statement4
+  until it reaches break statement or end of switch statement
+
+  when "integer_expr" value is equal to "integral_constant_expr3",
+  program will execute 
+    statement3, 
+    statement4
+  until it reaches break statement or end of switch statement
+
+  //--------------------//
+  //--------------------//
+
+  switch (integer_expr) 
+  {
+    case integral_constant_expr1: 
+      statement1;
+    case integral_constant_expr2:
+      statement2;
+      break;
+    case integral_constant_expr3:
+      statement3;
+    case integral_constant_expr4:
+      statement4;
+  }
+
+  statement5;
+
+  when "integer_expr" value is equal to "integral_constant_expr1",
+  program will execute all of those 
+    statement1, 
+    statement2
+  then will go to out of switch statement because of break statement 
+  and statement5 will be executed 
+*/
+
+/*
+  int foo(int);
+  double bar(int);
+
+  int main(void){
+    int ival = foo(123);
+
+    switch (foo(123)){ // VALID
+      // code
+    }
+
+    switch (bar(ival)){ // syntax error
+      // coode
+    }
+    // error: switch quantity not an integer
+  }
+*/
+
+/*
+  #define SIZE 100
+
+  int foo();
+
+  int main(void){
+
+    switch (foo(123))
+    { 
+      case 'A':       // type int, integral constant expression   VALID
+      case 10 + 20:   // type int, constant expression            VALID
+      case SIZE:      // type int, constant expression            VALID
+
+      case "hello":   // type const char*                         NOT VALID
+      case 3.14:      // type double                              NOT VALID
+      case 30:        // case label must be unique (10 + 20 = 30) compile-time
+    }
+  }
+*/
+
+/*
+  int main(void){
+    switch(printf("hello world\n")){
+      // no case label in switch statement is VALID
+    }
+    // output -> hello world
+  }
+*/
+
+/*
+  int main(void){
+    int x = 1;
+
+    switch(x){
+      case 1: printf("1\n");
+      case 2: printf("2\n");
+      case 3:
+    }
+    // gcc  -> https://godbolt.org/z/Gx1fha7ns (NO ERROR)
+    
+    // msvc -> https://godbolt.org/z/51GKE4dTs (syntax error)
+    //  error C2143: syntax error: missing ';' before '}'
+  }
+*/
+
+/*
+  int main(void){
+    int x = 1;
+
+    switch (x){
+      case 1: 
+      case 2:
+      case 3: printf("1 2 3\n");
+      // when the lase case label has a statement VALID
+      // output -> 1 2 3
+    }
+  }
+*/
+
+/*
+  int main(void){
+    
+    for (int i = 1; i < 10; ++i){
+      switch (i){
+        case 1: printf("day = %d, monday\n", i);       break;
+        case 2: printf("day = %d, tuesday\n", i);      break;
+        case 3: printf("day = %d, wednesday\n", i);    break;
+        case 4: printf("day = %d, thursday\n", i);     break;
+        case 5: printf("day = %d, friday\n", i);       break;
+        case 6: printf("day = %d, saturday\n", i);     break;
+        case 7: printf("day = %d, sunday\n", i);       break;
+        default: printf("day = %d, invalid\n", i);   
+      }
+    }
+
+    // output ->
+    //  day = 1, monday
+    //  day = 2, tuesday
+    //  day = 3, wednesday
+    //  day = 4, thursday
+    //  day = 5, friday
+    //  day = 6, saturday
+    //  day = 7, sunday
+    //  day = 8, invalid
+    //  day = 9, invalid
+  }
+*/
+
+/*
+  int main(void){
+    
+    for (int i = 1; i < 10; ++i){
+      switch (i){
+        case 1: printf("day = %d, monday\n", i);       break;
+        case 2: printf("day = %d, tuesday\n", i);      break;
+        case 3: printf("day = %d, wednesday\n", i);    break;
+        default: printf("day = %d, invalid\n", i);     break;
+        case 4: printf("day = %d, thursday\n", i);     break;
+        case 5: printf("day = %d, friday\n", i);       break;
+        case 6: printf("day = %d, saturday\n", i);     break;
+        case 7: printf("day = %d, sunday\n", i);       break;
+      }
+    }
+
+    // default case can be anywhere in switch statement but 
+    // generally used at the end of switch statement
+
+    // output ->
+    //  day = 1, monday
+    //  day = 2, tuesday
+    //  day = 3, wednesday
+    //  day = 4, thursday
+    //  day = 5, friday
+    //  day = 6, saturday
+    //  day = 7, sunday
+    //  day = 8, invalid
+    //  day = 9, invalid
+  }
+*/
+
+/*
+  int get_menu_option(void);
+
+  switch(get_menu_option()){
+    case ADD_RECORD : add_record(); break;
+    case DEL_RECORD : del_record(); break;
+    case UPD_RECORD : upd_record(); break;
+  }
+
+  switch(get_text_font){
+    case TIMES_NEW_ROMAN : set_times_new_roman(); break;
+    case ARIAL : set_arial(); break;
+    case COURIER_NEW : set_courier_new(); break;
+  }
+
+  switch(get_card_suit){
+    case HEARTS : set_hearts(); break;
+    case DIAMONDS : set_diamonds(); break;
+    case CLUBS : set_clubs(); break;
+    case SPADES : set_spades(); break;
+  }
+
+  switch(get_card_face){
+    case ACE : set_ace(); break;
+    case KING : set_king(); break;
+    case QUEEN : set_queen(); break;
+    case JACK : set_jack(); break;
+    case TEN : set_ten(); break;
+    case NINE : set_nine(); break;
+    case EIGHT : set_eight(); break;
+    case SEVEN : set_seven(); break;
+    case SIX : set_six(); break;
+    case FIVE : set_five(); break;
+    case FOUR : set_four(); break;
+    case THREE : set_three(); break;
+    case TWO : set_two(); break;  
+  }
+
+  // generally case values are symbolic constants(macros) 
+  // or enumeration constants
+*/
+
+/*
+  if (x == 5 || x == 7)
+    statement1;
+  else if (x == 9 || x == 13 || x == 17)
+    statement2;
+  else if (x == 19 || x == 23)
+    statement3;
+
+  switch(x){
+    case 5:
+    case 7: statement1; break;
+    case 9:
+    case 13:
+    case 17: statement2; break;
+    case 19:
+    case 23: statement3; break;
+  }
+*/
+
+/*
+  // compiler will generate jump table (switch statement optimization)
+
+  int main(void){
+    int x = 1;
+    switch (x){
+        case 1:     x = 11;   break;
+        case 2:     x = 12;   break;
+        case 3:     x = 13;   break;
+        case 4:     x = 14;   break;
+        case 5:     x = 15;   break;
+        default:    x = 55;   break;
+    }
+  }
+
+  // compiled with x86-64 gcc 14.2 -O0 -std=c11
+  //  main:
+  //    push rbp
+  //    mov rbp, rsp
+  //    mov DWORD PTR [rbp-4], 1         
+  //    cmp DWORD PTR [rbp-4], 5          
+  //    ja .L2                            --> checking default case
+  //    mov eax, DWORD PTR [rbp-4]        --> eax = x
+  //    mov rax, QWORD PTR .L4[0+rax*8]   --> check jump-table using x's value
+  //    jmp rax   
+  //  .L4:      --> jump table
+  //    .quad .L2
+  //    .quad .L8
+  //    .quad .L7
+  //    .quad .L6
+  //    .quad .L5
+  //    .quad .L3
+  //  .L8:
+  //    mov DWORD PTR [rbp-4], 11
+  //    jmp .L9
+  //  .L7:
+  //    mov DWORD PTR [rbp-4], 12
+  //    jmp .L9
+  //  .L6:
+  //    mov DWORD PTR [rbp-4], 13
+  //    jmp .L9
+  //  .L5:
+  //    mov DWORD PTR [rbp-4], 14
+  //    jmp .L9
+  //  .L3:
+  //    mov DWORD PTR [rbp-4], 15
+  //    jmp .L9
+  //  .L2:
+  //    mov DWORD PTR [rbp-4], 55
+  //    nop
+  //  .L9:
+  //    mov eax, 0
+  //    pop rbp
+  //    ret
+*/
+
+/*
+  void print_date(int day, int mon, int year){
+    printf("%02d", day);
+
+    switch(day){
+      case 1: 
+      case 21: 
+      case 31: 
+        printf("st "); break;
+      case 2: 
+      case 22: 
+        printf("nd "); break;
+      case 3: 
+      case 23: 
+        printf("rd "); break;
+      default: 
+        printf("th "); break;
+    }
+
+    switch (mon){
+      case 1:   printf("Jan "); break;
+      case 2:   printf("Feb "); break;
+      case 3:   printf("Mar "); break;
+      case 4:   printf("Apr "); break;
+      case 5:   printf("May "); break;
+      case 6:   printf("Jun "); break;
+      case 7:   printf("Jul "); break;
+      case 8:   printf("Aug "); break;
+      case 9:   printf("Sep "); break;
+      case 10:  printf("Oct "); break;
+      case 11:  printf("Nov "); break;
+      case 12:  printf("Dec "); break;
+    }
+
+    printf("%d\n", year);
+  }
+
+  int main(void){
+    int day = 1, mon = 1, year = 2001;
+    print_date(day, mon, year); // output -> 01st Jan 2001
+
+    day = 2, mon = 2, year = 2002;
+    print_date(day, mon, year); // output -> 02nd Feb 2002
+
+    day = 3, mon = 3, year = 2003;
+    print_date(day, mon, year); // output -> 03rd Mar 2003
+
+    day = 4, mon = 4, year = 2004;
+    print_date(day, mon, year); // output -> 04th Apr 2004
+  }
+*/
+
+/*
+  int foo(void);
+
+  int main(void){
+    const int a = 5;    // not a constant expression
+    const int b = 7;
+
+    switch (foo()){
+      case a:   // syntax error
+      case b:   // syntax error
+        ;
+    }
+    // error : case label does not reduce to an integer constant
+  }
+*/
+
+/*
+  int main(void){
+    int x = 5;
+
+    switch (x)
+      case 4: printf("4\n"); 
+      case 5: printf("5\n");   // syntax error
+      // error: case label not within a switch statement
+
+      // we need compound statement for multiple case labels
+  }
+*/
+
+/*
+  switch (x){
+    case 1: foo();  // fallthrough
+    case 2: bar();  break;
+    case 3: baz();  break;
+    case 4: bom();  break;
+  }
+
+  // if x == 1, foo(), bar() will be executed (by our choice)
+  // if x == 2, bar() will be executed ...
+*/
+
+/*
+*/
+
+int isleap(int);
+
+// 5 9 1987
+int total_day_in_year(int d, int m, int y){
+  int sum = d;
+
+  switch(m - 1){
+    case 11: sum += 30;   // fallthrough
+    case 10: sum += 31;   // fallthrough
+    case 9: sum += 30;    // fallthrough
+    case 8: sum += 31;    // fallthrough
+    case 7: sum += 31;    // fallthrough
+    case 6: sum += 30;    // fallthrough
+    case 5: sum += 31;    // fallthrough
+    case 4: sum += 30;    // fallthrough
+    case 3: sum += 31;    // fallthrough
+    case 2: sum += isleap(y) ? 29 : 28;   // fallthrough
+    case 1: sum += 31;
+  }
+
+  return sum;
+}

@@ -1201,7 +1201,7 @@
   #undef SIZE
   }
 
-  // SIZE macro kind of have scope in this scenario
+  // SIZE macro kind of have scope(pseudo scope) in this scenario
 */
 
 /*
@@ -1219,4 +1219,202 @@
 
   // output -> XXXX seen once
   }
+*/
+
+/*
+                ---------------------------------
+                | predefined symbolic constants |
+                ---------------------------------
+  https://en.cppreference.com/w/c/preprocessor/replace#Predefined_macros
+*/
+
+/*
+  ->Predefined symbolic constants are macros.
+  -> Predefined symbolic constants did not have a define directive
+  but in preprocessing phase they will be replaced with their values.
+  -> No header file needed to include for using these constants.
+*/
+
+/*
+  __LINE__
+  __FILE__
+  __DATE__
+  __TIME__
+  __STDC__
+  -> these macros existed since the C89 standard.
+*/
+
+/*
+  #include <stdio.h>
+
+  int main(void){
+    int x = __LINE__;
+    printf("x = %d\n", x);  // output -> x = 1251
+  }
+
+  // __LINE__ macro will be replaced with the line number where it is
+*/
+
+/*
+  __FILE__
+  __DATE__
+  __TIME__
+  those predefined symbolic constants are string literals
+*/
+
+/*
+  int main(void){
+    printf(__FILE__ "\n");
+    // printf("main.c" "\n");  -> compiler sees
+
+    printf("compile date : %s\n", __DATE__);
+    // output -> compile date : Sep  6 2024
+    printf("compile time : %s\n", __TIME__);
+    // output -> compile time : 11:39:55
+  }
+*/
+
+/*
+  #ifdef __STDC__
+    int main(void){
+      printf("Hello World\n");
+    }
+  #endif
+
+  #ifdef __cplusplus
+    int main(void){
+    printf("Hello Galaxy\n");
+    }
+  #endif
+
+  // output -> Hello World
+*/
+
+/*
+  // __func__ (since C99 standard)
+
+  void foo(void){
+    printf("foo() has been called\n");
+    printf("function name : %s\n", __func__);
+  }
+
+  int main(void){
+    printf("function name : %s\n", __func__);
+    foo();
+    // output ->
+    //  function name : main
+    //  foo() has been called
+    //  function name : foo
+  }
+*/
+
+/*
+                            ----------
+                            | #error |
+                            ----------
+*/
+
+/*
+  int main(void){
+
+  #ifdef __STDC__ 
+  #error "This program should be compiled with C++ compiler"
+  #endif
+
+  // syntax error -> 
+  // error: #error "This program should be compiled with C++ compiler"
+  }
+*/
+
+/*
+  // __STDC_VERSION__ macro (since C95 standard)
+  int main(void){
+
+  #if __STDC_VERSION__ == 199409L
+  #error "This program compiled with C95 compiler"
+  #elif __STDC_VERSION__ == 199901L
+  #error "This program compiled with C99 compiler"
+  #elif __STDC_VERSION__ == 201112L
+  #error "This program compiled with C11 compiler"
+  #elif __STDC_VERSION__ == 201710L
+  #error "This program compiled with C17 compiler"
+  #elif __STDC_VERSION__ == 202311L
+  #error "This program compiled with C23 compiler"
+  #endif
+
+  // output -> #error "This program compiled with C17 compiler"
+  }
+*/
+
+/*
+                            ---------
+                            | #line |
+                            ---------
+*/
+
+/*
+  int main(void){
+  #line 100 "line.c"
+    printf("__LINE__ = %d, __FILE__ = %s\n", __LINE__, __FILE__);
+    // output -> __LINE__ = 100, __FILE__ = line.c
+  }
+*/
+
+/*
+                            -----------
+                            | #pragma |
+                            -----------
+*/
+
+/*
+  People thought that compiler will generate extensions to preprocessor.
+  That is why #pragma directive has been created.
+  Compilers can generate its own #pragma directives.
+
+  #pragma's are compiler specific (implementation-defined)
+*/
+
+/*
+  // compiled with MSVC compiler
+  #pragma warning(disable: 4552)  // no warning will be generated
+
+  int main(void){
+    int x = 5;
+
+    x + 5;  // warning C4552: '+': result of expression not used
+  }
+*/
+
+/*
+  #pragma once      // multiple inclusion guard
+  #pragma pack(1)   // used for alignment
+*/
+
+/*
+  #include <stdio.h>
+
+  #define   SIZE      100
+  #define   AAA(x)    #x
+  #define   BBB(x)    AAA(x)
+
+
+  int main(void){
+    printf(AAA(SIZE) "\n");   // output -> SIZE
+    printf(BBB(SIZE) "\n");   // output -> 100
+  }
+  // !!! will be explained later !!!
+*/
+
+/*
+  #define   printf(x)   printf("%d\n", x)
+  // compile time inifite loop will not happen 
+
+  // when a macro replacement happening, if replacement is same as macro 
+  // it will not be replaced for the second time
+
+  int main(void){
+    printf(4567);   // output -> 4567
+    // printf(4567) will become printf("%d\n", 4567)
+  }
+  // !!! will be explained later !!!
 */

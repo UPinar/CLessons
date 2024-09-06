@@ -59,6 +59,7 @@
   - `do while` statement
   - `for` statement
   - infinite loop idiom(sonsuz döngü)[for]
+  - `switch` statement
 
 ### [Lesson_19_Preprocessor](https://github.com/UPinar/CLessons/tree/master/Lesson_19)
   - `#include`
@@ -70,3 +71,7 @@
   - conditional compiling (koşullu derleme)
   - multiple inclusion guard
   - `#undef`
+  - predefined symbolic constants
+  - `#error`
+  - `#line`
+  - `#pragma`
