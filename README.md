@@ -60,6 +60,8 @@
   - `for` statement
   - infinite loop idiom(sonsuz döngü)[for]
   - `switch` statement
+  - `goto` statement
+  - nested loops
 
 ### [Lesson_19_Preprocessor](https://github.com/UPinar/CLessons/tree/master/Lesson_19)
   - `#include`
@@ -75,3 +77,8 @@
   - `#error`
   - `#line`
   - `#pragma`
+
+### [Lesson_23_RandomNumberGeneration](https://github.com/UPinar/CLessons/tree/master/Lesson_23)
+  - `rand()` function
+  - `srand()` function
+  - randomize idiom

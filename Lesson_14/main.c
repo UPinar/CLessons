@@ -1865,6 +1865,15 @@
     
     // msvc -> https://godbolt.org/z/51GKE4dTs (syntax error)
     //  error C2143: syntax error: missing ';' before '}'
+
+
+    // ; null statement should be used 
+    switch(x){
+      case 1: printf("1\n");
+      case 2: printf("2\n");
+      case 3:
+        ; // null statement
+    }
   }
 */
 
@@ -2154,27 +2163,275 @@
 */
 
 /*
-*/
-
-int isleap(int);
-
-// 5 9 1987
-int total_day_in_year(int d, int m, int y){
-  int sum = d;
-
-  switch(m - 1){
-    case 11: sum += 30;   // fallthrough
-    case 10: sum += 31;   // fallthrough
-    case 9: sum += 30;    // fallthrough
-    case 8: sum += 31;    // fallthrough
-    case 7: sum += 31;    // fallthrough
-    case 6: sum += 30;    // fallthrough
-    case 5: sum += 31;    // fallthrough
-    case 4: sum += 30;    // fallthrough
-    case 3: sum += 31;    // fallthrough
-    case 2: sum += isleap(y) ? 29 : 28;   // fallthrough
-    case 1: sum += 31;
+  int isleap(int x){
+    return x % 4 == 0 && (x % 100 != 0 || x % 400 == 0);
   }
 
-  return sum;
-}
+  // 5 9 1987
+  int total_day_in_year(int d, int m, int y){
+    int sum = d;
+
+    switch(m - 1){
+      case 11: sum += 30;   // fallthrough
+      case 10: sum += 31;   // fallthrough
+      case 9: sum += 30;    // fallthrough
+      case 8: sum += 31;    // fallthrough
+      case 7: sum += 31;    // fallthrough
+      case 6: sum += 30;    // fallthrough
+      case 5: sum += 31;    // fallthrough
+      case 4: sum += 30;    // fallthrough
+      case 3: sum += 31;    // fallthrough
+      case 2: sum += isleap(y) ? 29 : 28;   // fallthrough
+      case 1: sum += 31;
+    }
+
+    return sum;
+  }
+
+  int main(void){
+    int d = 5, m = 9, y = 1987;
+    printf("%dth day of the year\n", total_day_in_year(d, m, y));
+    // output -> 248th day of the year
+  }
+*/
+
+/*
+                        ------------------
+                        | goto statement |
+                        ------------------
+*/
+
+/*
+  long jump (uzak sıçrama)
+    function flow will jump to another function
+
+  near(local) jump (yerel/yakın sıçrama)
+    function flow will jump to another location in the same function
+    same stack frame
+
+  labels are in function scope
+*/
+
+/*
+  int main(void){
+    // code
+    goto hello; // VALID
+
+  hello:
+
+    // code 
+    goto hello; 
+  }
+  // hello(label) identifier is in function scope
+  // inside main function hello label is valid in everywhere
+*/
+
+/*
+  int main(void){
+  hello:  // hello label is in function scope
+    ;
+
+    int hello = 1;  // hello variable is in block scope
+  }
+  // VALID CODE
+*/
+
+/*
+  while(expr_1){
+    if (expr_2)
+      goto out;
+
+    statement1;
+    statement2;
+    statement3;
+  out:
+    ;
+  }
+
+  while(expr_1){
+    if (expr_2)
+      continue;
+
+    statement1;
+    statement2;
+    statement3;
+  }
+
+  // Both this code blocks are same
+*/
+
+/*
+  // goto will exit all of the loops in this scenario
+
+  loop(){
+
+    loop(){
+
+      loop(){
+
+        if (c_exp)
+          goto out;
+      }
+    }
+  }
+
+  out:
+    statement_x;
+*/
+
+/*
+  // goto will both exit from switch and the for loop in this scenario
+
+  for(;;){
+    statement;
+
+    switch(int_ex){
+      case 1: statement; break;
+      case 2: statement; break;
+      case 3: 
+        statement;
+        goto out;
+    }
+  }
+
+  out:
+    statement_x;
+*/
+
+/*
+  // TODO : THIS WILL BE IMPLEMENTED LATER IN THIS COURSE
+  // goto will also used in ERROR HANDLING
+  // goto is used for giving back resources and memory
+*/
+
+/*
+                        ----------------
+                        | nested loops |
+                        ----------------
+*/
+
+/*
+  loop(){
+    loop(){
+      loop(){
+        statement;
+      }
+    }
+  }
+*/
+
+/*
+  int main(void){
+    for (int i = 0; i < 5; ++i){
+      for (int j = 0; j < 10; ++j){
+        printf("(%d %d) ", i, j);
+      }
+      printf("\n");
+    }
+  }
+  // output ->
+  //  (0 0) (0 1) (0 2) (0 3) (0 4) (0 5) (0 6) (0 7) (0 8) (0 9)
+  //  (1 0) (1 1) (1 2) (1 3) (1 4) (1 5) (1 6) (1 7) (1 8) (1 9)
+  //  (2 0) (2 1) (2 2) (2 3) (2 4) (2 5) (2 6) (2 7) (2 8) (2 9)
+  //  (3 0) (3 1) (3 2) (3 3) (3 4) (3 5) (3 6) (3 7) (3 8) (3 9)
+  //  (4 0) (4 1) (4 2) (4 3) (4 4) (4 5) (4 6) (4 7) (4 8) (4 9)
+*/
+
+/*
+  int main(void){
+    int i, k;
+    for (i = 0; i < 5; ++i){
+      for (k = 0; k < 10; ++k){
+      }
+    }
+    printf("(%d %d)\n", i, k);  // output -> (5 10)
+  }
+*/
+
+/*
+  int main(void){
+    int i, k;
+    for (i = 0; i < 5; ++i)
+      for (k = 0; k < 10; ++k); // there is a null statement here
+        printf("(%d %d)\n", i, k);  // output -> (5 10)
+  }
+*/
+
+/*
+  int main(void){
+    int count = 0;
+    for (int i = 0; i < 10; ++i){
+      for (int j = 0; j < 20; ++j){
+        for (int k = 0; k < 7; ++k){
+          ++count;
+        }
+      }
+    }
+    printf("count = %d\n", count);  // output -> count = 1400
+    // 10 * 20 * 7 = 1400
+  }
+*/
+
+/*
+  int main(void){
+    // <--- armstrong number_1 --->
+    for (int i = 100; i < 1000; ++i){
+      int d1 = i / 100;
+      int d2 = i / 10 % 10;
+      int d3 = i % 10;
+
+      if (d1 * d1 * d1 + d2 * d2 * d2 + d3 * d3 * d3 == i)
+        printf("%d ", i);
+    }
+    // output -> 153 370 371 407
+
+    printf("\n");
+
+    // <--- armstrong number_2 --->
+    int ival = 100;
+    for (int i = 1; i <= 9; ++i){
+      for (int j = 0; j <= 9; ++j){
+        for (int k = 0; k <= 9; ++k){
+          if (i * i * i + j * j * j + k * k * k == ival){
+            printf("%d ", ival);
+          }
+            ++ival;
+        }
+      }
+    }
+    // output -> 153 370 371 407
+  }
+*/
+
+/*
+  // if n = 5
+  //  *
+  //  **
+  //  ***
+  //  ****
+  //  *****
+
+  void print_start(int n)
+  {
+    while (n--)
+      putchar('*');
+    printf("\n");
+  }
+
+  int main(void){
+    int n = 5;
+
+    // <--- WAY 1 --->
+    for (int i = 1; i <= n; ++i){
+      for (int j = 0; j < i; ++j){
+        putchar('*');
+      }
+      printf("\n");
+    }
+
+    // <--- WAY 2 --->
+    for (int i = 1; i <= n; ++i)
+      print_start(i);
+    // increasing readability with using function for inner loop
+  } 
+*/
