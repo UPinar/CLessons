@@ -211,3 +211,106 @@
     // output -> IZSAQUZB VALVBDR WRYKA GTADYSQXK JMMXA
   }
 */
+
+/*
+  // heads possibility in heads or tails simulation 
+
+  #include <stdlib.h>
+
+  #define     NTOSS      100000000 // 100'000'000
+  #define     HEADS      1
+
+  int toss(void){
+    return rand() % 2;
+  }
+
+  int main(void){
+    int heads_count = 0;
+
+    for(int i = 0; i < NTOSS; ++i){
+      if (toss() == HEADS)
+        ++heads_count;
+    }
+    printf("Heads possibility = %f\n", (double)heads_count / NTOSS);
+    // output -> Heads possibility = 0.500000
+  }
+*/
+
+/*
+  // craps game simulation
+  #include <stdlib.h>
+
+  #define    NGAMES    10000000 // 10'000'000
+
+  int roll_dices(void);
+  int game_phase1(int sum);
+  int game_phase2(int sum);
+
+  int main(void){
+    int win_count = 0;
+    int sum = 0;
+    for(int i = 0; i < NGAMES; ++i){
+      sum = roll_dices();
+      win_count += game_phase1(sum);
+    }
+
+    printf("Winning possibility = %f\n", (double)win_count / NGAMES);
+    // output -> Winning possibility = 0.492299
+  }
+
+  int roll_dices(void){
+    int dice1 = rand() % 6 + 1;   // bad practice for professional applications
+    int dice2 = rand() % 6 + 1;   // bad practice for professional applications
+    return dice1 + dice2;
+  }
+ 
+  int game_phase1(int sum){
+    switch (sum)
+    {
+    case 7:
+    case 11:
+      return 1;
+    case 2:
+    case 3:
+    case 12:
+      return 0;
+    default:
+      return game_phase2(sum);
+    }
+  }
+
+  int game_phase2(int old_sum){
+    int sum = 0;
+    for(;;){
+      sum = roll_dices();
+
+      if (sum == old_sum)
+        return 1;
+      if (sum == 7)
+        return 0;
+    }
+  }
+*/
+
+/*
+  // <--- check circle_dots.png ---> 
+  #include <stdlib.h>
+
+  #define   NPOINTS   10000000  // 10'000'000
+
+  int main(void){
+    int inside_circle_count = 0;
+
+    for(int i = 0; i < NPOINTS; ++i){
+      double p_x = (double)rand() / RAND_MAX;
+      double p_y = (double)rand() / RAND_MAX;
+
+
+      if (p_x * p_x + p_y * p_y <= 1.0)
+        ++inside_circle_count;
+    }
+
+    printf("PI = %.12f\n", 4.0 * inside_circle_count / NPOINTS);
+    // output -> PI = 3.140932400000 
+  }
+*/

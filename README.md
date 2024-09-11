@@ -1,6 +1,6 @@
 # C Lessons
 
-### [Lesson_1_CLanguage](https://github.com/UPinar/CLessons/tree/master/Lesson_1) 
+### [Lesson_1 C Language](https://github.com/UPinar/CLessons/tree/master/Lesson_1) 
   - C language characteristics
   - C Standarts
   - C program
@@ -12,14 +12,14 @@
   - seperate compilation model
   - external reference
 
-### [Lesson_4_BasicTypes](https://github.com/UPinar/CLessons/tree/master/Lesson_4)
+### [Lesson_4 Basic Types](https://github.com/UPinar/CLessons/tree/master/Lesson_4)
   - basic types of C language
   - declaration(bildirim) and definition(tanimlama)
   - storage duration
   - scope (kapsam - faaliyet alani)
   - naming - naming conventions
 
-### [Lesson_6_Functions](https://github.com/UPinar/CLessons/tree/master/Lesson_6)
+### [Lesson_6 Functions](https://github.com/UPinar/CLessons/tree/master/Lesson_6)
   - function definition syntax
   - return statement
   - function call
@@ -27,13 +27,13 @@
   - ctype <ctype.h> module
   - function prototype(s) | function declaration
 
-### [Lesson_9_InputOutput](https://github.com/UPinar/CLessons/tree/master/Lesson_9)
+### [Lesson_9 Input Output](https://github.com/UPinar/CLessons/tree/master/Lesson_9)
   - standart C library
   - call(pass) by value, call(pass) by reference
   - constants (sabitler) 
   - Input & Output Operations
 
-### [Lesson_11_Operators](https://github.com/UPinar/CLessons/tree/master/Lesson_11)
+### [Lesson_11 Operators](https://github.com/UPinar/CLessons/tree/master/Lesson_11)
   - operator priority, precedence (operatör önceliği)
   - operator associativity (öncelik yönü)
   - arithmetic operators
@@ -47,7 +47,7 @@
   - comma operator (virgül operatörü)
   - ternary operator (koşul operatörü)
 
-### [Lesson_14_ControlStatements](https://github.com/UPinar/CLessons/tree/master/Lesson_14)
+### [Lesson_14 ControlStatements](https://github.com/UPinar/CLessons/tree/master/Lesson_14)
   - `if` statement
   - `while` statement
   - n kere dönen döngü idiyomu (loop idiom that loops n times)
@@ -63,7 +63,7 @@
   - `goto` statement
   - nested loops
 
-### [Lesson_19_Preprocessor](https://github.com/UPinar/CLessons/tree/master/Lesson_19)
+### [Lesson_19 Preprocessor](https://github.com/UPinar/CLessons/tree/master/Lesson_19)
   - `#include`
   - `#define`
   - object-like macros
@@ -78,7 +78,13 @@
   - `#line`
   - `#pragma`
 
-### [Lesson_23_RandomNumberGeneration](https://github.com/UPinar/CLessons/tree/master/Lesson_23)
+### [Lesson_23 Random Number Generation](https://github.com/UPinar/CLessons/tree/master/Lesson_23)
   - `rand()` function
   - `srand()` function
   - randomize idiom
+
+### [Lesson_24 Type Conversions](https://github.com/UPinar/CLessons/tree/master/Lesson_24)
+  - assignment type conversions (implicit)
+  - arithmetic type conversions (implicit)
+  - type-cast operator
+
