@@ -1,6 +1,4 @@
-<p align="center">
-  <h1>C Lessons</h1>
-</p>
+# [C Lessons]
 
 ### [Lesson_1 C Language](https://github.com/UPinar/CLessons/tree/master/Lesson_1) 
   - C language characteristics
