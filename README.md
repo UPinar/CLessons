@@ -1,5 +1,5 @@
 <p align="center">
-  # C Lessons
+  <h1>C Lessons</h1>
 </p>
 
 ### [Lesson_1 C Language](https://github.com/UPinar/CLessons/tree/master/Lesson_1) 
