@@ -1,4 +1,6 @@
-# C Lessons
+<p align="center">
+  # C Lessons
+</p>
 
 ### [Lesson_1 C Language](https://github.com/UPinar/CLessons/tree/master/Lesson_1) 
   - C language characteristics
@@ -88,3 +90,4 @@
   - arithmetic type conversions (implicit)
   - type-cast operator
 
+### [Lesson_25 Arrays](https://github.com/UPinar/CLessons/tree/master/Lesson_25)
