@@ -89,3 +89,8 @@
   - type-cast operator
 
 ### [Lesson_25 Arrays](https://github.com/UPinar/CLessons/tree/master/Lesson_25)
+  - information about data structures, algorithms, big O notation
+  - arrays
+  - array decay (array to pointer conversion)
+  - arrays initialization
+  - designated initializer(C99)
