@@ -1,4 +1,4 @@
-# [C Lessons]
+# C Lessons
 
 ### [Lesson_1 C Language](https://github.com/UPinar/CLessons/tree/master/Lesson_1) 
   - C language characteristics
