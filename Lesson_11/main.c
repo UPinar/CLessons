@@ -1758,4 +1758,251 @@
 */
 
 /*
+                    -------------------
+                    | sizeof operator |
+                    -------------------
+*/
+
+/*
+  sizeof is a "keyword" 
+  sizeof is a "compile time operator"
+  the expression it is generating is a "constant expression"
+
+  it calculates the storage need of a type
+  bir türün storage ihtiyacını hesaplıyor
+
+  the value it generates is an unsigned value
+    size_t is a type alias, not a type 
+      typedef unsigned int size_t;
+      typedef unsigned long size_t;
+    and which type's alias is that size_t is compiler dependent
+    size_t's underlying type is implementation defined
+*/
+
+/*
+  int main(void){
+    // %zu is a format specifier for size_t
+
+    printf("sizeof(_Bool) = %zu\n", sizeof(_Bool));
+    printf("sizeof(char) = %zu\n", sizeof(char));  
+    printf("sizeof(short) = %zu\n", sizeof(short));
+    printf("sizeof(int) = %zu\n", sizeof(int));
+    printf("sizeof(long) = %zu\n", sizeof(long));
+    printf("sizeof(long long) = %zu\n", sizeof(long long));
+    printf("sizeof(float) = %zu\n", sizeof(float));
+    printf("sizeof(double) = %zu\n", sizeof(double));
+    printf("sizeof(long double) = %zu\n", sizeof(long double));
+
+    // () paranthesis is necessary when sizeof operator's operand is type
+
+    // output ->
+    //  sizeof(_Bool) = 1
+    //  sizeof(char) = 1
+    //  sizeof(short) = 2
+    //  sizeof(int) = 4
+    //  sizeof(long) = 4
+    //  sizeof(long long) = 8
+    //  sizeof(float) = 4
+    //  sizeof(double) = 8
+    //  sizeof(long double) = 16
+  }
+*/
+
+/*
+  int main(void){
+    int x = 20;
+
+    int ar[x];  // syntax error
+    // x is not a constant expression
+
+    int ar[sizeof(double)];   // valid
+    // sizeof(double) is a constant expression
+  }
+*/
+
+/*
+  // sizeof operators operand can be any expression 
+  // except void type expression
+
+  // in this case sizeof operator will generate size of the expression's type
+
+  int main(void){
+    double dval = 4.5;
+
+    printf("%zu\n", sizeof dval);   // output -> 8
+    // if an expression used as sizeof operator's operand
+    // () paranthesis is not necessary
+    // "sizeof dval" is an expression by itself
+  }
+*/
+
+/*
+  int main(void){
+    double dval = 4.5;
+    printf("%zu\n", sizeof dval + 2);   // output -> 10
+    // sizeof operator has higher precedence than + operator
+
+    printf("%zu\n", sizeof(dval + 2));   // output -> 8
+  }
+*/
+
+
+/*
+  int main(void){
+    char c1 = 5;
+    char c2 = 5;
+
+    printf("%zu\n", sizeof(c1 + c2));   // output -> 4
+    // char + char = int + int -> int (integral promotion)
+
+    printf("%zu\n", sizeof 'A');   // output -> 4
+    // character constant's type is int in C language
+    // character constant's type is char in C++ language
+  }
+*/
+
+/*
+  int main(void){
+    printf("%zu\n", sizeof(int[10]));   // output -> 40
+    // int[10] is a type
+
+    printf("%zu\n", sizeof(double[20]));   // output -> 160
+  }
+*/
+
+/*
+  int main(void){
+    int a[100];
+
+    printf("%zu\n", sizeof a);   // output -> 400
+    // if an array to pointer conversion happens 
+    // a will converted to int* type
+    // and the output will be 4(x86) or 8(x64) 
+
+    // !!!!!! ATTENTION !!!!!!
+    // when sizeof operator's operand is an array idenfier
+    // array decay does not happen
+    // sizeof(a) is same with sizeof(int[100])
+    // !!!!!! ATTENTION !!!!!!
+  }
+*/
+
+/*
+  int main(void){
+    int a[100];
+    char b[40];
+    short c[20];
+    double d[10];
+
+    printf("%zu\n", sizeof(a) / sizeof(a[0]));    // output -> 100
+    printf("%zu\n", sizeof(b) / sizeof(b[0]));    // output -> 40
+    printf("%zu\n", sizeof(c) / sizeof(c[0]));    // output -> 20
+    printf("%zu\n", sizeof(d) / sizeof(d[0]));    // output -> 10
+  }
+*/
+
+/*
+  #define   asize(x)    (sizeof(x) / sizeof(x[0]))
+
+  int main(void){
+    int a[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+    for (int i = 0; i < asize(a); ++i){
+      printf("%d ", a[i]);
+    }
+    // output -> 1 2 3 4 5 6 7 8 9 10
+  }
+*/
+
+/*
+  #define   asize(x)    (sizeof(x) / sizeof(x[0]))
+
+  int main(void){
+    int a[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+    int b[2 * asize(a)];  // VALID
+  }
+*/
+
+/*
+  int main(void){
+    int x = 99;
+    unsigned int y = sizeof(x++);
+
+    printf("y = %u\n", y);  // output -> y = 4
+    printf("x = %d\n", x);  // output -> x = 99
+
+    // no code will generated for an expression that is operand of 
+    // sizeof operator 
+    // no side effect will be applied to the operand of sizeof operator
+
+    // unevaluated context(işlem kodu üretilmeyen bağlam)
+    // this term is being used in C++, but can be applied in this case
+  } 
+*/
+
+/*
+  int foo(void){
+    printf("foo has been called\n");
+    return 1;
+  }
+
+  double bar(void){
+    printf("bar has been called\n");
+    return 1.3;
+  }
+
+  int main(void){
+    unsigned int x = sizeof(foo() + bar());
+    printf("x = %u\n", x);  
+    // output -> x = 8
+    // "foo() + bar()" expression's type is : int + double -> double
+    
+
+    unsigned int y = sizeof foo() + bar();
+    printf("y = %u\n", y);
+    // output -> 
+    // bar has been called
+    // y = 5
+  }
+*/
+
+/*
+  int main(void){
+    int a[10] = { 0 };
+    unsigned x = sizeof(a[20]); // VALID 
+    // no code will be generated for a[20] expression
+    // so no undefined behaviour, valid code
+
+    printf("x = %u\n", x);  // output -> x = 4
+  }
+*/
+
+/*
+  int main(void){
+    int x = 6;
+    int y = 0;
+
+    unsigned k = sizeof(x / y); // VALID
+    // no undefined behaviour
+
+    printf("k = %u\n", k);  // output -> k = 4
+  }
+*/
+
+/*
+  #define  asize(x)    (sizeof(x) / sizeof(x[0]))
+
+  int main(void){
+    int a[5] = {1, 2, 3, 4, 5};
+
+    for (int i = -2; i < asize(a) - 2; ++i)
+      printf("%d ", a[i + 2]);
+
+    // output -> empty line
+
+    // asize(a)'s type is unsinged int 
+    // "i < asize(a) - 2 " -> "int < unsigned " -> "unsigned < unsigned" 
+    // "i < asize(a) - 2" expression's type is unsigned int
+  }
 */
