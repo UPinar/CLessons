@@ -417,3 +417,544 @@
     //  a[9] = 0
   }
 */
+
+/*
+  #include "utility.h"
+
+  #define SIZE 50
+
+  int main(void){
+    int a[SIZE];
+
+    randomize();
+    set_array_random(a, SIZE);
+    print_array(a, SIZE);
+  }  
+  // output ->
+  //   30  99 374 755 285 119 467 875 278 943
+  //  903 813 451 248 265 424 621 177 179 137
+  //   78 153 963 684   1 719 521   3 269 593
+  //  562 349 862 697 565 520 412 781 804 226
+  //  768 654 181 340 980 100 241 313 746 623
+  //  ---------------------------------------
+*/
+
+/*
+  // write a code that prints sum 
+
+  #include "utility.h"
+
+  #define SIZE 50
+
+  int main(void){
+    int a[SIZE];
+
+    randomize();
+    set_array_random(a, SIZE);
+
+    int sum = 0;
+    for (int i = 0; i < SIZE; ++i)
+      sum += a[i];
+
+    printf("sum = %d\n", sum);
+    // output -> sum = 27178 (can be change because of randomize)
+
+    // if sum's value will be greater than int's max value
+    // it will cause undefined behavior(UB) [Tanımsız Davranış]
+
+    // O(n) complexity
+  }
+*/
+
+/*
+  // write a code that prints mean 
+
+  #include "utility.h"
+
+  #define SIZE 50
+
+  int main(void){
+    int a[SIZE];
+
+    randomize();
+    set_array_random(a, SIZE);
+
+    int sum = 0;
+    for (int i = 0; i < SIZE; ++i)
+      sum += a[i];
+
+    printf("mean = %f\n", (double)sum / SIZE);
+    // mean = 551.240000
+  }
+*/
+
+/*
+  // write a code that prints standard deviation
+
+  #include "utility.h"
+  #include <math.h>
+
+  #define SIZE 50
+
+  int main(void){
+    int a[SIZE];
+    randomize();
+    set_array_random(a, SIZE);
+
+    int sum = 0;
+
+    for (int i = 0; i < SIZE; ++i)
+      sum += a[i];
+
+    double mean = (double)sum / SIZE;
+    double sum_square = 0.;
+
+    for (int i = 0; i < SIZE; ++i)
+      sum_square += (a[i] - mean) * (a[i] - mean);
+
+    double std_dev = sqrt(sum_square / SIZE);
+    printf("standart deviation = %f\n", std_dev);
+    // output -> standart deviation = 263.529259
+
+    // O(n * 2) -> O(n) complexity
+  }
+*/
+
+/*
+  // mean of the odd elements in an array
+
+  #include "utility.h"
+
+  #define SIZE 50
+
+  int main(void){
+    int a[SIZE];
+    randomize();
+    set_array_random(a, SIZE);
+
+    int sum_odd = 0;
+    int count_odd = 0;
+
+    for (int i = 0; i < SIZE; ++i){
+      if (a[i] % 2 != 0){
+        sum_odd += a[i];
+        ++count_odd;
+      }
+    }
+
+    // printf("mean of the odd elements = %f\n", (double)sum_odd / count_odd);
+
+    // if there is no odd element in the array
+    // if count_odd will be 0, it was divided by 0
+    // it will cause undefined behavior(UB) [Tanımsız Davranış]
+
+
+    if (count_odd)
+      printf("mean of the odd elements = %f\n", (double)sum_odd / count_odd);
+    else
+      printf("there is no odd element in the array\n");
+
+    // output -> mean of the odd elements = 470.692308
+    // O(n) complexity
+  }
+*/
+
+/*
+  // max_element and its index in an array
+
+  #include "utility.h"
+
+  #define SIZE 20
+
+  int main(void){
+    int a[SIZE];
+    randomize();
+    set_array_random(a, SIZE);
+    print_array(a, SIZE);
+
+    int max = a[0];
+    int max_index = 0;
+
+    for (int i = 1; i < SIZE; ++i){
+      if (a[i] > max){
+        max = a[i];
+        max_index = i;
+      }
+    }
+
+    printf("max element = %d max elements index = %d\n", max, max_index);
+    // output ->
+    //  156 171 258 442 164 680 195 753 694 714
+    //  197 197 227 138 501 369 328 933 705 630
+    //  ---------------------------------------
+    //  max element = 933 max elements index = 17
+  }
+*/
+
+/*
+  // minmax_element of an array
+
+  #include "utility.h"
+
+  #define SIZE 20
+
+  int main(void){
+    int a[SIZE];
+    randomize();
+    set_array_random(a, SIZE);
+    print_array(a, SIZE);
+
+    int min = a[0];
+    int max = a[0];
+
+
+    for (int i = 1; i < SIZE; ++i){
+      if (a[i] > max)
+        max = a[i];
+      else if (a[i] < min)
+        min = a[i];
+    }
+
+    printf("min element = %d\n", min);
+    printf("max element = %d\n", max);
+    // output ->
+    //  554 757 231 815 590 221 466  74 492 314
+    //  152 571 426 174 200 696 323 586 445 824
+    //  ---------------------------------------
+    //  min element = 74
+    //  max element = 824
+  }
+*/
+
+/*
+  // max and the runner-up element of an array
+
+  #include "utility.h"
+
+  #define SIZE 30
+
+  int main(void){
+    int a[SIZE];
+
+    randomize();
+    set_array_random(a, SIZE);
+    print_array(a, SIZE);
+
+    int max = a[0];
+    int runner_up = a[1];
+
+    if (a[0] < a[1]){
+      max = a[1];
+      runner_up = a[0];
+    }
+
+    for (int i = 2; i < SIZE; ++i){
+      if (a[i] > max){
+        runner_up = max;
+        max = a[i];
+      }
+      else if (a[i] > runner_up)
+        runner_up = a[i];
+    }
+
+    printf("max element = %d\n", max);
+    printf("runner-up element = %d\n", runner_up);
+    // output ->
+    //   50 559 790 764  73 423 177 870 160 547
+    //  947 977 719 983 131 686 732 194 947 451
+    //  61 786  80 448 693 473 527 466  28 231
+    //  ---------------------------------------
+    //  max element = 983
+    //  runner-up element = 977
+  }
+*/
+
+
+/*
+  // HOMEWORK
+  // Write a code that prints unique elements in an array
+  // complexity O(n)
+
+  #include "utility.h"
+  #include <stdlib.h>
+  #include <string.h>
+
+  #define SIZE 1000
+
+  int main(void){
+    int arr[SIZE];
+
+    randomize();
+
+    for (int i = 0; i < SIZE; ++i){
+      arr[i] = rand() % 500;
+    }
+
+    int uniqueArr[SIZE];
+    int notUniqueArr[SIZE];
+
+    memset(uniqueArr, -1, SIZE * sizeof(int));
+    memset(notUniqueArr, -1, SIZE * sizeof(int));
+
+    unsigned int flag_unique = 0;
+    int element; 
+
+    for (int i = 0; i < SIZE; ++i){
+      flag_unique = 0;
+      element = arr[i];
+
+      // element is not unique and already inside notUniqueArr 
+      // flag_unique = 1
+      for (int j = 0; j < SIZE; ++j){
+        if (notUniqueArr[j] == -1) 
+          break;
+        else if (notUniqueArr[j] == element){
+          flag_unique = 1;  
+          break;
+        }
+      }
+
+      // element is not unique and exists inside uniqueArr
+      // flag_unique = 2;
+      for (int j = 0; j < SIZE; ++j){
+        if (uniqueArr[j] != -1 && uniqueArr[j] == element){
+          flag_unique = 2;  
+          break;
+        }
+      }
+
+      switch (flag_unique)
+      {
+      case 0:
+        for (int k = 0; k < SIZE; ++k){
+          if (uniqueArr[k] == -1){
+            uniqueArr[k] = element;
+            break;
+          }
+        }
+        break;
+      case 1:
+        break;
+      case 2:
+        for (int k = 0; k < SIZE; ++k){
+          if (uniqueArr[k] == element){
+            uniqueArr[k] = -1;
+            break;
+          }
+        }
+        for (int k = 0; k < SIZE; ++k){
+          if (notUniqueArr[k] == -1){
+            notUniqueArr[k] = element;
+            break;
+          }
+        }
+        break;
+      }
+    }
+
+    // print unique values 
+    for (int i = 0; i < SIZE; ++i){
+      if (uniqueArr[i] != -1)
+        printf("%d ", uniqueArr[i]);
+    }
+  }
+*/
+
+/*
+  // searching an element in an array
+
+  #include "utility.h"
+  #define SIZE 20
+
+  // complexity of linear search agorithm is O(n)
+  void linear_search(const int* pa, int key){
+    int i;
+    for (i = 0; i < SIZE && pa[i] != key; ++i)
+      ; // null statement
+
+    if (i < SIZE)
+      printf("found, index = %d\n", i);
+    else
+      printf("not found\n", key);
+  }
+
+  int main(void){
+    int a[SIZE];
+    set_array_random(a, SIZE);
+    print_array(a, SIZE);
+    // output ->
+    //   41 467 334 500 169 724 478 358 962 464
+    //  705 145 281 827 961 491 995 942 827 436
+    //  --------------------------------------- 
+
+    int key = 334;
+    linear_search(a, key);
+    // output -> found, index = 2
+
+    int key_2 = 100;
+    linear_search(a, key_2);
+    // output -> key = 100 not found
+
+    int key_3 = 436;
+    linear_search(a, key_3);
+    // output -> found, index = 19
+  }
+*/
+
+/*
+  #include "utility.h"
+  #include <stdlib.h>
+
+  #define URAND_MAX  20
+
+  // when this function is called, it will generate [0 - URAND_MAX) 
+  // unique rand
+  // this function can only be generated URAND_MAX unique random numbers
+  // if there is not any unique number, it will return -1
+  int urand(void){
+    static _Bool flagsArr[URAND_MAX];
+    static int count = 0;
+
+    if (count == URAND_MAX)
+      return -1;
+
+    int elem;
+
+    //// <---- WAY 1 --->
+    // for(;;){
+    //   elem = rand() % URAND_MAX;
+    //   if (flagsArr[elem] == 0)
+    //     break;
+    // }
+
+    //// <---- WAY 2 --->
+    while (flagsArr[elem = rand() % URAND_MAX])
+      ;
+
+    flagsArr[elem] = 1;
+    ++count;
+    return elem;
+  }
+
+  int main(void){
+    randomize();
+
+    for (int i = 0; i < URAND_MAX; ++i)
+      printf("%d ", urand());
+
+    printf("%d", urand());
+
+    // output -> 14 1 9 2 8 7 10 17 13 0 15 4 5 3 18 6 16 12 11 19 -1
+  }
+*/
+
+/*
+  // reverse algorithm
+
+  #include "utility.h"
+
+  #define SIZE  20
+
+  int main(void){
+    int a[SIZE];
+    randomize();
+    set_array_random(a, SIZE);
+    print_array(a, SIZE);
+    // output ->
+    //  196 465  79 466 368 678 792 276 690 736
+    //  597  39 629 522 783  22   9 999 831 116
+
+    for (int i = 0; i < SIZE / 2; ++i){
+      int temp = a[i];
+      a[i] = a[SIZE - 1 - i];
+      a[SIZE - 1 - i] = temp;
+    }
+
+    print_array(a, SIZE);
+    // output ->
+    //  116 831 999   9  22 783 522 629  39 597
+    //  736 690 276 792 678 368 466  79 465 196
+  }
+*/
+
+/*
+  // output should be
+  // 4 9 8 13 19 7 18 7 9 13
+  // ****
+  // ********* 
+  // ******** 
+  // *************
+  // ******************* 
+  // *******
+  // **************** 
+  // ******* 
+  // ********* 
+  // ************* 
+
+  #include "utility.h"
+  #include <stdlib.h>
+
+  #define   SIZE  10
+
+  int main(void){
+    int a[SIZE];
+    randomize();
+
+    for (int i = 0; i < SIZE; ++i){
+      a[i] = rand() % 20 + 1;
+      printf("%d ", a[i]);
+    }
+    printf("\n");
+
+    // <---- WAY 1 --->
+    // for (int i = 0; i < SIZE; ++i){
+    //   for (int j = 0; j < a[i]; ++j)
+    //     putchar('*');
+    //   putchar('\n');
+    // }
+
+    // <---- WAY 2 ---> 
+    // (if there is no problem with changing array element's values)
+
+    for (int i = 0; i < SIZE; ++i){
+      while(a[i]--)
+        putchar('*');
+      putchar('\n');
+    }
+  }
+*/
+
+/*
+  // HOMEWORK <---- check homework_2.png ---> 
+  #include "utility.h"
+
+  #define   SIZE  20
+
+  int main(void){
+    int a[SIZE] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+                  11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
+
+    print_array(a, SIZE);
+
+    // for (int i = 0; i < SIZE; ++i){
+    //   a[i] = rand() % 20 + 1;   
+
+    unsigned int max_elem = 20;
+
+    while (max_elem--)
+    {
+      for (int i = 0; i < SIZE; ++i){
+        if (a[i] > max_elem){
+          putchar('*');
+        }
+        else
+          putchar(' ');
+      }
+
+      if (max_elem)
+        putchar('\n');
+    }
+  }
+*/
+
+

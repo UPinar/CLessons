@@ -46,6 +46,7 @@
   - sequence point (yan etki noktası)
   - comma operator (virgül operatörü)
   - ternary operator (koşul operatörü)
+  - sizeof operator
 
 ### [Lesson_14 ControlStatements](https://github.com/UPinar/CLessons/tree/master/Lesson_14)
   - `if` statement
