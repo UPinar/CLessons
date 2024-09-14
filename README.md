@@ -1,6 +1,4 @@
-<p align="center">
-  <h1>C Lessons</h1>
-</p>
+# C Lessons
 
 ### [Lesson_1 C Language](https://github.com/UPinar/CLessons/tree/master/Lesson_1) 
   - C language characteristics
@@ -95,4 +93,8 @@
   - arrays
   - array decay (array to pointer conversion)
   - arrays initialization
+<<<<<<< HEAD
   - designated initializer(C99)
+=======
+  - designated initializer(C99)
+>>>>>>> refs/remotes/origin/master
