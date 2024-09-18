@@ -95,3 +95,10 @@
   - array decay (array to pointer conversion)
   - arrays initialization
   - designated initializer(C99)
+  - sorting algorithms 
+  - bubbble sort
+  - merge algorithm 
+  - binary search
+
+### [Lesson_27 String](https://github.com/UPinar/CLessons/tree/master/Lesson_27)
+  
