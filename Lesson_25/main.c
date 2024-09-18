@@ -968,25 +968,69 @@
   // 526 523  45 427 514  18  42 323 317 982 (whole array also subsequence)
   // 526 523 514 -> this is not a subsequence
 
-
   // minimum 1 negative number is guaranteed in the array
+*/
 
+/*
   #include "nutility.h"
   #include <stdlib.h>
+  #include <limits.h>
 
   #define   SIZE  10
 
-  int max_subsequence_sum(const int* pa, int size){
+  int set_sum_max(int* sum_max, int a, int b, int c){
+    int sum_total = a + b + c;
 
+    if (*sum_max < sum_total)
+      *sum_max = sum_total;
+  }
+
+  int max_subsequence_sum(const int* pa, int size){
+    int sum_first = 0;
+    int sum_second = 0;
+    int negative_val = 0;
+    int sum_max = INT_MIN;
+    
+    int is_first_negative_appeared = 0;
+
+    for (int i = 0; i < size; ++i){
+      if (is_first_negative_appeared)
+      {
+        if (pa[i] < 0){
+          set_sum_max(&sum_max, sum_first, sum_second, negative_val);
+
+          sum_first = sum_second;
+          sum_second = 0;
+          negative_val = pa[i];
+        }
+        else{
+          sum_second += pa[i];
+        } 
+      }
+      else {
+        if (pa[i] < 0){  
+          negative_val = pa[i];
+          is_first_negative_appeared = 1;
+        }
+        else
+          sum_first += pa[i];
+      }
+
+      // check if it is the last element
+    	if (i == SIZE - 1)
+        set_sum_max(&sum_max, sum_first, sum_second, negative_val);
+    }
+
+    return sum_max;
   }
 
   int main(void){
+
     int a[SIZE];
 
     randomize();
 
     int is_negative_exist = 0;
-
     for (int i = 0; i < SIZE; ++i){
       a[i] = (rand() % 2 ? 1 : -1) * (rand() % 1000);
 
@@ -1001,18 +1045,65 @@
     }
 
     print_array(a, SIZE);
-    max_subsequence_sum(a, SIZE);
+    int max_sum = max_subsequence_sum(a, SIZE);
+    printf("max subsequence sum = %d\n", max_sum);
+
+    // output ->
+    //  223 -702 463 -71 991 -973 -21 -985 701 645
+    //  ---------------------------------------
+    //  max subsequence sum = 1383
   }
 */
 
 /*
   HOMEWORK - Partition Algorithm - O(n) complexity
 
-  // evens at th beginning, odds at the end
+  // evens at the beginning, odds at the end
   // 526 523  45 427 514  18  42 323 317 982
   // 526 514  18  42 982  45 427 323 317 523
   //                       *  
   // return the partition point(first odd number's index)
+*/
+
+/*
+  #include "nutility.h"
+
+  #define SIZE 10
+
+  // CHATGPT answer
+  int partition(int* pa, int size){
+    int i = 0;
+    int j = size - 1;
+
+    while (i < j){
+      while (i < size && pa[i] % 2 == 0)
+        ++i;
+
+      while (j >= 0 && pa[j] % 2 != 0)
+        --j;
+
+      if (i < j){
+        int temp = pa[i];
+        pa[i] = pa[j];
+        pa[j] = temp;
+      }
+    }
+
+    return i;
+  }
+
+  int main(void){
+    int a[SIZE];
+
+    randomize();
+    set_array_random(a, SIZE);
+    print_array(a, SIZE);
+
+    int partition_idx = partition(a, SIZE);
+    printf("partition index = %d\n", partition_idx);
+
+    print_array(a, SIZE);
+  }
 */
 
 /*
