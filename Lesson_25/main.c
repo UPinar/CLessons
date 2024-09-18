@@ -419,7 +419,7 @@
 */
 
 /*
-  #include "utility.h"
+  #include "nutility.h"
 
   #define SIZE 50
 
@@ -442,7 +442,7 @@
 /*
   // write a code that prints sum 
 
-  #include "utility.h"
+  #include "nutility.h"
 
   #define SIZE 50
 
@@ -469,7 +469,7 @@
 /*
   // write a code that prints mean 
 
-  #include "utility.h"
+  #include "nutility.h"
 
   #define SIZE 50
 
@@ -491,7 +491,7 @@
 /*
   // write a code that prints standard deviation
 
-  #include "utility.h"
+  #include "nutility.h"
   #include <math.h>
 
   #define SIZE 50
@@ -523,7 +523,7 @@
 /*
   // mean of the odd elements in an array
 
-  #include "utility.h"
+  #include "nutility.h"
 
   #define SIZE 50
 
@@ -562,7 +562,7 @@
 /*
   // max_element and its index in an array
 
-  #include "utility.h"
+  #include "nutility.h"
 
   #define SIZE 20
 
@@ -594,7 +594,7 @@
 /*
   // minmax_element of an array
 
-  #include "utility.h"
+  #include "nutility.h"
 
   #define SIZE 20
 
@@ -629,7 +629,7 @@
 /*
   // max and the runner-up element of an array
 
-  #include "utility.h"
+  #include "nutility.h"
 
   #define SIZE 30
 
@@ -675,7 +675,7 @@
   // Write a code that prints unique elements in an array
   // complexity O(n)
 
-  #include "utility.h"
+  #include "nutility.h"
   #include <stdlib.h>
   #include <string.h>
 
@@ -763,7 +763,7 @@
 /*
   // searching an element in an array
 
-  #include "utility.h"
+  #include "nutility.h"
   #define SIZE 20
 
   // complexity of linear search agorithm is O(n)
@@ -802,7 +802,7 @@
 */
 
 /*
-  #include "utility.h"
+  #include "nutility.h"
   #include <stdlib.h>
 
   #define URAND_MAX  20
@@ -851,7 +851,7 @@
 /*
   // reverse algorithm
 
-  #include "utility.h"
+  #include "nutility.h"
 
   #define SIZE  20
 
@@ -891,7 +891,7 @@
   // ********* 
   // ************* 
 
-  #include "utility.h"
+  #include "nutility.h"
   #include <stdlib.h>
 
   #define   SIZE  10
@@ -926,7 +926,7 @@
 
 /*
   // HOMEWORK <---- check homework_2.png ---> 
-  #include "utility.h"
+  #include "nutility.h"
 
   #define   SIZE  20
 
@@ -957,4 +957,634 @@
   }
 */
 
+/*
+  HOMEWORK - Maximum Subsequence Sum Problem - O(n) complexity
 
+  // subsequence ->
+  // 526 523  45 427
+  // 427
+  // 427 514
+  // 323 317 982
+  // 526 523  45 427 514  18  42 323 317 982 (whole array also subsequence)
+  // 526 523 514 -> this is not a subsequence
+
+  // minimum 1 negative number is guaranteed in the array
+*/
+
+/*
+  #include "nutility.h"
+  #include <stdlib.h>
+  #include <limits.h>
+
+  #define   SIZE  10
+
+  int set_sum_max(int* sum_max, int a, int b, int c){
+    int sum_total = a + b + c;
+
+    if (*sum_max < sum_total)
+      *sum_max = sum_total;
+  }
+
+  int max_subsequence_sum(const int* pa, int size){
+    int sum_first = 0;
+    int sum_second = 0;
+    int negative_val = 0;
+    int sum_max = INT_MIN;
+    
+    int is_first_negative_appeared = 0;
+
+    for (int i = 0; i < size; ++i){
+      if (is_first_negative_appeared)
+      {
+        if (pa[i] < 0){
+          set_sum_max(&sum_max, sum_first, sum_second, negative_val);
+
+          sum_first = sum_second;
+          sum_second = 0;
+          negative_val = pa[i];
+        }
+        else{
+          sum_second += pa[i];
+        } 
+      }
+      else {
+        if (pa[i] < 0){  
+          negative_val = pa[i];
+          is_first_negative_appeared = 1;
+        }
+        else
+          sum_first += pa[i];
+      }
+
+      // check if it is the last element
+    	if (i == SIZE - 1)
+        set_sum_max(&sum_max, sum_first, sum_second, negative_val);
+    }
+
+    return sum_max;
+  }
+
+  int main(void){
+
+    int a[SIZE];
+
+    randomize();
+
+    int is_negative_exist = 0;
+    for (int i = 0; i < SIZE; ++i){
+      a[i] = (rand() % 2 ? 1 : -1) * (rand() % 1000);
+
+      // make sure that there is at least 1 negative number in the array
+      if (is_negative_exist == 0 && a[i] < 0)
+        is_negative_exist = 1;
+
+      if (is_negative_exist == 0 && i == SIZE - 1 && a[i] > 0) {
+        printf("There is no negative number in the array\n");
+        a[i] = rand() % 1000 * -1;
+      }
+    }
+
+    print_array(a, SIZE);
+    int max_sum = max_subsequence_sum(a, SIZE);
+    printf("max subsequence sum = %d\n", max_sum);
+
+    // output ->
+    //  223 -702 463 -71 991 -973 -21 -985 701 645
+    //  ---------------------------------------
+    //  max subsequence sum = 1383
+  }
+*/
+
+/*
+  HOMEWORK - Partition Algorithm - O(n) complexity
+
+  // evens at the beginning, odds at the end
+  // 526 523  45 427 514  18  42 323 317 982
+  // 526 514  18  42 982  45 427 323 317 523
+  //                       *  
+  // return the partition point(first odd number's index)
+*/
+
+/*
+  #include "nutility.h"
+
+  #define SIZE 10
+
+  // CHATGPT answer
+  int partition(int* pa, int size){
+    int i = 0;
+    int j = size - 1;
+
+    while (i < j){
+      while (i < size && pa[i] % 2 == 0)
+        ++i;
+
+      while (j >= 0 && pa[j] % 2 != 0)
+        --j;
+
+      if (i < j){
+        int temp = pa[i];
+        pa[i] = pa[j];
+        pa[j] = temp;
+      }
+    }
+
+    return i;
+  }
+
+  int main(void){
+    int a[SIZE];
+
+    randomize();
+    set_array_random(a, SIZE);
+    print_array(a, SIZE);
+
+    int partition_idx = partition(a, SIZE);
+    printf("partition index = %d\n", partition_idx);
+
+    print_array(a, SIZE);
+  }
+*/
+
+/*
+  HOMEWORK - Donald Knuth Question
+  // find a code that does only 2 operations in the loop
+
+  #include "nutility.h"
+
+  #define   SIZE  20
+
+  int main(void){
+    int a[SIZE];
+
+    randomize();
+    set_array_random(a, SIZE);
+    print_array(a, SIZE);
+
+    int key;
+    printf("Enter a value for search: ");
+    scanf("%d", &key);
+
+    int i;
+    for (i = 0; i < SIZE; ++i)
+      if (a[i] == key)
+        break;
+
+    // There are 3 operations in this loop 
+    // 1. i < SIZE
+    // 2. a[i] == key
+    // 3. ++i
+
+    if (i < SIZE)
+      printf("found, index = %d\n", i);
+    else
+      printf("not found\n", key);
+
+    return 0;
+  }
+*/
+
+/*
+              -----------------------------------------------
+              | sorting algorithms (sıralama algoritmaları) |
+              -----------------------------------------------
+*/
+
+/*
+  -----------------------------------------------------------------------
+  sıralama(sorting) : bir kritere bağlı olarak, kriteri gerçekleştirecek 
+  şekilde dizinin elemanlarını yeniden konumlandırmak.
+
+  - sıralama algoritması ile sıralama kriteri(sorting criteria) 
+    birbirleriyle karıştırılmamalıdır.
+  - farklı sıralama algoritmaları aynı sıralama kriteri ile kullanılabilir.
+  - aynı sıralama algoritması farklı sıralama kriterleri ile farklı 
+  sıralamalar yapabilir.
+
+   5  7  -4  6  -9   2   3  -1
+   ---------------------------
+  -9 -4  -1  2   3   5   6   7   (ascending order)
+  -1  2   3 -4   5   6   7  -9   (ascending order of absolutes)
+  same algorithm, different sorting criteria
+
+
+  -----------------------------------------------------------------------
+  - best case scenario, average case scenario, worst case scenario
+  quick sort -> 
+    O(n log n)  best
+    O(n log n)  average
+    O(n^2)      worst
+
+  selection sort -> 
+    O(n^2)      best
+    O(n^2)      average
+    O(n^2)      worst
+
+  insertion sort -> 
+    O(n)        best
+    O(n^2)      average
+    O(n^2)      worst
+
+  those notations are computational complexity.
+
+  -----------------------------------------------------------------------
+  memory complexity : 
+    bubble sort algorithm is only using the array itself
+    but some algorithms are using extra memory space (1 more array size)
+
+  -----------------------------------------------------------------------
+  3 5 7 9 12 18 45 42 57 68 90 (almost sorted)
+                 x  x 
+
+  - two algorithms complexity can be same but in some scenarios like
+    almost sorted array above, one algorithm can sort it in best case
+    but the other one can sort it in worst case
+  - complexity is not the only criteria to choose an algorithm
+  -----------------------------------------------------------------------
+  sıralama algoritmasının stable olup olmaması 
+
+    23 Ahmet
+  35 Mehmet
+  16 Hüsnü
+    23 Gizem
+  55 İhsan
+    23 Turgut
+  48 Halime
+    23 Necati
+  18 Yeşim
+  5  Hakan
+
+  unstable sort -> (relative positions(izafi konumları) are not preserved)
+  -----------------
+    5  Hakan
+    16 Hüsnü
+    18 Yeşim
+      23 Turgut
+      23 Necati
+      23 Gizem 
+      23 Ahmet
+    35 Mehmet
+    48 Halime
+    55 İhsan
+
+  stable sort -> (relative positions(izafi konumları) are preserved)
+  -----------------
+      5  Hakan
+    16 Hüsnü
+    18 Yeşim
+      23 Ahmet
+      23 Gizem
+      23 Turgut           
+      23 Necati                       
+    35 Mehmet
+    48 Halime
+    55 İhsan
+
+  558 330 761 538 574 996 551 613 467 909   // even-odd partition
+  558 330 538 574 996 761 551 613 467 909   // partition is stable
+  -----------------------------------------------------------------------
+*/
+
+/*
+  Bubble Sort
+  -------------
+  909 558 330 761 538 574 996 551 613 467   - comparison : 909 - 558
+  558 909 330 761 538 574 996 551 613 467   - comparison : 909 - 330
+  558 330 909 761 538 574 996 551 613 467   - comparison : 909 - 761
+  558 330 761 909 538 574 996 551 613 467   - comparison : 909 - 538
+  558 330 761 538 909 574 996 551 613 467   - comparison : 909 - 574  
+  558 330 761 538 574 909 996 551 613 467   - comparison : 909 - 996
+  558 330 761 538 574 909 551 996 613 467   - comparison : 996 - 551
+  558 330 761 538 574 909 551 613 996 467   - comparison : 996 - 613
+  558 330 761 538 574 909 551 613 467 996   - comparison : 996 - 467  
+  
+  - 996(1 element) is in its place (n - 1) comparison has been done 
+  - (n - 1) elements more to be sorted
+  - total = (n - 1) * (n - 1) comparison will be done
+  - O(n^2) complexity
+
+  558 330 761 538 574 909 551 613 467 996   - comparison : 558 - 330
+  330 558 761 538 574 909 551 613 467 996   - comparison : 558 - 761
+  330 558 538 761 574 909 551 613 467 996   - comparison : 761 - 538
+  330 558 538 574 761 909 551 613 467 996   - comparison : 761 - 574
+  330 558 538 574 761 909 551 613 467 996   - comparison : 761 - 909
+  330 558 538 574 761 551 909 613 467 996   - comparison : 909 - 551
+  330 558 538 574 761 551 613 909 467 996   - comparison : 909 - 613
+  330 558 538 574 761 551 613 467 909 996   - comparison : 909 - 467
+  (330 558 538 574 761 551 613 467 909 996   - comparison : 909 - 996)
+
+  after 2'nd iteration done we don't need to compare 909 with 996 again
+  ...
+*/
+
+/*
+  #include "nutility.h"
+
+  #define   SIZE  100
+
+  int main(void){
+    int a[SIZE];
+
+    randomize();
+    set_array_random(a, SIZE);
+    print_array(a, SIZE);
+
+    for (int i = 0; i < SIZE - 1; ++i){
+      for (int k = 0; k < SIZE - 1 - i; ++k){
+        // buble sort algorithm ascending order
+        if (a[k] > a[k + 1]){
+          int temp = a[k];
+          a[k] = a[k + 1];
+          a[k + 1] = temp;
+        }
+
+        // buble sort algorithm descending order (different sorting criteria)
+        // if (a[k] < a[k + 1]){
+        //    int temp = a[k];
+        //    a[k] = a[k + 1];
+        //    a[k + 1] = temp;
+        //  }
+      }
+    }
+
+    print_array(a, SIZE);
+  }
+*/
+
+/*
+  #include "nutility.h"
+  #include <stdlib.h>
+  #include <math.h>
+
+  #define   SIZE  10
+
+  void set_array_random_include_negatives(int* pArr, int size){
+    while (size--)
+      *pArr++ = (rand() % 2 ? 1 : -1) * (rand() % 1000);
+  }
+
+  int main(void){
+    int a[SIZE];
+
+    randomize();
+    set_array_random_include_negatives(a, SIZE);
+    print_array(a, SIZE);
+    // output -> -49 327 789  35 717 -118 840  58 458 -715
+
+    for (int i = 0; i < SIZE - 1; ++i){
+      for (int k = 0; k < SIZE - 1 - i; ++k){
+        if (abs(a[k]) > abs(a[k + 1])){
+          int temp = a[k];
+          a[k] = a[k + 1];
+          a[k + 1] = temp;
+        }
+      }
+    }
+
+    print_array(a, SIZE);
+    // output -> 35 -49  58 -118 327 458 -715 717 789 840
+  }
+*/
+
+/*
+  // sorting criteria : 
+  //  odd numbers at the beginning, even numbers at the end
+  //  odds and evens are sorted in ascending order
+
+  #include "nutility.h"
+
+  #define   SIZE  10
+
+  int main(void){
+    int a[SIZE];
+
+    randomize();
+    set_array_random(a, SIZE);
+    print_array(a, SIZE);
+    // output -> 607 732 147 322 782 647 477 380 872  79
+
+    for (int i = 0; i < SIZE - 1; ++i){
+      for (int k = 0; k < SIZE - 1 - i; ++k){
+        if (  (a[k] % 2 == 0 && a[k + 1] % 2 == 1) ||
+              (a[k] % 2 == a[k + 1] % 2 && a[k] > a[k + 1]))
+        {
+          int temp = a[k];
+          a[k] = a[k + 1];
+          a[k + 1] = temp;
+        }
+      }
+    }
+
+    print_array(a, SIZE);
+    // output ->  79 147 477 607 647 322 380 732 782 872
+  }
+*/
+
+/*
+  #include "nutility.h"
+  #include <stdlib.h>
+  #include <time.h>
+
+  #define   SIZE    50000000
+
+  // bubble sort algorithm
+  // O(n^2) -> 10'000 elements    : 0.158000 seconds
+  // O(n^2) -> 100'000 elements   : 22.783000 seconds
+  // O(n^2) -> 1'000'000 elements : 22sec * 100 / 60 = 36.67 minutes (guess)
+  // O(n^2) -> 5'000'000 elements : 36.67 * 25  / 60 =  15.28 hours (guess)
+
+  // O(n log n) -> 5'000'000 elements   : 0.351000 seconds
+  // O(n log n) -> 50'000'000 elements  : 3.419000 seconds
+
+
+  int icmp(const void* vp1, const void* vp2){
+    return *(const int*)vp1 - *(const int*)vp2;
+  }
+
+  int main(void){
+    // memory allocation on heap segment
+    int* p = (int*)malloc(SIZE * sizeof(int));
+    if (!p){
+      printf("memory allocation failure\n");
+      return 1;
+    }
+
+    set_array_random(p, SIZE);
+
+    clock_t start = clock();
+
+    // bubble sort algorithm O(n^2)
+    // for (int i = 0; i < SIZE - 1; ++i){
+    //   for (int k = 0; k < SIZE - 1 - i; ++k){
+    //     if (p[k] > p[k + 1]){
+    //       int temp = p[k];
+    //       p[k] = p[k + 1];
+    //       p[k + 1] = temp;
+    //     }
+    //   }
+    // }
+
+    // O(n log n) algorithm
+    qsort(p, SIZE, sizeof(int), icmp);
+
+    clock_t end = clock();
+
+    printf( "sorting end %f seconds\n", 
+            (double)(end - start) / CLOCKS_PER_SEC);
+
+    free(p);
+  }
+*/
+
+/*
+  merge algorithm O(n)
+
+    | index a
+   61 243 293 451 524 797 814 832 845 965
+
+   194 347 365 382 416 469 529 532 630 754
+    | index b
+
+  a bittiyse b'den yaz, b bittiyse a'dan yaz,
+  ikisi de bitmemişse küçüğü yaz
+*/
+
+/*
+  #include "nutility.h"
+
+  #define   SIZE    10 
+
+  int main(void){
+    int a[SIZE];
+    int b[SIZE];
+    int c[2 * SIZE];
+
+    randomize();
+    set_array_random(a, SIZE);
+    set_array_random(b, SIZE);
+    sort_array(a, SIZE);
+    sort_array(b, SIZE);
+
+    print_array(a, SIZE);
+    // output -> 110 185 265 269 305 318 330 333 478 693
+    print_array(b, SIZE);
+    // output ->   3 204 373 491 545 692 707 768 781 888
+
+    // merge algorithm
+
+    int idx_a = 0;
+    int idx_b = 0;
+
+    for(int i = 0; i < 2 * SIZE; ++i){
+      if (idx_a == SIZE)
+        c[i] = b[idx_b++];
+      else if (idx_b == SIZE)
+        c[i] = a[idx_a++];
+      else if (a[idx_a] < b[idx_b])
+        c[i] = a[idx_a++];
+      else
+        c[i] = b[idx_b++];
+    }
+
+    print_array(c, 2 * SIZE);  
+    // output ->
+    //    3 110 185 204 265 269 305 318 330 333
+    //  373 478 491 545 692 693 707 768 781 888
+  }
+*/
+
+/*
+  binary search : O(log n)
+
+  //  61 243 293 451 524 797 814 832 845 965
+  //  | index_first                       | index_last
+*/
+
+/*
+  #include "nutility.h"
+
+  #define   SIZE    10 
+
+  int main(void){
+    int a[SIZE];
+
+    set_array_random(a, SIZE);
+    sort_array(a, SIZE);
+    print_array(a, SIZE);
+
+    int key;
+    printf("Enter a value for search: ");
+    scanf("%d", &key);
+
+    int idx_first = 0;
+    int idx_last  = SIZE - 1;
+    int idx_mid;
+
+    while(idx_first <= idx_last){
+      idx_mid = (idx_first + idx_last) / 2;
+
+      if (a[idx_mid] == key)
+        break;
+
+      if(a[idx_mid] > key)
+        idx_last = idx_mid - 1;
+      else
+        idx_first = idx_mid + 1;
+    }
+
+    if (idx_first > idx_last)
+      printf("not found\n");
+    else
+      printf("found, index = %d\n", idx_mid);
+
+    // output ->
+    //  41 169 334 358 464 467 478 500 724 962
+    //  ---------------------------------------
+    //  Enter a value for search: 962
+    //  found, index = 9
+
+    //  41 169 334 358 464 467 478 500 724 962
+    //  ---------------------------------------
+    //  Enter a value for search: 982
+    //  not found
+  }
+*/
+
+/*
+  #include "nutility.h"
+
+  #define   SIZE    200 
+
+  int main(void){
+    int a[SIZE];
+
+    set_array_random(a, SIZE);
+    sort_array(a, SIZE);
+
+    int key = 2222; // not in the array [0-1000)
+
+    int idx_first = 0;
+    int idx_last  = SIZE - 1;
+    int idx_mid;
+    int count = 0;
+
+    while(idx_first <= idx_last){
+      ++count;
+      idx_mid = (idx_first + idx_last) / 2;
+
+      if (a[idx_mid] == key)
+        break;
+
+      if(a[idx_mid] > key)
+        idx_last = idx_mid - 1;
+      else
+        idx_first = idx_mid + 1;
+    }
+
+    printf("size = %d, count = %d\n", SIZE, count);
+    // output -> size = 100, count = 7
+    // output -> size = 200, count = 8
+    // output -> size = 2000, count = 11
+    // output -> size = 4000, count = 12
+  }
+*/
