@@ -1,4 +1,4 @@
-#include "utility.h"
+#include "nutility.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -20,4 +20,16 @@ void print_array(const int* pArr, int size){
     printf("%3d ", pArr[i]);
   }
   printf("\n---------------------------------------\n");
+}
+
+void sort_array(int* pArr, int size){
+  for (int i = 0; i < size - 1; ++i){
+    for (int k = i + 1; k < size; ++k){
+      if (pArr[i] > pArr[k]){
+        int temp = pArr[i];
+        pArr[i] = pArr[k];
+        pArr[k] = temp;
+      }
+    }
+  }
 }
