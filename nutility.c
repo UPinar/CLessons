@@ -33,3 +33,10 @@ void sort_array(int* pArr, int size){
     }
   }
 }
+
+void sgets(char* pStr){
+  int c;
+  while ((c = getchar()) != '\n')
+    *pStr++ = (char)c;
+  *pStr = '\0';
+}
