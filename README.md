@@ -101,4 +101,9 @@
   - binary search
 
 ### [Lesson_27 String](https://github.com/UPinar/CLessons/tree/master/Lesson_27)
+  - NTBS (null terminated byte stream)
+  - string concatenate - append
+  - remove copy algorithm
+  - count algorithm
+  - count_if algorithm
   
