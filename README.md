@@ -106,4 +106,8 @@
   - remove copy algorithm
   - count algorithm
   - count_if algorithm
+
+### [Lesson_29 Pointers](https://github.com/UPinar/CLessons/tree/master/Lesson_29)
+  - address of operator (adres operatörü)
+  - dereferencing (indirection) operator (içerik operatörü)
   
