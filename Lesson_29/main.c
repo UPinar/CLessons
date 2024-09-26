@@ -942,3 +942,300 @@
     // output -> a[0] = 999, b[0] = 111
   }
 */
+
+/* 
+  - if a function will change the value of a variable, 
+    the address of the variable should be passed to the function.
+    i.e swap function
+
+    Why we need to change the variable ?
+*/
+
+/*
+  #define PI 3.14159265358979323846
+
+  double get_circle_area_1(double radius)
+  {
+    return PI * radius * radius;
+  }
+
+  void get_circle_area_2(double radius, double* p_area)
+  {
+    *p_area = PI * radius * radius;
+  }
+
+  int main(void)
+  {
+    double radius = 5.3;
+
+    double area_1 = get_circle_area_1(radius);
+    printf("area_1 = %f\n", area_1); 
+    // output -> area_1 = 88.247337
+
+    double area_2;
+    get_circle_area_2(radius, &area_2);
+    printf("area_2 = %f\n", area_2);
+    // output -> area_2 = 88.247337
+  }
+*/
+
+/*
+  // if the only reason that I need to calculate area is 
+  // to use it in another function
+
+  #define PI 3.14159265358979323846
+
+  double get_circle_area_1(double radius)
+  {
+    return PI * radius * radius;
+  }
+
+  void get_circle_area_2(double radius, double* p_area)
+  {
+    *p_area = PI * radius * radius;
+  }
+
+  double do_important_work(double area)
+  {
+    return area * 2;
+  }
+
+  int main(void)
+  {
+    double radius = 5.3;
+    double dval = do_important_work(get_circle_area_1(radius));
+
+    // get_circle_area_1 function is not making us 
+    // to create a variable for area 
+    // but get_circle_area_2 function is.
+  }
+*/
+
+/*
+  Question : Which scenarios that we want to select 
+              get_circle_area_2 function instead of get_circle_area_1 ?
+
+  - maliyet(cost) 
+  - birden fazla değerin iletilmesi (passing multiple values)
+*/
+
+/*
+  int sum(int a, int b)
+  {
+    return a + b;
+  }
+
+  int main(void)
+  {
+    int x = 10;
+    int y = 20;
+
+    int result = sum(x, y);
+  }
+
+  // compiled with x86-64 clang 19.1.0 -std=c11 -O0
+  // sum:
+  //   push rbp
+  //   mov rbp, rsp
+  //   mov dword ptr [rbp - 4], edi     : int a = x (x copied to a)
+  //   mov dword ptr [rbp - 8], esi     : int b = y (y copied to b)
+  //   mov eax, dword ptr [rbp - 4]     : eax = a
+  //   add eax, dword ptr [rbp - 8]     : eax += b
+  //   pop rbp
+  //   ret
+  // main:
+  //   push rbp
+  //   mov rbp, rsp
+  //   sub rsp, 16
+  //   mov dword ptr [rbp - 4], 10      : int x = 10
+  //   mov dword ptr [rbp - 8], 20      : int y = 20
+  //   mov edi, dword ptr [rbp - 4]     : edi = x
+  //   mov esi, dword ptr [rbp - 8]     : esi = y
+  //   call sum
+  //   mov dword ptr [rbp - 12], eax    : int result = eax
+  //   xor eax, eax
+  //   add rsp, 16
+  //   pop rbp
+  //   ret
+
+  // edi is first caller save register
+  // esi is second caller save register
+*/
+
+/*
+  typedef struct{
+    int a[20][20];
+    int row, col;
+  }Matrix;
+
+  Matrix get_random_matrix_1(void);
+
+  void get_random_matrix_2(Matrix*);
+
+  int main(void)
+  {
+    printf("sizeof(Matrix) = %zu\n", sizeof(Matrix));
+    // output -> sizeof(Matrix) = 1608
+
+    Matrix m; // this object is 1608 bytes
+
+    m = get_random_matrix_1();  
+    // 1608 bytes will be copied to m object
+
+    get_random_matrix_2(&m);
+    // 8 bytes(Matrix*) will be copied to get_random_matrix_2 function
+
+    // get_random_matrix_1 and get_random_matrix_2 functions
+    // are doing the same job but get_random_matrix_2 is cheaper
+  }
+*/
+
+/*
+  typedef struct{
+    int a[20][20];
+    int row, col;
+  }Matrix;
+
+  void get_random_matrix(Matrix*);
+  // function is accepting address of an object
+  // and it is writing to that object
+  // Matrix* : out param(eter)
+*/
+
+/*
+  // passing multiple values
+
+  // <------------ SCENARIO 1 ------------>
+  void get_values(double d1, 
+                  double d2, 
+                  double* p_alpha, 
+                  double* p_beta,
+                  double* p_gamma)
+  {
+    *p_alpha  = d1 + d2;
+    *p_beta   = d1 * d2;
+    *p_gamma  = d1 - d2;
+  }
+  // p_alpha, p_beta, p_gamma are being set inside the function
+
+  // <------------ SCENARIO 2 ------------>
+  double get_values_2(double d1, 
+                      double d2, 
+                      double* p_beta, 
+                      double* p_gamma)
+  {
+    *p_beta   = d1 * d2;
+    *p_gamma  = d1 - d2;
+    return d1 + d2;   
+  }
+  // returning p_alpha in return value and 
+  // p_beta and p_gamma is being set inside the function
+
+  // for this kind of functions, generally return value is 
+  // the important value(p_alpha) and others(p_beta, p_gamma) are
+  // the values that we might want to change or set but 
+  // not as important as the return value
+
+  int main(void)
+  {
+    double x = 5.3;
+    double y = 3.7;
+    double alpha, beta, gamma;
+
+    get_values(x, y, &alpha, &beta, &gamma);
+  }
+*/
+
+/*
+  // Write a function that add two matrix objects
+  // and pass the sum of the matrices to the caller
+
+  typedef struct{
+    int a[20][20];
+    int row, col;
+  }Matrix;
+
+  Matrix add_matrices_1(Matrix m1, Matrix m2);
+  // 3 copies of Matrix object
+
+  void add_matrices_2(Matrix m1, Matrix m2, Matrix* p_result);
+  // 2 copies of Matrix object, 1 copy of Matrix* object 
+
+  void add_matrices_3(const Matrix* m1,     
+                      const Matrix* m2, 
+                      Matrix* p_result);
+  // 3 copies of Matrix* object 
+  // in params : m1, m2 
+  // out param : p_result
+
+  // we do not want to change the values of m1 and m2
+  // we will use them as an input of the function
+  // so we are using const keyword 
+
+  // void set(T*);          -> function will write to T
+  // void access(const T*); -> function will read from T
+
+  int main(void)
+  {
+    Matrix m1;
+    Matrix m2;
+    Matrix result;
+    // ...
+
+    result = add_matrices_1(m1, m2);
+
+    add_matrices_2(m1, m2, &result);
+
+    add_matrices_3(&m1, &m2, &result);
+  }
+*/
+
+/*
+  // In C, an array CAN NOT call(pass) a function by value 
+  // only call it by reference is possible
+
+  void foo(int p[]);
+  void bar(int* p);
+  // Those 2 functions are equivalent
+
+  int main()
+  {
+    int a[100] = { 1, 2, 3, 4, 5 };
+
+    // because of array's elements are contigious in memory
+    // we can reach every elements of the array 
+    // by using the address of the first element
+
+    foo(a);   // a ==> &a[0] (array decay)
+    bar(a);   // a ==> &a[0] (array to pointer conversion)
+  }
+*/
+
+/*
+  // some functions get the address of an object,
+  // it uses the object as an input and also writes to the object
+  // and pass the object to the caller
+  // in-out parameter
+
+  // out parameter 
+  void foo(int* p);
+
+  // in-out parameter
+  void bar(int* p);
+
+  int main()
+  {
+    int x;  // indeterminate(garbage) value
+
+    foo(&x);    
+    // no logic error 
+    // foo function's parameter is out param
+    // so foo is not using x variable as an input
+
+    bar(&x);  // undefined behavior
+    // bar function's parameter is in-out param
+    // so bar is will use x variable as an input
+    // but x variable has an indeterminate value
+    // using indeterminate value is undefined behavior
+  }
+*/

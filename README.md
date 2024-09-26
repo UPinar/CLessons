@@ -48,7 +48,7 @@
   - ternary operator (koşul operatörü)
   - `sizeof` operator
 
-### [Lesson_14 ControlStatements](https://github.com/UPinar/CLessons/tree/master/Lesson_14)
+### [Lesson_14 Control Statements](https://github.com/UPinar/CLessons/tree/master/Lesson_14)
   - `if` statement
   - `while` statement
   - n kere dönen döngü idiyomu (loop idiom that loops n times)
@@ -111,3 +111,6 @@
   - address of operator (adres operatörü)
   - dereferencing (indirection) operator (içerik operatörü)
   
+### [Lesson_30 `const` Keyword](https://github.com/UPinar/CLessons/tree/master/Lesson_30)
+  - why using `const` keyword
+  - pointers & `const`
