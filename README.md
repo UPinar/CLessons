@@ -110,6 +110,9 @@
 ### [Lesson_29 Pointers](https://github.com/UPinar/CLessons/tree/master/Lesson_29)
   - address of operator (adres operatörü)
   - dereferencing (indirection) operator (içerik operatörü)
+  - pointer arithmetics
+  - subscript operator (köşeli parantez operatörü)
+  - diziler üzerinde işlem yapan fonksiyonlar
   
 ### [Lesson_30 `const` Keyword](https://github.com/UPinar/CLessons/tree/master/Lesson_30)
   - why using `const` keyword

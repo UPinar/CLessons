@@ -295,3 +295,145 @@
     // 'const' qualifier from pointer target type
   }
 */
+
+/*
+  int main(void)
+  {
+    int x = 10;
+    int y = 20;
+
+    const int* p = &x;
+
+    // *p = 30;  // syntax error
+    // error: assignment of read-only location '*p'
+
+    // "p" is giving a promise that it will not let "x" to be changed
+
+
+    x = 12; // VALID, assignment to x is not logic error 
+    // x is not const qualified, so changing its value is expected.
+  }
+*/
+
+/*
+  int main(void)
+  {
+    const int x = 10;
+    &x; 
+    // "&x" is an expression, it's data type is "const int*"
+
+    const int* ptr = &x;
+    // "ptr" is an expression, its data type is "const int*"
+  }
+*/
+
+/*
+  int main(void)
+  {
+    const int a[4] = { 0 };
+
+    a; // (array to pointer conversion)
+    // "a" is an expression, its data type is "const int*" 
+  }
+*/
+
+/*
+  - conversion from T* to const T* is VALID
+  - conversion from const T* to T* is INVALID(ub)
+*/
+
+/*
+  int main(void)
+  {
+    const int x = 10;
+    // x is const qualified so it cannot be changed
+
+    int* ptr = &x;  
+    // ptr is not giving a promise that it will not change "x"
+    // undefine behavior(ub)
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int x = 5;
+    // x is not const qualified so it can be changed
+
+    const int* ptr = &x;  // VALID -> no logic, or syntax error 
+    // ptr is giving a promise that it will not change "x"
+  }
+*/
+
+/*
+  int main(void)
+  {
+    // --------------------------------------------------------
+
+    const int x = 5;
+    const int* p = &x;  
+    // p is giving a promise that it will not change "x"
+    // x is const qualified so it cannot be changed
+    // VALID (const int* ==> const int*)
+
+    // --------------------------------------------------------
+
+    const int y = 10;
+    int* q = &y;
+    // y is const qualified so it cannot be changed
+    // q is not giving a promise that it will not change "y"
+    // INVALID (can cause ub) (const int* ==> int*)
+
+    // warning: initialization discards 'const' qualifier 
+    // from pointer target type
+
+    // --------------------------------------------------------
+
+    int z = 5;
+    const int* r = &z;
+    // r is giving a promise that it will not change "z"]
+    // z is not const qualified so it can be changed
+    // VALID (int* ==> const int*)
+
+    // --------------------------------------------------------
+  }
+*/
+
+/*
+  int main(void)
+  {
+    const int a[] = { 1, 2, 3, 4, 5 };
+    const int* p = a;
+    // VALID (const int* ==> const int*)
+
+    int *q = a;
+    // INVALID (const int* ==> int*)
+  }
+*/
+
+/*
+  - there are some scenarios that conversion from (const T* ==> T*) 
+    needs to be done. In those scenarios we will be use typecast 
+    operator. (const cast)
+*/
+
+/*
+  int main(void)
+  {
+    int x = 45;
+    const int* c_ptr = &x;
+
+
+    int* ptr = (int*)c_ptr; 
+    // conversion from (const int* ==> int*) with typecast operator
+
+    // "x" is not const qualified, change in its value is valid.
+    // normally "c_ptr" is giving a promise that it will not change "x"
+
+    // When we initialize "ptr"(int*) with "c_ptr(const int*)",
+    // we are initializing "ptr" with x's address.
+
+    // Becuase "x" is not const qualified,
+    // for "ptr" to change "x" is perfectly valid.
+  }
+*/
