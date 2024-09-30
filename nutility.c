@@ -23,10 +23,8 @@ void swap(int* x, int* y){
 }
 
 void set_array_random(int* p_array, int size){
-  while(size--){
-    *p_array = rand() % 1000;
-    ++p_array;
-  }
+  while(size--)
+    *p_array++ = rand() % 1000;
 }
 
 void print_array(const int* p_array, int size){

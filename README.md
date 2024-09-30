@@ -113,6 +113,9 @@
   - pointer arithmetics
   - subscript operator (köşeli parantez operatörü)
   - diziler üzerinde işlem yapan fonksiyonlar
+  - pointer idioms
+  - comparison between addresses(pointers)
+  - functions that returns pointer(adres döndüren fonksiyonlar)
   
 ### [Lesson_30 `const` Keyword](https://github.com/UPinar/CLessons/tree/master/Lesson_30)
   - why using `const` keyword

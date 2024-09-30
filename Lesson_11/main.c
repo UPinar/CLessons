@@ -98,7 +98,7 @@
       <=      less or equal     (relational / comparison operators)
   ----------------------------------------------------------------
   7.  ==      equal to 
-      !=      not equal         (comparison operators)
+      !=      not equal         (equality / comparison operators)
   ----------------------------------------------------------------
   8.  &       bitwise AND
   ----------------------------------------------------------------
