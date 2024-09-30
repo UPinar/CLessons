@@ -2124,3 +2124,1222 @@
   // but this syntax is only for functions, 
   // which have pointers as parameters
 */
+
+/*
+                      ------------------
+                      | pointer idioms |
+                      ------------------
+*/
+
+/*
+  "++", "--", "&", "*" operators are in the same priority level
+  and they are right associative
+
+  // ------------------------------------------------------
+
+  "++" -> increment operator
+  "--" -> decrement operator
+
+  "++" oparators operand, needs to be an LValue expression
+  "--" operators operand, needs to be an LValue expression
+
+  "++x", "x++", "x--", "--x" are all RValue expressions
+
+  "x++" , "x--" expressions will generate the value of "x"
+  "++x" expression will generate the value of "x + 1"
+  "--x" expression will generate the value of "x - 1"
+
+  // ------------------------------------------------------
+
+  "&" -> address of operator
+  "&" operators operand, needs to be an LValue expression
+  "&x" expression is an RValue expression
+
+  // ------------------------------------------------------
+
+  "*" -> dereference(içerik) operator
+  "*" operators operand, needs to be an address(pointer).
+  "*x" is an LValue expression
+
+  // ------------------------------------------------------
+*/
+
+/*
+  int main(void)
+  {
+    int x = 5;
+    ++x;    // "++" operators operand needs to be an L value
+  }
+
+  // compiled with x86-64 gcc 14.2 -std=c11 -O0
+  //  main:
+  //    push rbp
+  //    mov rbp, rsp
+  //    mov DWORD PTR [rbp-4], 5          : int x = 5;
+  //    add DWORD PTR [rbp-4], 1          : ++x;
+  //  ----> because "x" have a memory location(L value)
+  //  ----> it can be incremented
+  //    mov eax, 0
+  //    pop rbp
+  //    ret
+*/
+
+/*
+  int main(void)
+  {
+    int x = 5;
+    int* ptr = &x;
+    ++ptr;
+  }
+
+  // compiled with x86-64 gcc 14.2 -std=c11 -O0
+  //  main:
+  //    push rbp
+  //    mov rbp, rsp
+  //    mov DWORD PTR [rbp-12], 5           : int x = 5;
+  //    lea rax, [rbp-12]                   : -- rax = &x
+  //    mov QWORD PTR [rbp-8], rax          : int* ptr = &x;
+  //    add QWORD PTR [rbp-8], 4            : ++ptr;
+  // ---->  because "ptr" have a memory location(L value) 
+  // ---->  it can be incremented
+  //    mov eax, 0
+  //    pop rbp
+  //    ret
+*/
+
+/*
+  int main(void)
+  {
+    int x = 5;
+    ++&x; // syntax error
+    // error: lvalue required as increment operand
+    
+    // "++" and "&" operators are right associative
+
+    // -->  "&" operators operand, needs to be an L value "x"   [+]
+    //      "x" is L value
+    //      "&x" is an R value expression
+
+    // -->  "++" operators operand, needs to be an L value "&x" [-]
+    //      "&x" is R value expression
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int x = 5;
+    &x++; // syntax error
+    // error: lvalue required as unary '&' operand
+
+    // "++" and "&" operators are right associative
+
+    // --> "++" operators operand, needs to be an L value "x" [+]
+    //     "x" is L value
+    //     "x++" is an R value expression
+
+    // --> "&" operators operand, needs to be an L value "x++" [-]
+    //     "x++" is R value expression
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int x = 5;
+    &++x; // syntax error
+    // error: lvalue required as unary '&' operand
+
+    // "++" and "&" operators are right associative
+
+    // --> "++" operators operand, needs to be an L value "x" [+]
+    //     "x" is L value
+    //     "++x" is an R value expression
+
+    // --> "&" operators operand, needs to be an L value "++x" [-]
+    //     "++x" is R value expression
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int a[5] = { 0, 1, 2, 3, 4 };
+    int* p = a;
+
+    *p++; // "*p++" is an LValue expression
+
+    // "++" and "*" operators are right associative
+
+    // --> "++" operators operand, needs to be an L value "p" [+]
+    //     "p" is L value
+    //     "p++" is an address
+
+    // --> "*" operators operand, needs to be an address "p++" [+]
+    //     "p++" is an address
+  }
+
+  // compiled with x86-64 gcc 14.2 -std=c11 -O0
+  //  main:
+  //    push rbp
+  //    mov rbp, rsp
+  //    mov DWORD PTR [rbp-32], 0       : int a[0] = 0;
+  //    mov DWORD PTR [rbp-28], 1       : int a[1] = 1;
+  //    mov DWORD PTR [rbp-24], 2       : int a[2] = 2;
+  //    mov DWORD PTR [rbp-20], 3       : int a[3] = 3;
+  //    mov DWORD PTR [rbp-16], 4       : int a[4] = 4;
+  //    lea rax, [rbp-32]               : -- rax = &a[0]
+  //    mov QWORD PTR [rbp-8], rax      : int* p = &a[0];
+  //    mov rax, QWORD PTR [rbp-8]      : -- rax = &a[0]
+  //    add rax, 4                      : -- rax = &a[1](&a[0] + 4)
+  //    mov QWORD PTR [rbp-8], rax      : p = &a[1];
+  //    mov eax, 0
+  //    pop rbp
+  //    ret
+*/
+
+/*
+  #include "../nutility.h"
+  int main(void)
+  {
+    int a[2] = { 10, 20 };
+    int* p = a;
+
+    *p++ = 999;  
+    // "p++" expressions value is the value of "p"(&a[0])
+    
+    print_array(a, 2);  // output -> 999 20
+
+    // side effect has been applied -> p's value is &a[1]
+
+    *p = 333;
+    print_array(a, 2);  // output -> 999 333
+  }
+
+  // compiled with x86-64 gcc 14.2 -std=c11 -O0
+  //  main:
+  //    push rbp
+  //    mov rbp, rsp
+  //    mov DWORD PTR [rbp-16], 10        : int a[0] = 10;
+  //    mov DWORD PTR [rbp-12], 20        : int a[1] = 20;
+  //    lea rax, [rbp-16]                 : -- rax = &a[0]
+  //    mov QWORD PTR [rbp-8], rax        : int* p = &a[0];
+  //    mov rax, QWORD PTR [rbp-8]        : -- rax = &a[0]
+  //    lea rdx, [rax+4]                  : -- rdx = &a[1]
+  //    mov QWORD PTR [rbp-8], rdx        : p = &a[1];
+  //    mov DWORD PTR [rax], 999          : &a[0] = 999;
+  //    mov rax, QWORD PTR [rbp-8]        : -- rax = &a[1]
+  //    mov DWORD PTR [rax], 333          : &a[1] = 333;
+  //    mov eax, 0  
+  //    pop rbp
+  //    ret
+*/
+
+/*
+
+  *p = 500; 
+  ++p;
+  // Those 2 statements are equivalent to the statement below
+
+  *p++ = 500; 
+*/
+
+/*
+  int main(void)
+  {
+    int a[5] = { 0, 1, 2, 3, 4 };
+    *a++ = 777; // syntax error
+    // error: lvalue required as increment operand
+
+    // "a" is an LValue expression, because of array decay
+    // "&a[0]" is an RValue expression (does not have a memory location)
+
+    // --> "++" operators operand, needs to be an L value "&a[0]" [-]
+    //     "&a[0]" is RValue expression
+  }
+*/
+
+/*
+  #include "../nutility.h"
+
+  int main(void)
+  {
+    int a[5] = { 10, 20 };
+    int* p = a;
+
+    *++p = 999;
+    print_array(a, 2); // output -> 10 999
+
+    // "++" and "*" operators are right associative
+
+    // --> "++" operators operand, needs to be an L value "p" [+]
+    //     "p" is L value
+    //     "++p" is an address
+
+    // --> "*" operators operand, needs to be an address "++p" [+]
+    //     "++p" is an address
+
+    *p = 333;
+    print_array(a, 2); // output -> 10 333
+
+  }
+
+  // compiled with x86-64 gcc 14.2 -std=c11 -O0
+  //  main:
+  //    push rbp
+  //    mov rbp, rsp
+  //    mov DWORD PTR [rbp-16], 10      : int a[0] = 10;
+  //    mov DWORD PTR [rbp-12], 20      : int a[1] = 20;
+  //    lea rax, [rbp-16]               : -- rax = &a[0]
+  //    mov QWORD PTR [rbp-8], rax      : int* p = &a[0];
+  //    add QWORD PTR [rbp-8], 4        : p = &a[1](&a[0] + 4)
+  //    mov rax, QWORD PTR [rbp-8]      : -- rax = &a[1]
+  //    mov DWORD PTR [rax], 999        : &a[1] = 999;
+  //    mov eax, 0
+  //    pop rbp
+  //    ret
+*/
+
+/*
+  // will copy reverse of the array to another array (reverse copy)
+
+  #include "../nutility.h"
+
+  #define SIZE 20
+
+  void reverse_copy(int *p_dest, const int *p_source, int size)
+  {
+    p_dest += size; 
+    // p_dest is the address of the end of the array
+
+    while (size--)
+      *--p_dest = *p_source++;
+  }
+
+  // in the first iteration, p_dest will become 
+  // the last element of the array (prefix decrement) : idx[size - 1] 
+  // and p_source will be the first element of the array : idx[0]
+  // after the assignment, p_source will become 
+  // the second element of the array(postfix increment) : idx[1] 
+
+  int main(void)
+  {
+    int a[SIZE];
+    int b[SIZE];
+
+    randomize();
+    set_array_random(a, SIZE);
+    print_array(a, SIZE);
+
+    reverse_copy(b, a, SIZE); 
+
+    print_array(b, SIZE);
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int a[5] = { 10, 20, 30, 40, 50 };
+
+    int* p = a;
+
+    *p++;   // will dereferece p and then  increment p
+    (*p)++; // if p = &a[1], "(*p)++" will increment a[1] element
+  }
+*/
+
+/*
+  #include "../nutility.h"
+
+  int main(void)
+  {
+    int a[5] = { 10, 20, 30, 40, 50 };
+    int* p = a;
+
+    ++*p;   // ++(*(&a[0]))   ===> ++a[0]
+    print_array(a, 5);    // output -> 11 20 30 40 50
+
+    (*p)++; // (*(&a[0]))++   ===> a[0]++
+    print_array(a, 5);    // output -> 12 20 30 40 50
+  }
+*/
+
+/*
+  #include "../nutility.h"
+
+  int main(void)
+  {
+    int a[5] = { 10, 20, 30, 40, 50 };
+
+    ++*a;   // ++(*(&a[0]))   ===> ++a[0]
+    print_array(a, 5);    // output -> 11 20 30 40 50
+  }
+*/
+
+/*
+  #include "../nutility.h"
+
+  void foo(int* p, int size)
+  {
+    while(size--)
+      ++*p++;     // (++(*(p++))) 
+  }
+  // in first iteration p will be incremented(postfix) but 
+  // side effect will be applied in the second iteration 
+  // so p is &a[0]
+  // we will dereference p -> *(&a[0]) and will get a[0]
+  // and ++a[0] (prefix increment) will be applied
+
+  // first iteration ++a[0]
+
+  int main(void)
+  {
+    int a[5] = { 10, 20, 30, 40, 50 };
+    foo(a, 5);
+
+    print_array(a, 5);  // output -> 11 21 31 41 51
+  } 
+*/
+
+/*
+              ------------------------------------------
+              | comparison between addresses(pointers) |
+              ------------------------------------------
+*/
+
+/*
+  Comparison operators
+  --------------------
+  ">" ">=" "<" "<=" operators are in 6th priority level (relational)
+  "==" "!="         operators are in 7th priority level (equality)
+*/
+
+/*
+  two address is same when:
+    - both are pointing to the same object.
+    - both are pointing at the end of the same array.
+      (ikisi de aynı dizinin bittiği yerin adresi ise)
+    - both are NULL pointer.
+*/
+
+/*
+  // - both are pointing to the same object.
+
+  int main(void)
+  {
+    int x = 10;
+    int y = 20;
+
+    int* p1 = &x;
+    int* p2 = &y;
+    int* p3 = &x;
+
+    if (p1 == p2)
+      printf("p1 and p2 are equal\n");
+    else
+      printf("p1 and p2 are not equal\n");
+
+    // output -> p1 and p2 are not equal
+
+    if (p1 == p3)
+      printf("p1 and p3 are equal\n");
+    else
+      printf("p1 and p3 are not equal\n");
+
+    // output -> p1 and p3 are equal
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int a[5]  = { 10, 20, 30, 40, 50 };
+
+    // &a[4] ==> (a + 4) ==> is the last element's address
+
+    // &a[5] or (a + 5) is the address to the end of the array 
+    // holding this address in pointer -> VALID
+    // using this address in comparison operations -> VALID
+    // dereferencing this address -> Undefined Behavior(ub)
+    
+    int* p = a + 5;   // VALID
+    *p = 999;         // ub -> no object at this address
+    a[5] = 999;       // ub -> no object at this address
+    &a[5];            // VALID
+  }
+*/
+
+/*
+  // - both are pointing at the end of the same array.
+
+  int main(void)
+  {
+    int a[5] = { 10, 20, 30, 40, 50 };
+
+    int* p = a;
+    int* pend = a + 5;
+
+    while (p != pend){
+      printf("%d ", *p);
+      ++p;
+    }
+    // output -> 10 20 30 40 50
+  }
+*/
+
+/*
+  #include "../nutility.h"
+
+  #define SIZE 10
+
+  void printArray(const int* ps, const int* pe)
+  {
+    while (ps != pe)
+      printf("%3d ", *ps++);
+  }
+  // range(aralık)
+  // [ps, pe) -> ps is included, pe is excluded
+
+  int main(void)
+  {
+    int a[SIZE];
+
+    randomize();
+    set_array_random(a, SIZE);
+    print_array(a, SIZE);
+    // output -> 123 434 287 745 880 114 145 776 408 678
+
+    printArray(a, a + SIZE);
+    // output -> 123 434 287 745 880 114 145 776 408 678
+  }
+*/
+
+/*
+  void foo(int* ps, int* pe)
+  {
+    while(ps != pe)
+      ++ps;
+  }
+
+  int main(void)
+  {
+    int a[5] = { 0 };
+
+    foo(a, a + 5);      // VALID
+    foo(a + 4, a + 2);  // undefined behaviour(ub)
+
+    // first argument needs to be less than 
+    // or equal to the second argument
+  }
+*/
+
+/*
+  #define SIZE  20
+
+  int main(void)
+  {
+    int a[SIZE] = { 0 };
+
+    int* p1 = a + 5;
+    int* p2 = a + 12;
+
+    if (p2 > p1)
+      printf("p2 is greater than p1\n");
+    else
+      printf("p2 is less than p1\n");
+    
+    // output -> p2 is greater than p1
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int x = 10;
+    int y = 20;
+
+    int* p1 = &x;
+    int* p2 = &y;
+
+    if (p1 < p2) // this code is not logical
+      ;
+    // x and y's addresses are dependent on the compiler
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int x = 10;
+    int y = 10;
+
+    int* p1 = &x;
+    int* p2 = &y;
+
+
+    if (p1 == p2)
+      printf("p1 and p2 are equal\n");
+    else
+      printf("p1 and p2 are not equal\n");
+
+    // output -> p1 and p2 are not equal
+
+    if (*p1 == *p2)
+      printf("*p1 -> (x) and *p2 -> (y) are equal\n");
+    else
+      printf("*p1 -> (x) and *p2 -> (y) are not equal\n");
+
+    // output -> *p1 -> (x) and *p2 -> (y) are equal
+  }
+*/
+
+/*
+  int main(void)
+  {
+    char s1[] = "hello";    // s1 ==> &s1[0]  (array decay)
+    char s2[] = "hello";    // s2 ==> &s2[0]  (array decay)
+
+    if (s1 == s2)   // if (&s1[0] == &s2[0]) -> always false 
+      printf("s1 and s2 are equal\n");
+    else
+      printf("s1 and s2 are not equal\n");
+
+    // output -> s1 and s2 are not equal
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int a[20] = { 0 };
+
+    int* p1 = a - 1;    // DO NOT WRITE!
+    int* p2 = a + 21;   // DO NOT WRITE!
+
+    int* p3 = a + 20;   // write but not dereference it
+    // pointer to the end of the array
+  } 
+*/
+
+/*
+  int main(void)
+  {
+    int x = 10;   // can be used as 1 element array
+
+    int* p = &x + 1;  // VALID 
+    *p = 56;      // undefined behavior(ub)
+    int a = *p;   // undefined behavior(ub)
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int x = 10;
+    int* p = &x + 1;
+
+    printf("%d\n", *--p);   // output -> 10
+  }
+*/
+
+/*
+  #include "../nutility.h"
+
+  #define SIZE 20
+
+  void ReverseArray(int* p, int size)
+  {
+    int* p_last = p + size - 1;
+
+    while (p < p_last)
+      swap(p++, p_last--);
+  }
+
+  int main(void)
+  {
+    int a[SIZE];
+
+    randomize();
+    set_array_random(a, SIZE);
+    print_array(a, SIZE);
+    // output ->
+    //  521 356 380 410 417 283 347 455 165 259
+    //  988 231  61 212 656 108 274 955 993  33
+
+    ReverseArray(a, SIZE);
+    print_array(a, SIZE);
+    // output ->
+    //   33 993 955 274 108 656 212  61 231 988
+    //  259 165 455 347 283 417 410 380 356 521
+  }
+*/
+
+/*
+                ----------------------------------
+                | functions that returns pointer |
+                ----------------------------------
+                |   adres döndüren fonksiyonlar  |
+                ----------------------------------
+*/
+
+/*
+  int* foo(void); // function that returns a pointer to int
+  int bar(void);  // function that returns an int
+
+  int main(void)
+  {
+    int x = bar();
+    int* ptr = foo();
+  }
+*/
+
+/*
+  int* foo(void);
+
+  int main(void)
+  {
+    int* ptr = foo();
+    *ptr; 
+    // "*ptr" is the object that foo function returns its address
+  }
+*/
+
+/*
+  int g_x = 10;
+
+  int* foo(void)
+  {
+    return &g_x;
+  }
+
+  int main(void)
+  {
+    int* ptr = foo();
+    printf("g_x = %d\n", g_x);  // output -> g_x = 10
+
+    *ptr = 999;
+    printf("g_x = %d\n", g_x);  // output -> g_x = 999
+  }
+*/
+
+/*
+  int* foo();
+
+  int main(void)
+  {
+    int x = 10;
+    int a[] = { 1, 2, 3 };
+
+    int* p1 = &x; 
+    // p1 is initialized with the address of int
+    int* p2 = p1; 
+    // p2 is initialized with another pointer
+    int* p3 = a;  
+    // p3 is initialized with the identifier of an array
+    int* p4 = foo();
+    // p4 is initialized with the return value of a function
+  }
+*/
+
+/*
+  int g_x = 10;
+
+  int* foo(void)
+  {
+    return &g_x;
+  }
+
+  int main(void)
+  {
+    printf("g_x = %d\n", g_x);  // output -> g_x = 10
+
+    // "()" function call operator is in 1st priority level
+    // "*"  dereference operator is in 2nd priority level
+
+    *foo() = 777;   // *(foo()) ==> *(&g_x) ==> g_x
+    printf("g_x = %d\n", g_x);  // output -> g_x = 777
+  }
+*/
+
+/*
+  #include "../nutility.h"
+
+  int a[5] = { 10, 20, 30, 40, 50 };
+
+  int* foo(void)
+  {
+    return a;
+  }
+
+  int main(void)
+  {
+    print_array(a, 5);  // output -> 10 20 30 40 50
+
+    // "()" function call operator is in 1st priority level
+    // "[]" subscript operator is in 1st priority level
+    // "()" and "[]" operators are left associative
+
+    foo()[0]++;
+    print_array(a, 5);  // output -> 11 20 30 40 50
+
+    foo()[3] = 999;
+    print_array(a, 5);  // output -> 11 20 30 999 50
+  }
+*/
+
+/*
+  int* foo(void)
+  {
+    int x = 0;  // x is local variable -> automatic storage duration 
+    return &x;  
+  }
+
+  int main(void)
+  {
+    int* p = foo(); 
+    // warning: function returns address of local variable
+
+    // foo() is returning the address of a local variable
+    // p is a dangling pointer, 
+    // the object that p points to is destroyed 
+    // at the end of the function's execution
+
+    *p = 999;  // undefined behavior(ub)
+  }
+*/
+
+/*
+  char* foo(void)
+  {
+    char str[] = "hello world we are live from Istanbul";
+    // str is local variable -> automatic storage duration
+    return str;
+  }
+
+  int main(void)
+  {
+    char* p = foo();
+    // warning: function returns address of local variable
+
+    puts(p);  // undefined behavior(ub)
+  }
+*/
+
+/*
+  char g_str[] = "hello world we are live from Istanbul";
+  // str is global variable -> static storage duration
+
+  char* foo(void)
+  {
+    return g_str;
+  }
+
+  char* bar(void)
+  {
+    static char s_str[] = "reality or simulation";
+    // str is local static variable -> static storage duration
+
+    return s_str;
+  }
+
+  int main(void)
+  {
+    char* p1 = foo();
+    puts(p1);  
+    // output -> hello world we are live from Istanbul
+
+    char* p2 = bar();
+    puts(p2);
+    // output -> reality or simulation
+  }
+*/
+
+/*
+  int* foo(void)
+  {
+    int x = 45;
+    int* p = &x;
+    return p; 
+    // p's value is the address of x
+    // x is local variable -> automatic storage duration
+    // x will destroyed at the end of the function execution
+  }
+
+  int main(void)
+  {
+    int* p1 = foo();
+    // p is a dangling pointer
+
+    *p1 = 999;  // undefined behavior(ub)
+  }
+*/
+
+/*
+  int* foo(int* ptr)
+  {
+    return ptr; 
+    // returning the address that comes as an argument
+  }
+
+  int main(void)
+  {
+    int x = 10;
+
+    int* p = foo(&x);   // p is holding the address of x
+    *p = 8888;
+
+    printf("x = %d\n", x);  // output -> x = 8888
+  }
+*/
+
+/*
+  #include "../nutility.h"
+
+  int* foo(int* ptr)
+  {
+    return ptr + 3;
+    // returning &a[3] ==> (a + 3)
+  }
+
+  int main(void)
+  {
+    int a[5] = { 10, 20, 30, 40, 50 };
+
+    int* p = foo(a);  // argument is &a[0]
+    *p += 300;
+    print_array(a, 5);  // output -> 10 20 30 340 50
+  }
+*/
+
+/*
+  functions can return these addresses without creating ub.
+    1. static storage duration objects addresses
+      - global variable addresses
+      - local static variable addresses
+      - string literals (static storage duration array addresses)
+    2. address that comes as an argument
+    3. dynamic storage duration object addresses
+*/
+
+/* 
+  Question : "ptr" is a pointer variable 
+  that points to an element inside an array called "a".
+  What is the index of the element that "ptr" points to?
+
+  Answer : (ptr - a)
+*/
+
+/*
+  // Change the value of the max element of the array to -1
+
+  #include "../nutility.h"
+
+  #define SIZE 10
+
+  int* getMaxElement(const int* p, int size)
+  {
+    int* pmax = (int*)p;
+
+    for(int i = 1; i < size; ++i){
+      if (p[i] > *pmax)
+        pmax = (int*)(p + i);
+    }
+    return pmax;
+  }
+
+  int main(void)
+  {
+    int a[SIZE];
+
+    randomize();
+    set_array_random(a, SIZE);
+    print_array(a, SIZE);
+    // output ->   5 181 372 697 224 704 993 357 639 849
+
+    int* p = getMaxElement(a, SIZE);
+    printf("max element : %d and its index is %lld\n", *p, p - a);
+    // output -> max element : 993 and its index is 6
+
+    *p = -1;
+    print_array(a, SIZE);
+    // output ->   5 181 372 697 224 704  -1 357 639 849
+  }
+*/
+
+/*
+  #include "../nutility.h"
+
+  #define SIZE 10
+
+  int* getMaxElement(const int* p, int size)
+  {
+    int* pmax = (int*)p;
+
+    for(int i = 1; i < size; ++i){
+      if (p[i] > *pmax)
+        pmax = (int*)(p + i);
+    }
+    return pmax;
+  }
+
+  int main(void)
+  {
+    int a[SIZE];
+
+    randomize();
+    set_array_random(a, SIZE);
+    print_array(a, SIZE);
+    // output -> 511  16  39 959 351 524 903 614  31 170
+
+    *getMaxElement(a, SIZE) = -1;
+    print_array(a, SIZE);
+    // output -> 511  16  39  -1 351 524 903 614  31 170
+  }
+*/
+
+/*
+  // Swap the max element with the first element of the array
+
+  #include "../nutility.h"
+
+  #define SIZE 10
+
+  int* getMaxElement(const int* p, int size)
+  {
+    int* pmax = (int*)p;
+
+    for(int i = 1; i < size; ++i){
+      if (p[i] > *pmax)
+        pmax = (int*)(p + i);
+    }
+    return pmax;
+  }
+
+  int main(void)
+  {
+    int a[SIZE];
+
+    randomize();
+    set_array_random(a, SIZE);
+    print_array(a, SIZE);
+    // output -> 184 964  42  34 234 230 476 187 547 620
+
+    swap(a, getMaxElement(a, SIZE));
+    // a ===> &a[0]
+    // getMaxElement(a, SIZE) ===> &a[max_elem_idx]
+
+    print_array(a, SIZE);
+    // output -> 964 184  42  34 234 230 476 187 547 620
+  }
+*/
+
+/*
+  #include "../nutility.h"
+
+  #define SIZE 10
+
+  int* getMaxElement(const int* p, int size)
+  {
+    int* pmax = (int*)p;
+
+    for(int i = 1; i < size; ++i){
+      if (p[i] > *pmax)
+        pmax = (int*)(p + i);
+    }
+    return pmax;
+  }
+
+  int* getMinElement(const int* p, int size)
+  {
+    int* pmin = (int*)p;
+
+    for(int i = 1; i < size; ++i){
+      if (p[i] < *pmin)
+        pmin = (int*)(p + i);
+    }
+    return pmin;
+  }
+
+  int main(void)
+  {
+    int a[SIZE];
+
+    randomize();
+    set_array_random(a, SIZE);
+    print_array(a, SIZE);
+    // output -> 625 206 873 549 445  50 673 221 387 831
+
+    int* pmax = getMaxElement(a, SIZE);
+    int* pmin = getMinElement(a, SIZE);
+
+    printf("max element : %d, index = %lld\n", *pmax, pmax - a);
+    // output -> max element : 873, index = 2
+    printf("min element : %d, index = %lld\n", *pmin, pmin - a);
+    // output -> min element : 50, index = 5
+  }
+*/
+
+/*
+  // Swap min and max elements of the array
+
+  #include "../nutility.h"
+
+  #define SIZE 10
+
+  int* getMaxElement(const int* p, int size)
+  {
+    int* pmax = (int*)p;
+
+    for(int i = 1; i < size; ++i){
+      if (p[i] > *pmax)
+        pmax = (int*)(p + i);
+    }
+    return pmax;
+  }
+
+  int* getMinElement(const int* p, int size)
+  {
+    int* pmin = (int*)p;
+
+    for(int i = 1; i < size; ++i){
+      if (p[i] < *pmin)
+        pmin = (int*)(p + i);
+    }
+    return pmin;
+  }
+
+  int main(void)
+  {
+    int a[SIZE];
+
+    randomize();
+    set_array_random(a, SIZE);
+    print_array(a, SIZE);
+    // output -> 928   0 841 213 661 788 219 128 869 117
+
+    swap(getMaxElement(a, SIZE), getMinElement(a, SIZE));
+
+    print_array(a, SIZE);
+    // output ->   0 928 841 213 661 788 219 128 869 117 
+  }
+*/
+
+/*
+  // call print_array function a way that 
+  // begins with max element
+  // ends with the end of the array 
+  #include "../nutility.h"
+
+  #define SIZE 10
+
+  int* getMaxElement(const int* p, int size)
+  {
+    int* pmax = (int*)p;
+
+    for(int i = 1; i < size; ++i){
+      if (p[i] > *pmax)
+        pmax = (int*)(p + i);
+    }
+    return pmax;
+  }
+
+  int main(void)
+  {
+    int a[SIZE];
+    randomize();
+    set_array_random(a, SIZE);
+    print_array(a, SIZE);
+    // output -> 297 367  57 198  91 920 616 784 178 748
+
+    int* pmax = getMaxElement(a, SIZE);
+
+    print_array(pmax, SIZE - (pmax - a));
+    // output -> 920 616 784 178 748
+
+    // integer - address -> NOT VALID
+    // address - address = integer
+  }
+*/
+
+/*
+  // call print_array function a way that 
+  // begins with the first element
+  // ends with the max element
+  #include "../nutility.h"
+
+  #define SIZE 10
+
+  int* getMaxElement(const int* p, int size)
+  {
+    int* pmax = (int*)p;
+
+    for(int i = 1; i < size; ++i){
+      if (p[i] > *pmax)
+        pmax = (int*)(p + i);
+    }
+    return pmax;
+  }
+
+  int main(void)
+  {
+    int a[SIZE];
+    randomize();
+    set_array_random(a, SIZE);
+    print_array(a, SIZE);
+    // output -> 865 813 463 910 355 811 894 958 610 329
+
+    int* pmax = getMaxElement(a, SIZE);
+    print_array(a, pmax - a + 1);
+    // output -> 865 813 463 910 355 811 894 958
+  }
+*/
+
+/*
+  // call print_array function a way that 
+  // prints all elements between min and max elements
+  #include "../nutility.h"
+
+  #define SIZE 10
+
+  int* getMaxElement(const int* p, int size)
+  {
+    int* pmax = (int*)p;
+
+    for(int i = 1; i < size; ++i){
+      if (p[i] > *pmax)
+        pmax = (int*)(p + i);
+    }
+    return pmax;
+  }
+
+  int* getMinElement(const int* p, int size)
+  {
+    int* pmin = (int*)p;
+
+    for(int i = 1; i < size; ++i){
+      if (p[i] < *pmin)
+        pmin = (int*)(p + i);
+    }
+    return pmin;
+  }
+
+  int main(void)
+  {
+    int a[SIZE];
+    randomize();
+    set_array_random(a, SIZE);
+    print_array(a, SIZE);
+    // output -> 482 646 687 125 730 299 323 759 341 224
+
+    int* pmax = getMaxElement(a, SIZE);
+    int* pmin = getMinElement(a, SIZE);
+
+    if (pmin < pmax)
+      print_array(pmin, pmax - pmin + 1);
+    else
+      print_array(pmax, pmin - pmax + 1);
+
+    // output -> 125 730 299 323 759
+  }
+*/
