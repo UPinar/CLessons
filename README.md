@@ -96,7 +96,7 @@
   - arrays initialization
   - designated initializer(C99)
   - sorting algorithms 
-  - bubbble sort
+  - bubble sort
   - merge algorithm 
   - binary search
 
@@ -116,7 +116,11 @@
   - pointer idioms
   - comparison between addresses(pointers)
   - functions that returns pointer(adres döndüren fonksiyonlar)
+  - valid and invalid pointers
+  - `NULL` - null pointer 
   
 ### [Lesson_30 `const` Keyword](https://github.com/UPinar/CLessons/tree/master/Lesson_30)
   - why using `const` keyword
   - pointers & `const`
+  
+### [Lesson_33 Type Alias(`typedef`) Declarations](https://github.com/UPinar/CLessons/tree/master/Lesson_33)
