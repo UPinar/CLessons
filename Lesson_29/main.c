@@ -3343,3 +3343,710 @@
     // output -> 125 730 299 323 759
   }
 */
+
+/*
+  selection sort O(n^2)
+
+  482 646 687 125 730 299 323 759 341 224
+  125 646 687 482 730 299 323 759 341 224
+  125 224 687 482 730 299 323 759 341 646
+  125 224 299 482 730 687 323 759 341 646
+  125 224 299 323 730 687 482 759 341 646
+  125 224 299 323 341 687 482 759 730 646
+  125 224 299 323 341 482 687 759 730 646
+  125 224 299 323 341 482 646 759 730 687
+  125 224 299 323 341 482 646 687 730 759
+
+  (n - 1) * (n) = n^2 - n = O(n^2)
+*/
+
+/*
+  #include "../nutility.h"
+  #define   SIZE  10
+
+  int* getMinElement(const int* p, int size)
+  {
+    int* pmin = (int*)p;
+
+    for(int i = 1; i < size; ++i){
+      if (p[i] < *pmin)
+        pmin = (int*)(p + i);
+    }
+    return pmin;
+  }
+
+  void selection_sort(int* p, int size)
+  {
+    for (int i = 0; i < size - 1; ++i){
+      swap(p + i, getMinElement(p + i, size - i));
+    }
+    
+  }
+
+  int main(void)
+  {
+    int a[SIZE];
+    randomize();
+    set_array_random(a, SIZE);
+    print_array(a, SIZE);
+    // output -> 133 803 439 619 433 924 821 191 469 824
+
+    selection_sort(a, SIZE);
+    print_array(a, SIZE);
+    // output -> 133 191 433 439 469 619 803 821 824 924
+  }
+*/
+
+/*
+                ------------------------------
+                | valid and invalid pointers |
+                ------------------------------
+*/
+
+/*
+  pointer variable can be in 2 different state.
+    - valid pointer   -> pointer değişken geçerli durumda
+    - invalid pointer -> pointer değişken geçersiz durumda
+
+  invalid pointer can not be used in any operation other than 
+  assignment operation(assigning a valid pointer to it)
+  
+  dereferencible pointer -> valid pointer and when it is dereferenced
+  it will not cause undefined behavior(ub)
+
+  if a pointer is pointing an object that its life time is not over
+  (still alive) then the pointer is a valid pointer
+*/
+
+/*
+  int main(void)
+  {
+    int a[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+    int* ptr;
+
+    ptr = a + 10;
+
+    --ptr;    // is a valid operation
+    printf("%d\n", *ptr);  // output -> 10
+
+    ptr -= 2; // is a valid operation
+    printf("%d\n", *ptr);   // output -> 8
+
+    ptr = a + 10;
+    int val = ptr - (a + 3);
+    printf("val = %d\n", val);  // val = 7;
+
+    ptr = a + 10;
+    *ptr; // undefined behavior(ub)
+    // ptr is a valid but not a dereferencing pointer 
+    // when it is pointing to the end of the array
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int* ptr; // invalid pointer
+    // because of "ptr" is an automatic storage duration object
+    // it has indeterminate(garbage) value.
+    // this kind of pointers are called "wild pointer"
+
+    // the only way to make a pointer valid is to assign a 
+    // valid address to it
+  }
+*/
+
+/*
+  int* foo(void)
+  {
+    int x = 10;
+    return &x;
+  }
+
+  int main(void)
+  {
+    int* ptr = foo(); // invalid pointer
+    // because of the address that foo function returns,
+    // is the address of a local variable;
+    // the object that "ptr" points to 
+    // is destroyed at the end of the "foo" function's execution
+    // so "ptr" becomes a "dangling pointer"
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int* ptr;         // "ptr" is invalid -> wild pointer
+    int x = 15;       // "ptr" is invalid -> wild pointer
+                      // "ptr" is invalid -> wild pointer
+    if (x > 10){      // "ptr" is invalid -> wild pointer
+      int y = 45;     // "ptr" is invalid -> wild pointer
+      ptr = &y;       // "ptr" is valid
+      // code ...     // "ptr" is valid   
+      // code ...     // "ptr" is valid
+    }                 // "ptr" is invalid -> dangling pointer
+                      // "ptr" is invalid -> dangling pointer
+    // code ...       // "ptr" is invalid -> dangling pointer
+    ptr = &x;         // "ptr" is valid
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int* ptr;
+    int a[5] = { 0 };
+
+    ptr = a + 5;  // "ptr" is a valid but not dereferencible pointer
+    ptr++;        // "ptr" is invalid pointer
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int x = 10;
+    int arr[20] = { 0 };
+
+    int* ptr = &x;  // "ptr" is a valid pointer
+    ptr = arr + 20; // "ptr" is a valid but not dereferencible pointer
+    ptr = NULL;     // "ptr" is a valid pointer (null pointer)
+  }
+*/
+
+/*
+                        ----------------
+                        | null pointer |
+                        ----------------
+*/
+
+/*
+  - `NULL` is not a keyword.
+  - `NULL` is NOT an identifier from compiler's point of view.
+    (NULL derleyici açısından bir isim değildir.)
+  - `NULL` is a macro.(symbolic constant)
+  - `NULL` macro is defined in some header files of C standart library
+    (stdio.h, stdlib.h, time.h, stddef.h, string.h ...)
+  - null pointer is an address constant. 
+    (constant expression and an address)
+  - null pointer is an address that can be assign to or initialize 
+    all pointer types.
+
+  - if a pointer is a null pointer, it is a valid pointer but
+    it is not pointing to any object.
+    (geçerli bir pointer olmasına rağmen hiçbir nesnenin adresi değil.)
+    (hiçbir nesnenin adresi olmayacağı garantisi var.)
+  
+  - dereferencing a null pointer is undefined behavior(ub)
+    (null pointer dereference)
+*/
+
+/*
+  int main(void)
+  {
+    int* i_ptr = NULL;
+    i_ptr = NULL;
+
+    double* d_ptr = NULL;
+    d_ptr = NULL;
+    
+    char* c_ptr = NULL;
+    c_ptr = NULL;
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int* ptr = NULL;
+  }
+
+  // compiled with x86-64 clang 19.1.0 -O0 -std=c11
+  // main:
+  //  push rbp
+  //  mov rbp, rsp
+  //  mov qword ptr [rbp - 8], 0  : int* ptr = NULL
+  //  xor eax, eax
+  //  pop rbp
+  //  ret
+*/
+
+
+/*
+  int main(void)
+  {
+    int* ptr = NULL;
+
+    *ptr;   // dereferencing a null pointer undefined behavior(ub)
+    ptr[3]; // *(ptr + 3) -> undefined behavior(ub)
+
+    sizeof(*ptr); // not undefined behavior(ub) 
+    // no operation code is generated for the operand of sizeof operator 
+    // unevaluated context 
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int* ptr = NULL;
+
+    if (ptr == NULL){}
+    if (ptr != NULL){}
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int x = 34;
+
+    int* p1 = NULL;
+    int* p2 = &x;
+
+    if (p1 == p2)
+      printf("p1 and p2 are equal\n");
+    else
+      printf("p1 and p2 are not equal\n");
+    
+    // output -> p1 and p2 are not equal
+
+    p2 = NULL;
+
+    if (p1 == p2)
+      printf("p1 and p2 are equal\n");
+    else
+      printf("p1 and p2 are not equal\n");
+
+    // output -> p1 and p2 are equal
+  }
+*/
+
+/*
+  - pointer expression(an address) can be used 
+    in a conditional expression (logical expression)
+
+  - logical interpretation of a pointer expression
+    is that if the pointer is a null pointer or not
+    (eğer lojik ifade beklenen bir yerde, pointer ifadesi
+    kullanılmışsa, lojik yorumlama pointer ifadesinin 
+    NULL pointer olup olmadığı sorgulamasıdır.)
+*/
+
+/*
+  int main(void)
+  {
+    int x = 10;
+    int* ptr = &x;
+
+    //  ---------------------------------------------------
+
+    if (ptr != NULL){}
+    if (ptr){}
+    // Those 2 lines are equivalent.
+
+    while (ptr == NULL){}
+    while (!ptr){}
+    // Those 2 lines are equivalent.
+
+    //  ---------------------------------------------------
+
+    int* p1, *p2;
+
+    if (p1 && p2){}
+    if (p1 != NULL && p2 != NULL){}
+    // Those 2 lines are equivalent.
+
+    //  ---------------------------------------------------
+
+    ptr ? 5 : 10;
+    ptr != NULL ? 5 : 10;
+    // Those 2 lines are equivalent.
+
+    //  ---------------------------------------------------
+  }
+*/
+
+/*
+  // if a static storage duration object (pointer) is not 
+  // initalized with an address, it will be a null pointer.
+
+  int* g_p3;  
+  // global variable(pointer) - static storage duration object
+  // NULL pointer
+
+  int main(void)
+  {
+    int* p1;
+    // local variable(pointer) - automatic storage duration object
+    // indeterminate(garbage) value
+
+    static int* s_p2;
+    // static local variable(pointer) - static storage duration object
+    // NULL pointer
+
+
+    if (s_p2 == NULL)
+      printf("s_p2 is a null pointer\n");
+    else
+      printf("s_p2 is not a null pointer\n");
+
+    // output -> s_p2 is a null pointer
+
+    if (!g_p3)
+      printf("g_p3 is a null pointer\n");
+    else
+      printf("g_p3 is not a null pointer\n");
+    
+    // output -> g_p3 is a null pointer
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int arr[10];      // array of integers
+    int* p_arr[10];   // array of pointers
+
+    // ---------------------------------------------------------
+
+    int arr_2[5] = { 1, 2, 3 };
+    // last 2 elements are zero initialized
+
+    printf("arr_2[3] = %d, arr_2[4] = %d\n", arr_2[3], arr_2[4]);
+    // output -> arr_2[3] = 0, arr_2[4] = 0
+
+    // ---------------------------------------------------------
+
+    int x, y, z;
+    int* p_arr_2[5] = { &x, &y, &z };
+    // last 2 elements are NULL pointer
+
+    if (p_arr_2[3] == NULL && p_arr_2[4] == NULL)
+      printf("last 2 elements are NULL pointer\n");
+    else
+      printf("last 2 elements are not NULL pointer\n");
+
+    // output ->last 2 elements are NULL pointer
+
+    // ---------------------------------------------------------
+  }
+*/
+
+/*
+  #include <time.h>
+
+  int main(void)
+  {
+    int x = 5;
+    int* p = &x;
+
+    // -------------------------------------------------------
+
+    p = x;    // assigning integer to pointer 
+    p = 34;   // assigning integer to pointer
+    // error: assignment to 'int *' from 'int' makes pointer 
+    // from integer without a cast
+
+    // -------------------------------------------------------
+
+    p = 0;            // VALID
+    int* ptr_2 = 0;   // VALID
+
+    // implicit 0 to NULL pointer conversion 
+    // (null pointer conversion)
+
+    int x = 10;
+    p = x;            // NOT VALID (might syntax error) 
+    // error: assignment to 'int *' from 'int' 
+    // makes pointer from integer without a cast
+
+    // need to assign integer constant for null pointer conversion.
+    // tam sayı sabiti 0 kullanılmalıdır.
+
+    // -------------------------------------------------------
+
+    time(0);    // do not need to include any header file
+    time(NULL); // need to include header file that defined NULL macro
+    // Those 2 lines are equivalent.
+
+    // time function's parameter variable is a pointer
+    // we are passing null pointer to its parameter variable.
+
+    // -------------------------------------------------------
+  } 
+*/
+
+/*
+  <---------------------- SCENARIO_1 ---------------------->
+
+  - In C standart and 3rd party libraries, some functions
+    returns an address after their operations are done.
+    If those functions is not able to succeed the operation
+    they will return a null pointer.
+    (When the function is failed, it will return a null pointer)
+
+    FILE* fopen(???);  
+    if "fopen" function fails, it will return a null pointer
+
+    void* malloc(size_t);
+    if "malloc" function fails, it will return a null pointer
+*/
+
+/*
+  int main(void)
+  {
+    //  -------------------------------------------------------
+
+    FILE* fp = fopen("deneme.txt", "r");
+
+    if (fp == NULL)
+      printf("deneme.txt file could not be opened\n");
+    else
+      printf("deneme.txt file is opened\n");
+    
+    // output -> deneme.txt file could not be opened
+
+    //  -------------------------------------------------------
+
+    fp = fopen("main.c", "r");
+
+    if (!fp)
+      printf("main.c file could not be opened\n");
+    else
+      printf("main.c file is opened\n");
+
+    // output -> main.c file is opened
+
+    //  -------------------------------------------------------
+  }
+*/
+
+/*
+  <---------------------- SCENARIO_2 ---------------------->
+
+  - Some functions, are searching a value in a data structure.
+    If the value is found, they will return the address of the
+    element. If the value is not found(unsuccessful search), 
+    they will return a null pointer.
+
+    strchr(const char* ntbs, int character);
+    // if the character is not found, it will return a null pointer
+
+    strchr, strrchr, strstr, strpbrk, memchr ...
+*/
+
+/*
+  #include <string.h>
+
+  #define SIZE 100
+
+  int main(void)
+  {
+    char str[SIZE] = "hello world";
+
+    // -------------------------------------------------------
+
+    char* c_p = strchr(str, 'z');
+    
+    if (c_p != NULL)
+      printf("character 'z' is found in the string\n");
+    else
+      printf("character 'z' is not found in the string\n");
+
+    // output -> character 'z' is not found in the string
+
+    // -------------------------------------------------------
+
+    c_p = strchr(str, 'o');
+
+    if (c_p){
+      printf("character 'o' is found in the string\n");
+      printf("index of 'o' is %lld\n", c_p - str);
+      puts(c_p);
+    }
+    else
+      printf("character 'o' is not found in the string\n");
+
+    // output -> 
+    //  character 'o' is found in the string
+    //  index of 'o' is 4
+    //  o world
+
+    // -------------------------------------------------------
+  }
+*/
+
+/*
+  #include "../nutility.h"
+
+  #define SIZE 10
+
+  // if the key is found in the array, 
+  // it will return the address of the element
+  // if the key is not found in the array,
+  // it will return a null pointer
+  int* search_in_array(const int* p_array, int size, int key)
+  {
+    while(size--){
+      if(*p_array == key){
+        return (int*)p_array;   // const cast -> const int* to int*
+      }
+      ++p_array;
+    }
+
+    return NULL;
+  }
+
+  int main(void)
+  {
+    int a[SIZE];
+    set_array_random(a, SIZE);
+    print_array(a, SIZE);
+
+    int key;
+    printf("enter a key : ");
+    scanf("%d", &key);
+
+    int* ptr = search_in_array(a, SIZE, key);
+
+    if (ptr){
+      printf("key is found in the array\n");
+      printf("index of the key is %lld\n", ptr - a);
+      *ptr = -1;
+      print_array(a, SIZE);
+    }
+    else
+      printf("key is not found in the array\n");
+
+    // input ->  
+    //  41 467 334 500 169 724 478 358 962 464
+    //  enter a key : 500
+    // output -> 
+    //  key is found in the array
+    //  index of the key is 3
+    //   41 467 334  -1 169 724 478 358 962 464
+
+
+    // input ->
+    //  41 467 334 500 169 724 478 358 962 464
+    //  enter a key : 999
+    // output -> key is not found in the array
+  }
+*/
+
+/*
+  <---------------------- SCENARIO_3 ---------------------->
+
+  - Some functions are accepting an address to an object or a 
+    null pointer as an argument. Function will act differently
+    according to the argument that is passed to it.
+      -> acting different when the argument is a null pointer
+      -> acting different when the argument is an address of an object
+
+    so not a null pointer dereferencing happening when 
+    the argument passed is a null pointer.
+
+    time_t time(time_t* ptr);   -> out param
+    - time(0);
+    - time(NULL);
+
+
+  - When a function with a pointer argument has been used,
+    first thing to check is, if NULL pointer passed to that function
+    will be an undefined behavior or it will have a special 
+    meaning for that function.
+
+    Bir fonksiyonun pointer argümanı aldığı durumda, 
+    ilk yapılması gereken şey, o fonksiyona NULL pointer
+    geçilmesinin tanımsız davranış mı yoksa o fonksiyon için
+    özel bir anlamı olup olmadığını kontrol etmektir.
+*/
+
+/*
+  #include <time.h>
+
+  int main(void)
+  {
+    // -------------------------------------------------------
+
+    time_t sec;
+    time(&sec);
+    printf("seconds since 1.1.1970 : %lld\n", (long long)sec);
+    // output -> seconds since 1.1.1970 : 1727961306
+
+    // -------------------------------------------------------
+
+    printf("seconds since 1.1.1970 : %lld\n", (long long)time(NULL));
+    // output -> seconds since 1.1.1970 : 1727961306
+
+    // -------------------------------------------------------
+  }
+*/
+
+/*
+  int main(void)
+  {
+    FILE* p_file = fopen("main.c", "r");
+
+    // -------------------------------------------------------
+
+    fflush(p_file); 
+    // will flush the buffer of the file stream
+    // if we want only flush to one file stream
+
+    // -------------------------------------------------------
+
+    fflush(NULL);   
+    // will flush all of the output streams
+    // if we want to flush all of the output streams
+
+    // -------------------------------------------------------
+  }
+*/
+
+/*
+  #include "../nutility.h"
+
+  // void print_array(const int* p_array, int size){
+  //   for (int i = 0; i < size; ++i){
+  //     if (i && i % 10 == 0)
+  //       putchar('\n');
+  //     printf("%3d ", p_array[i]);    ---------------------->
+  //   }
+  // }
+
+  // in "print_array" functions code pointer argument is dereferenced.
+  // "p_array[i]" is dereferencing the pointer
+
+  int main(void)
+  {
+    int* ptr = NULL;
+    print_array(ptr, 10);   // null pointer dereferencing(ub)
+  }
+*/
+
+/*
+  < ---------------------- SCENARIO_4 ---------------------- >
+  - pointer variable's value can be used as a flag 
+    -> if nullptr, false
+    -> if not nullptr, true
+*/
+
+/*
+  int g_x = 34;
+
+  int main(void)
+  {
+    int* p = NULL;
+
+    if (1){
+      p = &g_x;
+    }
+
+    if (p){ // using pointer's value as a flag
+      // code..
+    }   
+  }
+*/
