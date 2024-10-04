@@ -124,3 +124,8 @@
   - pointers & `const`
   
 ### [Lesson_33 Type Alias(`typedef`) Declarations](https://github.com/UPinar/CLessons/tree/master/Lesson_33)
+  - `typedef` declarations
+  - type aliases in standart library
+
+### [Lesson_34 Standart Library](https://github.com/UPinar/CLessons/tree/master/Lesson_34)
+  - string operations (yazı işlemleri)
