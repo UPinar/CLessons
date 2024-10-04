@@ -22,13 +22,13 @@ void swap(int* x, int* y){
   *y = temp;
 }
 
-void set_array_random(int* p_array, int size){
+void set_array_random(int* p_array, size_t size){
   while(size--)
     *p_array++ = rand() % 1000;
 }
 
-void print_array(const int* p_array, int size){
-  for (int i = 0; i < size; ++i){
+void print_array(const int* p_array, size_t size){
+  for (size_t i = 0; i < size; ++i){
     if (i && i % 10 == 0)
       putchar('\n');
     printf("%3d ", p_array[i]);
@@ -36,9 +36,9 @@ void print_array(const int* p_array, int size){
   printf("\n---------------------------------------\n");
 }
 
-void sort_array(int* pArr, int size){
-  for (int i = 0; i < size - 1; ++i){
-    for (int k = i + 1; k < size; ++k){
+void sort_array(int* pArr, size_t size){
+  for (size_t i = 0; i < size - 1; ++i){
+    for (size_t k = i + 1; k < size; ++k){
       if (pArr[i] > pArr[k]){
         int temp = pArr[i];
         pArr[i] = pArr[k];
@@ -48,62 +48,62 @@ void sort_array(int* pArr, int size){
   }
 }
 
-void reverse_array(int* p_array, int size)
+void reverse_array(int* p_array, size_t size)
 {
-  for(int i = 0; i < size / 2; ++i)
+  for(size_t i = 0; i < size / 2; ++i)
     swap(p_array + i, p_array + size - i - 1);
 }
 
-int get_sum(const int* p_array, int size)
+int get_sum(const int* p_array, size_t size)
 {
   int sum = 0;
-  for(int i = 0; i < size; ++i)
+  for(size_t i = 0; i < size; ++i)
     sum += p_array[i];
   
   return sum;
 }
 
-double get_mean(const int* p_array, int size)
+double get_mean(const int* p_array, size_t size)
 {
-  return (double)get_sum(p_array, size) / size;
+  return (double)get_sum(p_array, size) / (double)size;
 }
 
-double get_std_dev(const int* p_array, int size)
+double get_std_dev(const int* p_array, size_t size)
 {
   double mean = get_mean(p_array, size);
   double sum_square = 0.;
 
-  for(int i = 0; i < size; ++i)
+  for(size_t i = 0; i < size; ++i)
     sum_square += (p_array[i] - mean) * (p_array[i] - mean);
 
-  return sqrt(sum_square / (size - 1));
+  return sqrt(sum_square / ((int)size - 1));
 }
 
-int get_max_elem(const int* p_array, int size)
+int get_max_elem(const int* p_array, size_t size)
 {
   int max = p_array[0];
-  for(int i = 1; i < size; ++i)
+  for(size_t i = 1; i < size; ++i)
     if(p_array[i] > max)
       max = p_array[i];
   
   return max;
 }
 
-int get_min_elem(const int* p_array, int size)
+int get_min_elem(const int* p_array, size_t size)
 {
   int min = *p_array;
-  for(int i = 1; i < size; ++i)
+  for(size_t i = 1; i < size; ++i)
     if(p_array[i] < min)
       min = p_array[i];
   
   return min;
 }
 
-void get_min_max(const int* p_array, int size, int* p_min, int* p_max)
+void get_min_max(const int* p_array, size_t size, int* p_min, int* p_max)
 {
   *p_min = *p_max = *p_array;
 
-  for(int i = 1; i < size; ++i){
+  for(size_t i = 1; i < size; ++i){
     if(p_array[i] > *p_max)
       *p_max = p_array[i];
     else if(p_array[i] < *p_min)
@@ -111,13 +111,13 @@ void get_min_max(const int* p_array, int size, int* p_min, int* p_max)
   }
 }
 
-void copy_array(int* p_dest, const int* p_source, int size)
+void copy_array(int* p_dest, const int* p_source, size_t size)
 {
   while (size--)
     *p_dest++ = *p_source++;
 }
 
-void swap_arrays(int* p_array1, int* p_array2, int size)
+void swap_arrays(int* p_array1, int* p_array2, size_t size)
 {
   while (size--)
     swap(p_array1++, p_array2++);
