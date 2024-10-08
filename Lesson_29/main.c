@@ -4050,3 +4050,81 @@
     }   
   }
 */
+
+/*
+                    -----------------------
+                    | more pointer idioms |
+                    -----------------------
+*/
+
+/*
+  - p bir yazıyı gösteriyor ise ve 
+    p'nin gösterdiği yazı boş değil ise
+
+  if (p != NULL && *p != '\0') {}
+  if (p && *p) {}
+
+    when p = NULL -> *p will be undefined behaviour 
+    because of the short circuit when p = NULL,
+    *p will not be evaluated
+
+  --------------------------------------------------------
+
+  - p bir yazıyı göstermiyor ise veya 
+    p'nin gösterdiği yazı boş ise
+
+  if (p == NULL || *p == '\0') {}
+  if (!p || !*p) {}
+
+    when p = NULL -> *p will be undefined behaviour 
+    because of the short circuit when p = NULL,
+    *p will not be evaluated
+*/
+
+/*
+  way to change ptr's value to the address of the end of the string
+  it should also be correct when the string is empty
+
+  ptr ==>     'h'
+              'e'
+              'l'
+              'l'
+              'o'
+              '\0'        <== ptr will be pointing here
+*/
+
+/*
+  <---------------------- IDIOM_1 ---------------------->
+
+  while(*ptr != '\0')
+    ++ptr;
+
+  while(*ptr)
+    ++ptr;
+
+  <---------------------- IDIOM_2 ---------------------->
+
+  while(*ptr++)
+    ; // null statement
+  --p;
+
+  <---------------------- IDIOM_3 ---------------------->
+
+  while(*++ptr)
+    ; // null statement
+
+  -> this idiom will be UB when the string is empty.
+
+  <---------------------- IDIOM_4 ---------------------->
+
+  #include <string.h> // strlen
+
+  ptr += strlen(ptr);
+
+  <---------------------- IDIOM_5 ---------------------->
+
+  #include <string.h> // strchr
+
+  ptr = strchr(ptr, '\0');
+*/
+

@@ -118,6 +118,7 @@
   - functions that returns pointer(adres döndüren fonksiyonlar)
   - valid and invalid pointers
   - `NULL` - null pointer 
+  - more pointer idioms
   
 ### [Lesson_30 `const` Keyword](https://github.com/UPinar/CLessons/tree/master/Lesson_30)
   - why using `const` keyword
@@ -129,3 +130,14 @@
 
 ### [Lesson_34 Standart Library](https://github.com/UPinar/CLessons/tree/master/Lesson_34)
   - string operations (yazı işlemleri)
+    - `strlen` 
+    - `strchr` 
+    - `strrchr`
+    - `strstr`
+    - `strpbrk`
+    - `strcpy`
+    - overlapped blocks and `restrict` keyword
+    - `strcat`
+    - string comparison(yazıların karşılaştırılması)
+      - lexicographical compare
+      - `strcmp`
