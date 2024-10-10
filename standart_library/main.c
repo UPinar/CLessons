@@ -772,6 +772,7 @@
 
 /*
   #include <string.h> // strcmp
+  #include <ctype.h>  // toupper
 
   #define SIZE 100
 
@@ -779,8 +780,31 @@
   int strcmp(const char* p_first, const char* p_second);
 
   // strcmp function's implementation
-  char* Strcmp_1(const char* p_first, const char* p_second)
+  int Strcmp_1(const char* p_first, const char* p_second)
   {
+    while(*p_first == *p_second)
+    {
+      if (*p_first == '\0')
+        return 0;
+
+      ++p_first, ++p_second;
+    }
+
+    return *p_first - *p_second;
+  }
+
+  // case insensitive strcmp function's implementation
+  int Stricmp_1(const char* p_first, const char* p_second)
+  {
+    while(tolower(*p_first) == tolower(*p_second))
+    {
+      if (*p_first == '\0')
+        return 0;
+
+      ++p_first, ++p_second;
+    }
+
+    return tolower(*p_first) - tolower(*p_second);
   }
 
   int main(void)
@@ -815,7 +839,6 @@
       printf("(%s) = (%s)\n", s1, s2);
     // output -> (hello) < (world)
 
-
     cmp_result = strcmp(s1, s3);
     if (cmp_result > 0)
       printf("(%s) > (%s)\n", s1, s3);
@@ -826,5 +849,57 @@
     // output -> (hello) = (hello)
 
     // ---------------------------------------------------
+
+    char s4[SIZE] = "istanbul";
+    char s5[SIZE] = "ISTANBUL";
+
+    cmp_result = Strcmp_1(s4, s5);
+
+    if (cmp_result == 0)
+      printf("(%s) = (%s)\n", s4, s5);
+    else 
+      printf("(%s) != (%s)\n", s4, s5);
+    // output -> (istanbul) != (ISTANBUL)
+
+    // ---------------------------------------------------
+
+    cmp_result = Stricmp_1(s4, s5);
+    if (cmp_result == 0)
+      printf("(%s) = (%s)\n", s4, s5);
+    else 
+      printf("(%s) != (%s)\n", s4, s5);
+    // output -> (istanbul) = (ISTANBUL)
+
+    // ---------------------------------------------------
+  }
+*/
+
+/*
+  #include <string.h>  // strcmp
+
+  #define SIZE 100
+
+  // boolean int functions -> true: non-zero, false: zero
+  int ends_with(const char* p_source, const char* p_key)
+  {
+    size_t len_source = strlen(p_source);
+    size_t len_key = strlen(p_key);
+
+    if (len_key > len_source)
+      return 0;
+
+    return !strcmp(p_source + len_source - len_key, p_key);
+  }
+
+  int main()
+  {
+    char str[SIZE] = "hello galaxy";
+    char end[] = "axy";
+
+    if (ends_with(str, end))
+      printf("(%s) ends with (%s)\n", str, end);
+    else
+      printf("(%s) does not end with (%s)\n", str, end);
+    // output -> (hello galaxy) ends with (axy) 
   }
 */

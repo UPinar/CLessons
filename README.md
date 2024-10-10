@@ -1,6 +1,6 @@
 # C Lessons
 
-### [Lesson_1 C Language](https://github.com/UPinar/CLessons/tree/master/Lesson_1) 
+### [C Language](https://github.com/UPinar/CLessons/tree/master/c_language) 
   - C language characteristics
   - C Standarts
   - C program
@@ -12,14 +12,14 @@
   - seperate compilation model
   - external reference
 
-### [Lesson_4 Basic Types](https://github.com/UPinar/CLessons/tree/master/Lesson_4)
+### [Basic Types](https://github.com/UPinar/CLessons/tree/master/basic_types)
   - basic types of C language
   - declaration(bildirim) and definition(tanimlama)
   - storage duration
   - scope (kapsam - faaliyet alani)
   - naming - naming conventions
 
-### [Lesson_6 Functions](https://github.com/UPinar/CLessons/tree/master/Lesson_6)
+### [Functions](https://github.com/UPinar/CLessons/tree/master/functions)
   - function definition syntax
   - return statement
   - function call
@@ -27,13 +27,13 @@
   - ctype <ctype.h> module
   - function prototype(s) | function declaration
 
-### [Lesson_9 Input Output](https://github.com/UPinar/CLessons/tree/master/Lesson_9)
+### [Input Output](https://github.com/UPinar/CLessons/tree/master/input_output)
   - standart C library
   - call(pass) by value, call(pass) by reference
   - constants (sabitler) 
   - Input & Output Operations
 
-### [Lesson_11 Operators](https://github.com/UPinar/CLessons/tree/master/Lesson_11)
+### [Operators](https://github.com/UPinar/CLessons/tree/master/operators)
   - operator priority, precedence (operatör önceliği)
   - operator associativity (öncelik yönü)
   - arithmetic operators
@@ -48,7 +48,7 @@
   - ternary operator (koşul operatörü)
   - `sizeof` operator
 
-### [Lesson_14 Control Statements](https://github.com/UPinar/CLessons/tree/master/Lesson_14)
+### [Control Statements](https://github.com/UPinar/CLessons/tree/master/control_statements)
   - `if` statement
   - `while` statement
   - n kere dönen döngü idiyomu (loop idiom that loops n times)
@@ -64,7 +64,7 @@
   - `goto` statement
   - nested loops
 
-### [Lesson_19 Preprocessor](https://github.com/UPinar/CLessons/tree/master/Lesson_19)
+### [Preprocessor](https://github.com/UPinar/CLessons/tree/master/preprocessor)
   - `#include`
   - `#define`
   - object-like macros
@@ -79,17 +79,17 @@
   - `#line`
   - `#pragma`
 
-### [Lesson_23 Random Number Generation](https://github.com/UPinar/CLessons/tree/master/Lesson_23)
+### [Random Number Generation](https://github.com/UPinar/CLessons/tree/master/random_number_generation)
   - `rand()` function
   - `srand()` function
   - randomize idiom
 
-### [Lesson_24 Type Conversions](https://github.com/UPinar/CLessons/tree/master/Lesson_24)
+### [Type Conversions](https://github.com/UPinar/CLessons/tree/master/type_conversions)
   - assignment type conversions (implicit)
   - arithmetic type conversions (implicit)
   - type-cast operator
 
-### [Lesson_25 Arrays](https://github.com/UPinar/CLessons/tree/master/Lesson_25)
+### [Arrays](https://github.com/UPinar/CLessons/tree/master/arrays)
   - information about data structures, algorithms, big O notation
   - arrays
   - array decay (array to pointer conversion)
@@ -100,14 +100,14 @@
   - merge algorithm 
   - binary search
 
-### [Lesson_27 String](https://github.com/UPinar/CLessons/tree/master/Lesson_27)
+### [String](https://github.com/UPinar/CLessons/tree/master/string)
   - NTBS (null terminated byte stream)
   - string concatenate - append
   - remove copy algorithm
   - count algorithm
   - count_if algorithm
 
-### [Lesson_29 Pointers](https://github.com/UPinar/CLessons/tree/master/Lesson_29)
+### [Pointers](https://github.com/UPinar/CLessons/tree/master/pointers)
   - address of operator (adres operatörü)
   - dereferencing (indirection) operator (içerik operatörü)
   - pointer arithmetics
@@ -119,16 +119,17 @@
   - valid and invalid pointers
   - `NULL` - null pointer 
   - more pointer idioms
+  - pointer arrays
   
-### [Lesson_30 `const` Keyword](https://github.com/UPinar/CLessons/tree/master/Lesson_30)
+### [`const` Keyword](https://github.com/UPinar/CLessons/tree/master/const_keyword)
   - why using `const` keyword
   - pointers & `const`
   
-### [Lesson_33 Type Alias(`typedef`) Declarations](https://github.com/UPinar/CLessons/tree/master/Lesson_33)
+### [Type Alias(`typedef`) Declarations](https://github.com/UPinar/CLessons/tree/master/typedef_declarations)
   - `typedef` declarations
   - type aliases in standart library
 
-### [Lesson_34 Standart Library](https://github.com/UPinar/CLessons/tree/master/Lesson_34)
+### [Standart Library](https://github.com/UPinar/CLessons/tree/master/standart_library)
   - string operations (yazı işlemleri)
     - `strlen` 
     - `strchr` 
@@ -141,3 +142,6 @@
     - string comparison(yazıların karşılaştırılması)
       - lexicographical compare
       - `strcmp`
+  
+### [String Literals](https://github.com/UPinar/CLessons/tree/master/string_literals)
+
