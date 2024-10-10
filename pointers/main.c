@@ -4167,18 +4167,12 @@
 */
 
 /*
-  #include "../nutility.h"
-
-  int g_x, g_y, g_z, g_t;
-
-  int g_iarr[] = { 10, 20, 30, 40, 50 };
+  int g_x, g_y, g_z;
 
   int main(void)
   {
 
-    int* ptr_arr[10] = { &g_x, &g_y, &g_z, g_iarr, &g_t };
-
-    // -------------------------------------------------------
+    int* ptr_arr[10] = { &g_x, &g_y, &g_z };
 
     *ptr_arr[0] = 999;
     printf("g_x = %d\n", g_x);  // output -> g_x = 999
@@ -4188,11 +4182,27 @@
 
     **ptr_arr = 100;
     printf("g_x = %d\n", g_x);  // output -> g_x = 100
+  }
+*/
 
-    // -------------------------------------------------------
+/*
+  #include "../nutility.h"
 
-    ++ptr_arr[3];
-    printf("g_t = %d\n", g_t);
+  int g_x, g_y, g_z;
+
+  int g_iarr[] = { 10, 20, 30, 40, 50 };
+
+  int main(void)
+  {
+
+    int* ptr_arr[10] = { &g_x, g_iarr, &g_y, &g_z };
+
+    printf("adrress of ptr_arr[1] = %p\n", (void*)ptr_arr[1]);
+    // output -> adrress of ptr_arr[1] = 00007FF788A94010
+
+    ++ptr_arr[1];
+    printf("adrress of ptr_arr[1] = %p\n", (void*)ptr_arr[1]);
+    // output -> adrress of ptr_arr[1] = 00007FF788A94014
     // g_iarr is now pointing to the second element of the array
 
     ++*ptr_arr[3];
