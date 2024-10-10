@@ -4128,3 +4128,86 @@
   ptr = strchr(ptr, '\0');
 */
 
+/*
+                      ------------------
+                      | Pointer Arrays |
+                      ------------------
+*/
+
+/*
+  int* foo(void);
+
+  int main(void)
+  {
+    int* ptr_arr[10]; 
+    // ptr_arr[0] .... ptr_arr[9] types are int*
+
+    int x = 10;
+    int* ptr = &x;
+    int b_arr[10];
+
+    ptr_arr[2] = &x;
+    ptr_arr[3] = ptr;
+    ptr_arr[4] = b_arr;
+    ptr_arr[5] = foo();
+
+    // "ptr_arr" data type is `int* [10]`
+  }
+*/
+
+/*
+  int g_x, g_y, g_z, g_t;
+
+  int main(void)
+  {
+
+    int* ptr_arr_1[10] = { &g_x, &g_y, &g_z, &g_t };  // VALID
+    int* ptr_arr_2[] = { &g_x, &g_y, &g_z, &g_t };    // VALID
+  }
+*/
+
+/*
+  int g_x, g_y, g_z;
+
+  int main(void)
+  {
+
+    int* ptr_arr[10] = { &g_x, &g_y, &g_z };
+
+    *ptr_arr[0] = 999;
+    printf("g_x = %d\n", g_x);  // output -> g_x = 999
+
+    ++*ptr_arr[2];
+    printf("g_z = %d\n", g_z);  // output -> g_z = 1
+
+    **ptr_arr = 100;
+    printf("g_x = %d\n", g_x);  // output -> g_x = 100
+  }
+*/
+
+/*
+  #include "../nutility.h"
+
+  int g_x, g_y, g_z;
+
+  int g_iarr[] = { 10, 20, 30, 40, 50 };
+
+  int main(void)
+  {
+
+    int* ptr_arr[10] = { &g_x, g_iarr, &g_y, &g_z };
+
+    printf("adrress of ptr_arr[1] = %p\n", (void*)ptr_arr[1]);
+    // output -> adrress of ptr_arr[1] = 00007FF788A94010
+
+    ++ptr_arr[1];
+    printf("adrress of ptr_arr[1] = %p\n", (void*)ptr_arr[1]);
+    // output -> adrress of ptr_arr[1] = 00007FF788A94014
+    // g_iarr is now pointing to the second element of the array
+
+    ++*ptr_arr[3];
+    print_array(g_iarr, 5);   //  output -> 10 21 30 40 50
+
+    // -------------------------------------------------------
+  }
+*/
