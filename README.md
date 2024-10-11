@@ -120,6 +120,7 @@
   - `NULL` - null pointer 
   - more pointer idioms
   - pointer arrays
+  - pointer to pointer
   
 ### [`const` Keyword](https://github.com/UPinar/CLessons/tree/master/const_keyword)
   - why using `const` keyword

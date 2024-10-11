@@ -7,7 +7,7 @@
 */
 
 /*
-  - tokenizing aşamasında string literallerim ayrı tokenlar olarak
+  - tokenizing aşamasında string literaller ayrı tokenlar olarak
     ayrılırlar.
 
   - derleyici ("hello") çift tırnak içinde bir yazı ile karşılaştığında
