@@ -4203,11 +4203,896 @@
     ++ptr_arr[1];
     printf("adrress of ptr_arr[1] = %p\n", (void*)ptr_arr[1]);
     // output -> adrress of ptr_arr[1] = 00007FF788A94014
-    // g_iarr is now pointing to the second element of the array
+
+    // ptr_arr[1] is now pointing to the 
+    // second element of the g_iarr array
 
     ++*ptr_arr[3];
     print_array(g_iarr, 5);   //  output -> 10 21 30 40 50
 
     // -------------------------------------------------------
+  }
+*/
+
+/*
+  int x, y, z, t;
+
+  int main(void)
+  {
+    // -------------------------------------------------------
+    
+    int* const p[] = { &x, &y, &z, &t };
+
+    // p is a constant pointer to int array (top-level const)
+    // changing pointers in the array is not allowed
+    
+    int m_x = 12;
+    p[2] = &m_x;  // syntax error
+    // error: assignment of read-only location 'p[2]'
+
+    *p[1] = 45;   // VALID
+    printf("y = %d\n", y);  // output -> y = 45
+
+    // -------------------------------------------------------
+
+    const int* p2[] = { &x, &y, &z, &t }; 
+    // int const* p2[] = { &x, &y, &z, &t };
+
+    // p2 is a pointer to constant int array (low-level const)
+    // changing the value of the object that the pointers 
+    // are pointing to is not allowed
+
+    p2[1] = NULL; // VALID
+
+    int m_y = 45;
+    p2[1] = &m_y; // VALID
+
+    *p2[1] = 32; // syntax error
+    // error: assignment of read-only location '*p2[1]'
+
+    // -------------------------------------------------------
+
+    const int * const p3[] = { &x, &y, &z, &t };
+    // int const * const p3[] = { &x, &y, &z, &t };
+
+    // p3 is a constant pointer to constant int array
+    // changing the value of the object that the pointers
+    // are pointing to is not allowed
+    // changing the pointers in the array is not allowed
+
+    p3[0] = NULL; // syntax error
+    // error: assignment of read-only location 'p3[0]'
+
+    int m_z = 56;
+    p3[2] = &m_z; // syntax error
+    // error: assignment of read-only location 'p3[2]'
+
+    *p3[3] = 100; // syntax error
+    // error: assignment of read-only location '*(const int *)p3[3]'
+
+    // -------------------------------------------------------
+  }
+*/
+
+/*
+  #include <stddef.h> // size_t
+  #include "../nutility.h"
+
+  int main(void)
+  {
+    const char* const p_days[] = {  "monday", "tuesday", "wednesday", 
+                  "thursday", "friday", "saturday", "sunday" };
+
+    // -------------------------------------------------------
+
+    for(size_t i = 0; i < asize(p_days); ++i)
+      puts(p_days[i]);
+
+    // output ->
+    //  monday
+    //  tuesday
+    //  wednesday
+    //  thursday
+    //  friday
+    //  saturday
+    //  sunday
+
+    // -------------------------------------------------------
+
+    for(size_t i = 0; i < asize(p_days); ++i)
+      printf("%p %s\n", p_days[i], p_days[i]);
+
+    // output ->
+    //  00007FF7DDFD5050 monday
+    //  00007FF7DDFD5057 tuesday
+    //  00007FF7DDFD505F wednesday
+    //  00007FF7DDFD5069 thursday
+    //  00007FF7DDFD5072 friday
+    //  00007FF7DDFD5079 saturday
+    //  00007FF7DDFD5082 sunday
+
+    // -------------------------------------------------------
+  }
+*/
+
+/*
+  const char* const g_p_days[] = {  "monday", "tuesday", "wednesday", 
+                "thursday", "friday", "saturday", "sunday" };
+  // g_p_days array is a static storage duration object
+  // g_p_days array will be initialized only once
+
+
+  void foo()
+  {
+    const char* const p_days[] = {  "monday", "tuesday", "wednesday", 
+                "thursday", "friday", "saturday", "sunday" };
+    // p_days array is an automatic storage duration object
+    // p_days array will be initialized each time 
+    // "foo" function is called
+
+    static const char* const s_p_days[] = {  "monday", "tuesday", 
+        "wednesday", "thursday", "friday", "saturday", "sunday" };
+    // s_p_days array is a static storage duration object
+    // s_p_days array will be initialized only once 
+  }
+
+  // p_days, g_p_days and s_p_days array's elements are 
+  // string literals(char arrays) and they are all 
+  // static storage duration objects
+*/
+
+/*
+  int main(void)
+  {
+    const char* const p_days[] = { "", "monday", "tuesday", 
+        "wednesday", "thursday", "friday", "saturday", "sunday" };
+    // "p_days" array can be used as a lookup table
+
+    int day_no = 3;
+    printf("day %d is %s", day_no, p_days[day_no]);
+    // output -> day 3 is wednesday
+  }
+*/
+
+/*
+  #include <stddef.h> // size_t
+  #include <string.h> // strcmp
+  #include "../nutility.h"
+
+  // how to check if a string is a valid day name
+
+  int main(void)
+  {
+    char* const p_days[] = { "monday", "tuesday", "wednesday", 
+          "thursday", "friday", "saturday", "sunday" };
+
+    char buf[20] = "saturday";
+    // char buf[20] = "istanbul";
+
+    size_t i;
+
+    // -------------------- WAY_1 --------------------
+    for(i = 0; i < asize(p_days); ++i)
+      if (!strcmp(buf, p_days[i]))
+        break;
+    // -----------------------------------------------
+
+    // ------------- WAY_2(idiomatic way) ------------
+    for(i = 0; i < asize(p_days) && strcmp(buf, p_days[i]); ++i)
+      ; // null statement
+    // -----------------------------------------------
+
+    if (i < asize(p_days))
+      printf("%s is %zu day\n", buf, i + 1);
+    else
+      printf("invalid day name\n");
+
+    // input -> "saturday"
+    // output -> saturday is 6 day
+
+    // input -> "istanbul"
+    // output -> invalid day name
+  }
+*/
+
+/*
+  // how to print the elements and their addresses one by one
+
+  #include <stddef.h> // size_t
+  #include "../nutility.h"  
+
+  int main(void)
+  {
+    for (size_t i = 0; i < PNAMES_SIZE; ++i)
+      printf(" %p %s\n", p_names[i], p_names[i]);
+
+    // output ->
+    //  00007FF730DD5091 ata
+    //  00007FF730DD5095 emrecan
+    //  00007FF730DD509D adem
+    //  00007FF730DD50A2 burhan
+    //  00007FF730DD50A9 korhan
+    //  00007FF730DD50B0 demir
+    //  ...
+  }
+*/
+
+/*
+  // write random elements
+
+  #include "../nutility.h"
+  #include <stdlib.h> // rand
+
+  int main(void)
+  {
+    randomize();
+
+    for(int i = 0; i < 5; ++i)
+      printf("%s ", p_names[rand() % PNAMES_SIZE]);
+    
+    // output -> cemal sefer hakki hilmi pelinsu
+  }
+*/
+
+/*
+  // write elements an their lengths
+
+  #include "../nutility.h"
+  #include <string.h> // strlen
+
+  int main(void)
+  {
+    for (size_t i = 0; i < PNAMES_SIZE; ++i)
+      printf("%s %zu\n", p_names[i], strlen(p_names[i]));
+    // output ->
+    //  ata 3
+    //  emrecan 7
+    //  adem 4
+    //  burhan 6
+    //  korhan 6
+    //  demir 5
+    //  ...
+  }
+*/
+
+/*
+  // write elements that have specific lengths
+
+  #include "../nutility.h"
+  #include <stddef.h> // size_t
+  #include <string.h> // strlen
+
+  int main(void)
+  {
+    size_t wanted_len = 9;
+
+    for (size_t i = 0; i < PNAMES_SIZE; ++i)
+      if(strlen(p_names[i]) == wanted_len)
+        printf("%s ", p_names[i]);
+      
+    // output -> necmettin alparslan nasrullah
+  }
+*/
+
+/*
+  // write element's first characters
+
+  #include "../nutility.h"
+  #include <stddef.h> // size_t
+  #include <string.h> // strlen
+
+  int main(void)
+  {
+    for (size_t i = 0; i < PNAMES_SIZE; ++i)
+      putchar(*p_names[i]);
+
+    printf("\n---------------------------------------\n");
+
+    for (size_t i = 0; i < PNAMES_SIZE; ++i)
+      putchar(p_names[i][0]);   
+
+    // Those 2 for loops are equivalent.
+
+    // p_names[i] ==> *(p_names + i)
+    // *p_names[i] ==> *(*(p_names + i))
+    // p_names[i][0] ==> *(*(p_names + i) + 0) ==> *(*(p_names + i))
+  }
+*/
+
+/*
+  **address -> double dereferencing(indirection)
+*/
+
+/*
+  // write element's last characters
+
+  #include "../nutility.h"
+  #include <stddef.h> // size_t
+  #include <string.h> // strlen
+
+  int main(void)
+  {
+    for (size_t i = 0; i < PNAMES_SIZE; ++i)
+      putchar(p_names[i][strlen(p_names[i]) - 1]);
+
+
+    printf("\n---------------------------------------\n");
+    // we need to make sure that the string is not empty
+
+    size_t len;
+    for (size_t i = 0; i < PNAMES_SIZE; ++i)
+      if ((len = strlen(p_names[i])) > 0)
+        putchar(p_names[i][len - 1]);
+  }
+*/
+
+/*
+  // write elements that have a specific character inside of it
+
+  #include "../nutility.h"
+  #include <stddef.h> // size_t
+  #include <string.h> // strchr
+
+  int main(void)
+  {
+    int ch = 'p';
+
+    int counter = 0;
+    for (size_t i = 0; i < PNAMES_SIZE; ++i)
+      if (strchr(p_names[i], ch)){
+        printf("%s ", p_names[i]);
+        ++counter;
+      }
+
+    printf("\ntotal %d elements\n", counter);
+
+    // output ->
+    //  poyraz rupen edip recep sarp perihan alparslan polat 
+    //  pelinsu petek abdulmuttalip pelin galip suphi tayyip 
+    //  pinat pakize papatya polathan
+    //  total 19 elements
+  }
+*/
+
+/*
+  #include "../nutility.h"
+  #include <stddef.h> // size_t
+  #include <string.h> // strchr
+
+  int main(void)
+  {
+    int counter = 0;
+    for (int c = 'a'; c <= 'z'; ++c){
+      printf("elements that have '%c' character inside of it : \n", c);
+      counter = 0;
+      for (size_t i = 0; i < PNAMES_SIZE; ++i)
+        if (strchr(p_names[i], c)){
+          printf("%s ", p_names[i]);
+          ++counter;
+        }
+
+      printf("\ntotal %d elements\n", counter);
+      (void)getchar();
+    }
+  }
+*/
+
+/*
+  // print elements that have a specific substring inside of it
+
+  #include <string.h> // strstr
+  #include "../nutility.h"
+
+  int main(void)
+  {
+    char str[] = "un";
+
+    for (size_t i = 0; i < PNAMES_SIZE; ++i)
+      if (strstr(p_names[i], str))
+        printf("%s ", p_names[i]);
+
+    // output ->  haldun kunter ferhunde yunus tuncer cuneyt 
+    //            gunay tunc ceyhun tayfun orkun
+  }
+*/
+
+/*
+  // print elements that does not have 
+  // any of the specific characters inside of it
+
+  #include <string.h> // strpbrk
+  #include "../nutility.h"
+
+  int main(void)
+  {
+    char str[] = "aeoi";
+
+    for (size_t i = 0; i < PNAMES_SIZE; ++i)
+      if (!strpbrk(p_names[i], str))
+        printf("%s ", p_names[i]);
+
+    // output ->  muslum cumhur utku turgut durmus yunus 
+    //            gul ugur su yusuf gurbuz tunc ufuk
+  }
+*/
+
+/*
+  // HOMEWORK - dizideki yazılardan içinde herhangi bir karakterden
+  // birden fazla olanlar yazdırılacak.
+
+  #include "../nutility.h"
+  #include <string.h> // strlen, memset
+  #include <stddef.h> // size_t
+
+  #define LETTER_COUNT 26
+
+  void place_chars_in_alphabet( int* alphabet, 
+                                size_t alphabet_size, 
+                                const char* str)
+  {
+    memset(alphabet, 0, alphabet_size);
+
+    for(size_t i = 0; i < strlen(str); ++i)
+      ++alphabet[str[i] - 'a'];
+  }
+
+  int has_repeated_char(int* alphabet)
+  {
+    for(int i = 0; i < LETTER_COUNT; ++i)
+      if (alphabet[i] > 1)
+        return 1;
+
+    return 0;
+  }
+
+  int main(void)
+  {
+    int alphabet[LETTER_COUNT] = { 0 };
+
+    for(size_t i = 0; i < PNAMES_SIZE; ++i)
+    {
+      place_chars_in_alphabet(alphabet, sizeof alphabet , p_names[i]);
+
+      if (has_repeated_char(alphabet))
+        printf("%s ", p_names[i]);
+    }
+  }
+*/
+
+/*
+  #include "../nutility.h"
+  #include <string.h>
+  #include <stddef.h> // size_t
+
+  int main(void)
+  {
+    for(size_t i = 0; i < PNAMES_SIZE; ++i)
+      *p_names[i] = '*';   // syntax error
+      // error: assignment of read-only location '*p_names[i]'
+      
+    // if p_names's type was char* p_names[] -> undefined behaviour(ub)
+    // because of string literals are immutable objects
+    // changing characters of a string literal is UB
+  }
+*/
+
+/*
+  #include "../nutility.h"
+  #include <stddef.h> // size_t
+  #include <stdlib.h> // rand
+
+  int main(void)
+  {
+    for(int i = 0; i < 100; ++i)
+    {
+      size_t idx1 = rand() % PNAMES_SIZE;
+      size_t idx2 = rand() % PNAMES_SIZE;
+
+      char* temp = p_names[idx1];
+      p_names[idx1] = p_names[idx2];
+      p_names[idx2] = temp;
+
+      // changing elements places in the array VALID operation
+    }
+  }
+*/
+
+/*
+  // sort the array alphabetically
+
+  #include "../nutility.h"
+  #include <stddef.h> // size_t
+  #include <string.h> // strcmp
+
+  int main(void)
+  {
+    for (size_t i = 0; i < PNAMES_SIZE - 1; ++i)
+      for (size_t k = 0; k < PNAMES_SIZE - 1 - i; ++k)
+        if (strcmp(p_names[k], p_names[k + 1]) > 0)
+        {
+          const char* temp = p_names[k];
+          p_names[k] = p_names[k + 1];
+          p_names[k + 1] = temp;
+        }
+
+    for (size_t i = 0; i < PNAMES_SIZE ; ++i)
+      printf("%s ", p_names[i]);
+
+    // output -> abdi abdullah abdulmuttalip adem adnan afacan 
+    // agah ahmet akin alev ali alican alparslan ...
+  }
+*/
+
+/*
+  // sort the array by the length of the elements ascending
+
+  #include "../nutility.h"
+  #include <stddef.h> // size_t
+  #include <string.h> // strcmp
+
+  int main(void)
+  {
+    size_t len1, len2;
+    for (size_t i = 0; i < PNAMES_SIZE - 1; ++i)
+      for (size_t k = 0; k < PNAMES_SIZE - 1 - i; ++k){
+        len1 = strlen(p_names[k]);
+        len2 = strlen(p_names[k + 1]);
+
+        if ((len1 > len2) || 
+            (len1 == len2 && strcmp(p_names[k], p_names[k + 1]) > 0))
+        {
+          const char* temp = p_names[k];
+          p_names[k] = p_names[k + 1];
+          p_names[k + 1] = temp;
+        }
+      }
+
+    for (size_t i = 0; i < PNAMES_SIZE ; ++i)
+      printf("%s ", p_names[i]);
+
+    // output -> su ali ata can cem ece eda efe ege gul naz abdi 
+    // adem agah akin alev anil arda asim atif atil ayla ayse ...
+  }
+*/
+
+/*
+  void func(void)
+  {
+    char* p_names1[] = {
+    "ata", "emrecan", "adem", "burhan", "korhan", "demir", "bilal", 
+    "emrecan", "celik", "zahide", "dost", "lale", "baran", "saniye", 
+    "poyraz", "saadet", "aynur", "yeliz", "berivan", "mukerrem", "melih", 
+    "necati", "cezmi", "muslum", "azize", "atif", "rupen", "alev", 
+    "haldun", "hulusi", "yelda", "billur", "yasemin", "tarcan", "yasar", 
+    "tarkan", "refik", "berk", "kenan", "izzet", "adnan", "sefa", 
+    "kazim", "gursel", "huseyin", "suheyla", "binnaz", "nusret", 
+    "aykut", "efecan", "esra", "tonguc", "kunter", "yurdanur", 
+    "abdi" };
+
+    static char* p_names2[] = {
+    "ata", "emrecan", "adem", "burhan", "korhan", "demir", "bilal", 
+    "emrecan", "celik", "zahide", "dost", "lale", "baran", "saniye", 
+    "poyraz", "saadet", "aynur", "yeliz", "berivan", "mukerrem", "melih", 
+    "necati", "cezmi", "muslum", "azize", "atif", "rupen", "alev", 
+    "haldun", "hulusi", "yelda", "billur", "yasemin", "tarcan", "yasar", 
+    "tarkan", "refik", "berk", "kenan", "izzet", "adnan", "sefa", 
+    "kazim", "gursel", "huseyin", "suheyla", "binnaz", "nusret", 
+    "aykut", "efecan", "esra", "tonguc", "kunter", "yurdanur", 
+    "abdi", };
+
+    static const char* p_names3[] = {
+    "ata", "emrecan", "adem", "burhan", "korhan", "demir", "bilal", 
+    "emrecan", "celik", "zahide", "dost", "lale", "baran", "saniye", 
+    "poyraz", "saadet", "aynur", "yeliz", "berivan", "mukerrem", "melih", 
+    "necati", "cezmi", "muslum", "azize", "atif", "rupen", "alev", 
+    "haldun", "hulusi", "yelda", "billur", "yasemin", "tarcan", "yasar", 
+    "tarkan", "refik", "berk", "kenan", "izzet", "adnan", "sefa", 
+    "kazim", "gursel", "huseyin", "suheyla", "binnaz", "nusret", 
+    "aykut", "efecan", "esra", "tonguc", "kunter", "yurdanur", 
+    "abdi", };
+
+    static const char* const p_names4[] = {
+    "ata", "emrecan", "adem", "burhan", "korhan", "demir", "bilal", 
+    "emrecan", "celik", "zahide", "dost", "lale", "baran", "saniye", 
+    "poyraz", "saadet", "aynur", "yeliz", "berivan", "mukerrem", "melih", 
+    "necati", "cezmi", "muslum", "azize", "atif", "rupen", "alev", 
+    "haldun", "hulusi", "yelda", "billur", "yasemin", "tarcan", "yasar", 
+    "tarkan", "refik", "berk", "kenan", "izzet", "adnan", "sefa", 
+    "kazim", "gursel", "huseyin", "suheyla", "binnaz", "nusret", 
+    "aykut", "efecan", "esra", "tonguc", "kunter", "yurdanur", 
+    "abdi", };
+  }
+
+  int main(void)
+  {
+    func();
+
+    // --------------------- p_names1 array ---------------------
+
+    // everytime "func" has been called 
+    //  p_names1 array will be initialized. 
+    // p_names1 array is a local variable of the function "func"
+    //  -> automatic storage duration
+    // p_names1 array's elements are string literals
+    //  -> static storage duration
+
+    // p_names1 array's elements are string literals, attempting 
+    // to change the characters of the elements of the array is UB
+
+    // because of p_names1 array is not top-level const 
+    // its elements(string literals) can be changed with another 
+    // char* element.
+
+    // --------------------- p_names2 array ---------------------
+
+    // p_names2 array will only be initialized once 
+    //  when "func" is called 
+    // p_names2 array is a static array 
+    //  -> static storage duration
+    // p_names2 array's elements are string literals
+    //  -> static storage duration
+
+    // p_names2 array's elements are string literals, attempting 
+    // to change the characters of the elements of the array is UB
+
+    // because of p_names2 array is not top-level const 
+    // its elements(string literals) can be changed with another 
+    // char* element.
+
+    // --------------------- p_names3 array ---------------------
+
+    // because of p_names3 array is low-level const array
+    // attempting to change characters of the elements of the 
+    // array will be syntax error
+
+    // because of p_names3 array is not top-level const 
+    // its elements(string literals) can be changed with another 
+    // const char* element.
+
+    // --------------------- p_names4 array ---------------------
+
+    // because of p_names4 array is low-level const array
+    // attempting to change characters of the elements of the array
+    // will be syntax error
+
+    // because of p_names4 array is top-level const 
+    // attempting to change the elements(const char*) of the array 
+    // will be syntax error
+  }
+*/
+
+/*
+  int main(void)
+  {
+    const char* p_names[] = {
+    "ata", "emrecan", "adem", "burhan", "korhan", "demir", "bilal", 
+    "emrecan", "celik", "zahide", "dost", "lale", "baran", "saniye", 
+    "poyraz", "saadet", "aynur", "yeliz", "berivan", "mukerrem", "melih", 
+    "necati", "cezmi", "muslum", "azize", "atif", "rupen", "alev", 
+    "haldun", "hulusi", "yelda", "billur", "yasemin", "tarcan", "yasar", 
+    "tarkan", "refik", "berk", "kenan", "izzet", "adnan", "sefa", 
+    "kazim", "gursel", "huseyin", "suheyla", "binnaz", "nusret", 
+    "aykut", "efecan", "esra", "tonguc", "kunter", "yurdanur", 
+    "abdi", NULL };
+
+    // sometimes pointer array's last element is NULL
+
+    int i = 0;
+
+    while(p_names[i])
+      printf("%s ", p_names[i++]);
+
+    // output -> ata emrecan adem burhan korhan demir bilal emrecan 
+    // celik zahide dost lale baran saniye poyraz saadet aynur yeliz 
+    // berivan mukerrem melih necati cezmi muslum azize atif rupen ...
+  }
+*/
+
+/*
+  int main(void)
+  {
+    const char* p_names[3] = { "ata", "emrecan"  "adem" };
+    // sometimes ','(comma) is forgotten when initializing the array
+    // p_names[2] is now NULL
+    // // {"ata", "emrecanadem", NULL}
+
+    // when its being forgotten and the last element of the array
+    // has been dereferenced it will be undefined behaviour(ub)
+    // (null pointer dereferencing)
+  }
+*/
+
+/*
+  // copy elements of the array to a buffer as concatenated
+
+  #include "../nutility.h"
+  #include <stddef.h> // size_t
+  #include <string.h> // strcpy, strcat
+
+  int main(void)
+  {
+    char* p[] = {"ata", "emrecan", "adem", "burhan"};
+    char buf[100];
+    
+    buf[0] = '\0';  
+    // strcat is will concatenate from null character
+
+    for(size_t i = 0; i < asize(p); ++i)
+      strcat(buf, p[i]);
+
+    puts(buf);  // output -> ataemrecanademburhan
+  }
+*/
+
+/*
+                      ----------------------
+                      | pointer to pointer |
+                      ----------------------
+*/
+
+/*
+  //  <----- check pointer_to_int.png ----->
+
+  int main(void)
+  {
+    int x = 10;
+    int* p = &x;
+
+    printf("&x = %p\n", (void*)&x); // output -> &x = 0000004CB4FFF9EC
+    // address of "x"
+
+    printf("p  = %p\n", (void*)p);  // output -> p  = 0000004CB4FFF9EC
+    // value of "p"
+
+    printf("&p = %p\n", (void*)&p); // output -> &p = 0000004CB4FFF9E0
+    // address of "p"
+  }
+*/
+
+/*
+  // <----- check pointer_to_pointer.png ----->
+
+  int main(void)
+  {
+    int x = 10;
+    int* p = &x;
+    int** pp = &p;
+
+    &x;     
+    // "&x" expression's data type is `int*` 
+    // &x is a pointer int
+
+    p;      
+    // "p" expression's data type is `int*` 
+    // p is a pointer to int
+
+    &p;     
+    // "&p" expression's data type is `int**`
+    // &p is a pointer to pointer to int
+
+    pp;
+    // "pp" expression's data type is `int**`
+    // pp is a pointer to pointer to int
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int x = 10;
+    int y = 99;
+
+    int* p = &x;
+    printf("%d\n", *p);   // output -> 10
+
+    int** pp = &p;
+    *pp = &y;
+    printf("%d\n", *p);   // output -> 99
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int x = 10;
+
+    int* p = &x;
+    int** pp = &p;
+
+    printf("x  = %d\n", x);   // output -> x  = 10
+
+    **pp = 99;
+    printf("x  = %d\n", x);   // output -> x  = 99
+
+    ++**pp;   // ++(*(*pp))
+    // 3 operators here (++, *, *) all of them are right associative
+    // unary pointer operators
+
+    printf("x  = %d\n", x);   // output -> x  = 100
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int x = 10;
+    int* p = &x;
+    int** pp = &p;
+  }
+
+  - bir ismin(identifier)'ın oluşturduğu ifadeler     L value'dur.
+  - adres operatorü(&) ile oluşturulan tüm ifadeler   R value'dur.
+  - içerik operatörü(*) ile oluşturulan tüm ifadeler  L value'dur.
+  _________________________________________________________________
+  |_______________________________________________________________|
+  |                                                               |
+  | expression            data type       value category (L / R)  |
+  | ------------------------------------------------------------- |
+  | x(identifier)           int                 L value           |
+  | ------------------------------------------------------------- |
+  | &x                      int*                R value           |
+  | ------------------------------------------------------------- |
+  | p(identifier)           int*                L value           |
+  | ------------------------------------------------------------- |
+  | *p                      int                 L value           |
+  | ------------------------------------------------------------- |
+  | &p                      int**               R value           |
+  | ------------------------------------------------------------- |
+  | pp(identifier)          int**               L value           |
+  | ------------------------------------------------------------- |
+  | *pp                     int*                L value           |
+  | ------------------------------------------------------------- |
+  | **pp                    int                 L value           |
+  | ------------------------------------------------------------- |
+  | &pp                     int***              R value           |
+  |_______________________________________________________________|
+  |_______________________________________________________________|
+*/
+
+/*
+  int main(void)
+  {
+    for (int i = 1; i <= 10; ++i)
+    {
+      printf("int");
+      int n = i;
+      while(n--)
+        putchar('*');
+      printf("p%d = &p%d;", i, i - 1);
+      putchar('\n');
+    }
+
+    // output ->
+    //  int*p1 = &p0;
+    //  int**p2 = &p1;
+    //  int***p3 = &p2;
+    //  int****p4 = &p3;
+    //  int*****p5 = &p4;
+    //  int******p6 = &p5;
+    //  int*******p7 = &p6;
+    //  int********p8 = &p7;
+    //  int*********p9 = &p8;
+    //  int**********p10 = &p9;
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int x = 99;
+    int*p1 = &x;
+    int**p2 = &p1;
+    int***p3 = &p2;
+    int****p4 = &p3;
+    int*****p5 = &p4;
+    int******p6 = &p5;
+    int*******p7 = &p6;
+    int********p8 = &p7;
+    int*********p9 = &p8;
+    int**********p10 = &p9;
+
+    ++**********p10;
+
+    printf("x = %d\n", x);  // output -> x = 100
   }
 */

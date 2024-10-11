@@ -3,6 +3,11 @@
 
 #include <stddef.h> // size_t
 
+#define asize(x) (sizeof(x) / sizeof(x[0]))
+
+extern const char* p_names[];
+#define PNAMES_SIZE 335
+
 void randomize(void);
 void sgets(char* pStr);
 void swap(int* x, int* y);
