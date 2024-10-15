@@ -1,4 +1,4 @@
-# C Lessons
+<h1 align="center"> CLessons </h1>
 
 ### [C Language](https://github.com/UPinar/CLessons/tree/master/c_language) 
   - C language characteristics
@@ -121,6 +121,8 @@
   - more pointer idioms
   - pointer arrays
   - pointer to pointer
+  - `const` correctness in pointers
+  - `void` pointers
   
 ### [`const` Keyword](https://github.com/UPinar/CLessons/tree/master/const_keyword)
   - why using `const` keyword
