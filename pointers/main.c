@@ -5096,3 +5096,1053 @@
     printf("x = %d\n", x);  // output -> x = 100
   }
 */
+
+/*
+  #include "../nutility.h"
+
+  int main(void)
+  {
+    int a[5] = { 10, 20, 30, 40, 50 };
+
+    int* p = a;
+    int** pp = &p;
+
+    // *pp[3]   ===> *(pp[3]) ===> *(*(pp + 3))
+    // (*pp)[3] ===> (p)[3]   ===> *(p + 3)
+
+    ++(*pp)[3];
+    print_array(a, 5);  // output ->  10  20  30  41  50
+
+    (*pp)[2]++;
+    print_array(a, 5);  // output ->  10  20  31  41  50
+  }
+*/
+
+/*
+  int g_x = 11;
+
+  void foo(int** ptr)
+  {
+    *ptr = &g_x;
+  }
+
+  int main(void)
+  {
+    int* p; 
+
+    foo(&p);
+    printf("%d\n", *p);  // output -> 11
+
+    *p = 22;
+    printf("%d\n", *p);  // output -> 22
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int x = 10;
+    int* p = &x;
+
+    // -------------------------------------------------------
+
+    foo(p);  
+    // from "x"'s perspective this call is a pass(call) by reference
+    //  -> "foo" function CAN change the value of "x"
+    //  -> by dereferencing
+    // from "p"'s perspective this call is a pass(call) by value
+    //  -> "foo" function CAN NOT change the value of "p"
+
+    // -------------------------------------------------------
+
+    bar(&p);
+    // from "x"'s perspective this call is a pass(call) by reference
+    //  -> "bar" function CAN change the value of "x"
+    //  -> by double dereferencing
+    // from p's perspective this call is a pass(call) by reference
+    //  -> "bar" function CAN change the value of "p"
+    //  -> by dereferencing
+
+    // -------------------------------------------------------
+  }
+*/
+
+/*
+  int g = 11;
+
+  void foo(int* ptr)
+  {
+    *ptr = 22;   // changing the value of "x"
+  }
+
+  void bar(int** ptr)
+  {
+    **ptr = 33;  // changing the value of "x"
+    *ptr = &g;    // changing the value of "p"
+  }
+
+  int main(void)
+  {
+    int x = 11;
+    int* p = &x;
+
+    // -------------------------------------------------------
+
+    foo(p);
+    printf("x = %d\n", x);      // output -> x = 22
+
+    printf("&x = %p\n", &x);    // output -> &x = 000000E8525FF8BC
+    printf("p  = %p\n", p);     // output -> p  = 000000E8525FF8BC
+
+    // -------------------------------------------------------
+
+    bar(&p);
+
+    printf("x = %d\n", x);      // output -> x = 33
+
+    printf("&x = %p\n", &x);    // output -> &x = 000000E8525FF8BC
+    printf("p  = %p\n", p);     // output -> p  = 00007FF6CCB74010
+    printf("&g = %p\n", &g);    // output -> &g = 00007FF7EB9E4010
+
+    // -------------------------------------------------------
+  }
+*/
+
+/*
+  void pswap(int** ptr1, int** ptr2)
+  {
+    int* p_temp = *ptr1;
+    *ptr1 = *ptr2;
+    *ptr2 = p_temp;
+  }
+
+  int main(void)
+  {
+    int x = 11;
+    int y = 22;
+
+    int* p1 = &x;
+    int* p2 = &y;
+
+    printf("*p1 = %d  *p2 = %d\n", *p1, *p2);  
+    // output -> *p1 = 11  *p2 = 22
+
+    pswap(&p1, &p2);
+    // swapping pointer variables   
+
+    printf("*p1 = %d  *p2 = %d\n", *p1, *p2);
+    // output -> *p1 = 22  *p2 = 11
+  }
+*/
+
+/*
+  // write a function that takes an address and the size of an array
+  // and will send the address of the max and min elements of the array
+
+  #include "../nutility.h"
+
+  #define   SIZE  10 
+
+  void get_min_max_addresses( const int* p_arr, 
+                              size_t size, 
+                              int** ptr_min, 
+                              int** ptr_max)
+  {
+    *ptr_min = *ptr_max = (int*)p_arr;
+
+    for (size_t i = 0; i < size; ++i)
+    {
+      if (p_arr[i] < **ptr_min)
+        *ptr_min = (int*)(p_arr + i);
+      else if (p_arr[i] > **ptr_max)
+        *ptr_max = (int*)(p_arr + i);
+    }
+  }
+
+  int main(void)
+  {
+    int arr[SIZE];
+
+    randomize();
+    set_array_random(arr, SIZE);
+    print_array(arr, SIZE);
+    // output -> 122 481 452 903 770 410 851 738 712 411
+
+    int* p_min, *p_max;
+    get_min_max_addresses(arr, SIZE, &p_min, &p_max);
+
+    printf("min_elem = %d, index = %lld\n", *p_min, p_min - arr);
+    printf("max_elem = %d, index = %lld\n", *p_max, p_max - arr);
+    // output ->
+    //  min_elem = 122, index = 0
+    //  max_elem = 903, index = 3
+
+    swap(p_min, p_max);
+    print_array(arr, SIZE);
+    // output -> 903 481 452 122 770 410 851 738 712 411
+
+    // ---------------------------------------------------
+
+    // printing elements from min to max elements
+    if (p_min < p_max)
+      print_array(p_min, p_max - p_min + 1);
+    else
+      print_array(p_max, p_min - p_max + 1);
+    // output -> 903 481 452 122
+  }
+*/
+
+/*
+  #include "../nutility.h"
+
+  void foo_1(int** ptr_1, int** ptr_2)
+  {
+    int x = **ptr_1;
+    **ptr_1 = **ptr_2;
+    **ptr_2 = x;
+  }
+
+  void foo_2(int** ptr_1, int** ptr_2)
+  {
+    swap(*ptr_1, *ptr_2); // "swap" function is in <nutility.h>
+  }
+
+  int main(void)
+  {
+    int x = 22, y = 33;
+    int* p1 = &x, *p2 = &y;
+
+    printf("x = %d, y = %d\n", x, y);  
+    // output -> x = 22, y = 33
+
+    foo(&p1, &p2);
+    printf("x = %d, y = %d\n", x, y);  
+    // output -> x = 33, y = 22
+  }
+*/
+
+/*
+  void foo(int** ptr_1, int** ptr_2)
+  {
+    int temp_x = **ptr_1;
+    **ptr_1 = **ptr_2;
+    **ptr_2 = temp_x;
+  }
+
+  int main(void)
+  {
+    int x = 22, y = 33;
+    int* p1 = &x, *p2 = &y;
+
+    foo(&p1, &p2);
+  }
+
+  // compiled with x86-64 gcc 14.2 -std=c11 -O0
+  //  foo:
+  //    push rbp
+  //    mov rbp, rsp
+  //  ------------------------------------------------------------
+  //  -------------------- int** ptr_1 = &p1; --------------------
+  //  -------------------- int** ptr_2 = &p2; --------------------
+  //  ------------------------------------------------------------
+  //    mov QWORD PTR [rbp-24], rdi         : int** ptr_1 = &p1;
+  //    mov QWORD PTR [rbp-32], rsi         : int** ptr_2 = &p2;
+  //  ------------------------------------------------------------
+  //  ------------------  int temp_x = **ptr_1; ------------------
+  //  ------------------------------------------------------------
+  //    mov rax, QWORD PTR [rbp-24]         : rax = ptr_1   (int**)
+  //    mov rax, QWORD PTR [rax]            : rax = *ptr_1  (int*)
+  //    mov eax, DWORD PTR [rax]            : eax = **ptr_1 (int)
+  //    mov DWORD PTR [rbp-4], eax          : int temp_x = **ptr_1;
+  //  ------------------------------------------------------------
+  //  -------------------- **ptr_1 = **ptr_2; --------------------
+  //  ------------------------------------------------------------
+  //    mov rax, QWORD PTR [rbp-32]         : rax = ptr_2   (int**)
+  //    mov rdx, QWORD PTR [rax]            : rdx = *ptr_2  (int*)
+  //    mov rax, QWORD PTR [rbp-24]         : rax = ptr_1   (int**)
+  //    mov rax, QWORD PTR [rax]            : rax = *ptr_1  (int*)
+  //    mov edx, DWORD PTR [rdx]            : edx = **ptr_2 (int)
+  //    mov DWORD PTR [rax], edx            : **ptr_1 = **ptr_2;  
+  //  ------------------------------------------------------------
+  //  --------------------  **ptr_2 = temp_x; --------------------
+  //  ------------------------------------------------------------
+  //    mov rax, QWORD PTR [rbp-32]         : rax = ptr_2   (int**)
+  //    mov rax, QWORD PTR [rax]            : rax = *ptr_2  (int*)
+  //    mov edx, DWORD PTR [rbp-4]          : edx = temp_x
+  //    mov DWORD PTR [rax], edx            : **ptr_2 = temp_x;
+  //  ------------------------------------------------------------
+  //    nop
+  //    pop rbp
+  //    ret
+  //  main:
+  //    push rbp
+  //    mov rbp, rsp
+  //    sub rsp, 32
+  //    mov DWORD PTR [rbp-4], 22           : int x = 22;
+  //    mov DWORD PTR [rbp-8], 33           : int y = 33;
+  //    lea rax, [rbp-4]                    : rax = &x
+  //    mov QWORD PTR [rbp-16], rax         : int* p1 = &x;
+  //    lea rax, [rbp-8]                    : rax = &y
+  //    mov QWORD PTR [rbp-24], rax         : int* p2 = &y;
+  //    lea rdx, [rbp-24]                   : rdx = &p2
+  //    lea rax, [rbp-16]                   : rax = &p1
+  //    mov rsi, rdx                        : rsi = &p2
+  //    mov rdi, rax                        : rdi = &p1
+  //    call foo
+  //    mov eax, 0
+  //    leave
+  //    ret
+*/
+
+/*
+  #include <stddef.h> // size_t
+
+  void foo(int**, size_t arr_size);
+
+  int main(void)
+  {
+    int* p_arr[10];
+
+    foo(p_arr, 10); 
+    foo(&p_arr[0], 10);
+
+    // if we want to send the address(first element's address) 
+    // of the array to a function, we need to send the address of 
+    // the first int*(pointer to int) element's address
+    // so address of the int* ===> int** (pointer to pointer to int)
+  }
+*/
+
+/*
+  void print_pointees_1(int* const* ptr_arr, size_t size)
+  {
+    // ----------------------------------------------------
+
+    for (size_t i = 0; i < size; ++i)
+      printf("%d ", *ptr_arr[i]);
+    putchar('\n');
+
+    // '[]' subscript operator's precedence is higher than 
+    // '*'  dereferencing operator  ====> '[]' > '*'
+
+    // ----------------------------------------------------
+
+    for (size_t i = 0; i < size; ++i)
+      printf("%d ", **(ptr_arr + i));
+    putchar('\n');
+    // ptr_arr[i]   ===> *(ptr_arr + i)
+    // *ptr_arr[i]  ===> *(*(ptr_arr + i))  ===> **(ptr_arr + i)
+
+    // ----------------------------------------------------
+  }
+
+  void print_pointees_2(int* const* ptr_arr, size_t size)
+  {
+    while (size--)
+      printf("%d ", **ptr_arr++);
+    putchar('\n');
+
+    // '*' and '++' operators have the same precedence
+    // they both are right associative operators
+    // **ptr_arr++ ===> *(*(ptr_arr++))
+
+    // the value that "ptr_arr++" expression generates is "ptr_arr"
+  }
+
+  int main(void)
+  {
+    int x = 10, y = 20, z = 30, t = 40;
+
+    int* p_arr[4] = { &x, &y, &z, &t };
+
+    print_pointees_1(p_arr, 4);
+    // output -> 
+    //  10 20 30 40
+    //  10 20 30 40
+
+    print_pointees_2(p_arr, 4); 
+    // output -> 10 20 30 40
+  }
+*/
+
+/*
+  #include <stddef.h>   // size_t
+  #include <string.h>   // strcmp
+  #include "../nutility.h"
+
+  void print_names_1(const char** p_arr_names, size_t size)
+  {
+    for (size_t i = 0; i < size; ++i)
+      printf("%s ", p_arr_names[i]);
+    putchar('\n');
+  }
+
+  void print_names_2(const char** p_arr_names, size_t size)
+  {
+    while (size--)
+      printf("%s ", *p_arr_names++);
+    putchar('\n');
+  }
+
+  void cp_swap(const char** c_ptr1, const char** c_ptr2)
+  {
+    const char* p_temp = *c_ptr1;
+    *c_ptr1 = *c_ptr2;
+    *c_ptr2 = p_temp;
+  }
+
+  void sort_names(const char** p_arr_names, size_t size)
+  {
+    for(size_t i = 0; i < size - 1; ++i)
+      for (size_t k = 0; k < size - 1 - i; ++k)
+        if (strcmp(p_arr_names[k], p_arr_names[k + 1]) > 0)
+          cp_swap(p_arr_names + k, p_arr_names + k + 1);
+  }
+
+  int main(void)
+  {
+    print_names_1(p_names, PNAMES_SIZE);
+    // output -> 
+    //  ata emrecan adem burhan korhan demir 
+    //  bilal emrecan celik zahide dost lale baran ...
+
+    sort_names(p_names, PNAMES_SIZE);
+    print_names_2(p_names, PNAMES_SIZE);
+    // output ->
+    //  abdi abdullah abdulmuttalip adem adnan afacan agah 
+    // ahmet akin alev ali alican alparslan ...
+  }
+*/
+
+/*
+              -----------------------------------
+              | `const` correctness in pointers |
+              -----------------------------------
+*/
+
+/*
+  // `const` anahtar sözcüğü ney'den önce geliyorsa const olan o'dur.
+
+  int main(void)
+  {
+    int x = 10;
+    int y = 20;
+
+    // -------------------------------------------------------
+
+    int* const p1 = &x;
+    // `const` "p1"'den önce geliyor. `const` olan "p1"
+
+    // "p1" ifadesi atama operatörünün
+    // sol operandı olursa sentaks hatası olacak.
+
+    p1 = &y;   // syntax error
+    *p1 = 12;  // VALID
+
+    // -------------------------------------------------------
+
+    int const *p2 = &x;
+    // `const` "*p2" den önce geliyor. `const` olan "*p2"
+
+    // "*p2" ifadesi atama operatörünün
+    // sol operandı olursa sentaks hatası olacak.
+
+    p2 = &y;  // VALID
+    *p2 = 12; // syntax error
+
+    // -------------------------------------------------------
+    // -------------------------------------------------------
+
+    int* p3 = &x;
+    int* p4 = &y;
+
+    // -------------------------------------------------------
+
+    int** const pp1 = &p3;
+    // `const` "pp1"'den önce geliyor. `const` olan "pp1"
+
+    // "pp1" ifadesi atama operatörünün
+    // sol operandı olursa sentaks hatası olacak.
+
+    pp1 = &p4;  // syntax error
+    *pp1 = p4;  // VALID
+    **pp1 = 12; // VALID
+
+    // -------------------------------------------------------
+
+    int* const *pp2 = &p3;
+    // `const` "*pp2" den önce geliyor. const olan "*pp2"
+
+    // "*pp2" ifadesi atama operatörünün
+    // sol operandı olursa sentaks hatası olacak.
+
+    pp2 = &p4;  // VALID
+    *pp2 = p4;  // syntax error
+    **pp2 = 12; // VALID
+
+    // -------------------------------------------------------
+
+    int const **pp3 = &p3;
+    // `const` "**pp3" den önce geliyor. const olan "**pp3"
+
+    // "**pp3" ifadesi atama operatörünün 
+    // sol operandı olursa sentaks hatası olacak.
+
+    pp3 = &p4;  // VALID
+    *pp3 = p4;  // VALID
+    **pp3 = 12; // syntax error
+
+    // -------------------------------------------------------
+  }
+*/
+
+/*
+  #include <stddef.h> // size_t
+
+  int g_x = 10;
+
+  void print_pointees(int* const* iptr_arr, size_t size) 
+  {
+    *iptr_arr = &g_x;   // syntax error
+    iptr_arr[2] = &g_x; // syntax error
+    // iptr_arr[2] ===> *(iptr_arr + 2)
+  }
+
+  // int* const* iptr_arr ===> `const` "*iptr_arr" den önce,
+  // dolayısıyla `const` olan "*iptr_arr"
+  // "*iptr_arr" ifadesi atama operatörünün sol operandı olursa
+  // sentaks hatası olacak.
+
+  int main(void)
+  {
+    int x = 1, y = 2, z = 4;
+    int* ip_arr[3] = { &x, &y, &z };
+
+    print_pointees(ip_arr, 3);
+    // this function will guarantee that it
+    // will not change the elements of the array (ppinters)
+
+    // fonksiyon dizinin içindeki pointerları 
+    // DEĞİŞTİRMEME garantisi veriyor.
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int arr[5] = { 10, 20, 30, 40, 50 };
+    
+    // -------------------------------------------------------
+
+    // "arr"  expression's data type is int*
+    // "&arr" expression's data type is int(*)[5]
+
+    // arr  ===> int* (array decay)
+    // &arr ===> int(*)[5] (address of an array)
+
+    // -------------------------------------------------------
+
+    int* p1 = arr;      // VALID
+    int* p2 = &arr[0];  // VALID
+    int* p3 = &arr;     // syntax error
+    // error: initialization of 'int *' 
+    // from incompatible pointer type 'int (*)[5]
+
+    int(*p4)[5] = &arr; // VALID
+
+    // -------------------------------------------------------
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int arr[5] = { 10, 20, 30, 40, 50 };
+
+    int* p1 = arr;
+    int(*p2)[5] = &arr;
+
+    printf("%p\n", arr);    // output -> 00000065A47FF710
+    printf("%p\n", &arr);   // output -> 00000065A47FF710
+    printf("%p\n", p1);     // output -> 00000065A47FF710
+    printf("%p\n", p2);     // output -> 00000065A47FF710
+  }
+
+  // compiled with x86-64 gcc 14.2 -std=c11 -O0
+  // main:
+  //  push rbp
+  //  mov rbp, rsp
+  //  mov DWORD PTR [rbp-48], 10      : int elem_1(&arr[0]) = 10; 
+  //  mov DWORD PTR [rbp-44], 20      : int elem_2(&arr[1]) = 20;
+  //  mov DWORD PTR [rbp-40], 30      : int elem_3(&arr[2]) = 30;
+  //  mov DWORD PTR [rbp-36], 40      : int elem_4(&arr[3]) = 40;
+  //  mov DWORD PTR [rbp-32], 50      : int elem_5(&arr[4]) = 50;
+  //  lea rax, [rbp-48]               : rax = &arr[0]
+  //  mov QWORD PTR [rbp-8], rax      : int* p1 = &arr[0]
+  //  lea rax, [rbp-48]               : rax = &arr[0]
+  //  mov QWORD PTR [rbp-16], rax     : int(*p2)[5] = &arr[0]
+  //  mov eax, 0
+  //  pop rbp
+  //  ret
+*/
+
+/*
+  int main(void)
+  {
+    int arr[5] = { 10, 20, 30, 40, 50 };
+
+    int* p1 = arr;
+    int(*p2)[5] = &arr;
+
+
+    // "*arr" expression's data type is int
+    // "*p1" expression's data type is int
+
+    // "*&arr" expression's data type is int[5]
+    // "*p2" expression's data type is int[5]
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int arr[4] = { 10, 20, 30, 40};
+
+    // -------------------------------------------------------
+
+    int* p1 = arr;
+
+    for (int i = 0; i < 5; ++i){
+      printf("%p %p\n", arr + i, p1);
+      ++p1;
+    }
+
+    // output ->
+    //  000000E306DFFD50 000000E306DFFD50
+    //  000000E306DFFD54 000000E306DFFD54
+    //  000000E306DFFD58 000000E306DFFD58
+    //  000000E306DFFD5C 000000E306DFFD5C
+    //  000000E306DFFD60 000000E306DFFD60
+    // increasing 0x04 = 4(decimal)
+
+    putchar('\n');
+
+    // -------------------------------------------------------
+
+
+    int (*p2)[4] = &arr;
+
+    for (int i = 0; i < 5; ++i){
+      printf("%p %p\n", &arr + i, p2);
+      ++p2;
+    }
+    
+    // output ->
+    //  000000E306DFFD50 000000E306DFFD50   
+    //  000000E306DFFD60 000000E306DFFD60
+    //  000000E306DFFD70 000000E306DFFD70
+    //  000000E306DFFD80 000000E306DFFD80
+    //  000000E306DFFD90 000000E306DFFD90
+    // increasing 0x10 = 16(decimal) -> (4 * 0x04)
+    
+    // -------------------------------------------------------
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int arr[5] = { 10, 20, 30, 40, 50 };
+
+    int (*p)[5] = &arr;
+    // *p     ===> arr
+    // *p[5]  ===> arr[5] ===> *(arr + 5)
+
+    // **p    ===> arr[0]
+    // ++**p  ===> ++arr[0] ===> ++(*(arr + 0))
+
+    for (int i = 0; i < 5; ++i)
+      printf("%d ", (*p)[i]);
+    putchar('\n');
+
+    // output -> 10 20 30 40 50
+  }
+*/
+
+/*
+  #include "../nutility.h"
+
+  void foo(int (*p)[5])
+  {
+    print_array(*p, 5);   // output ->   1   2   3   4   5
+  }
+
+  int main(void)
+  {
+    int arr[5] = { 1, 2, 3, 4, 5 };
+    foo(&arr);
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int arr[5] = { 1, 2, 3, 4, 5 };
+    int(*p)[5] = &arr;
+
+    int* ptr  = *p;
+    int* ptr2 = arr;
+    int* ptr3 = &(*p)[0];
+    // Those 3 lines are equivalent.
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int arr[20];
+    int* ptr = arr;
+    int (*ptr2)[20] = &arr;
+
+    // -------------------------------------------------------
+
+    printf("%zu\n", sizeof(ptr));   // output -> 8
+    // "ptr" identifier expression's data type is int*
+    printf("%zu\n", sizeof(*ptr));  // output -> 4
+    // "*ptr" expression's data type is int
+
+    // -------------------------------------------------------
+
+    printf("%zu\n", sizeof(ptr2));  // output -> 8
+    // "ptr2" identifier expression's data type is int*
+    printf("%zu\n", sizeof(*ptr2)); // output -> 80
+    // "*ptr2" expression's data type is int[20]
+
+    // -------------------------------------------------------
+
+    printf("%zu\n", sizeof(*ptr2));     // output -> 80
+    printf("%zu\n", sizeof(int[20]));   // output -> 80
+    printf("%zu\n", sizeof(arr));       // output -> 80
+
+    // -------------------------------------------------------
+  }
+*/
+
+/*
+  void foo_1(int* p);
+  void foo_2(int p[]);
+  void foo_3(int p[10]);
+  // Those 3 lines are equivalent.
+
+  void bar_1(int** p);
+  void bar_2(int* p[]);
+  void bar_3(int* p[10]);
+  // Those 3 lines are equivalent.
+*/
+
+/*
+                        -----------------
+                        | void pointers |
+                        -----------------
+*/
+
+/*
+  - `void` is a type like `int` and `double` 
+  - can not declare a variable from type `void`
+  - can not declare an array holds `void` elements
+  - `void` type can not be a `sizeof` operators operand
+  - type of an expression(bir ifadenin türü) can be `void`
+
+  - `void*` is a pointer type
+  - `void*` is an object pointer type not a function pointer type
+*/
+
+/*
+  int main(void)
+  {
+    void x; // syntax error
+    // error: variable or field 'x' declared void
+
+    void arr[5];  // syntax error
+    // error: declaration of 'arr' as array of voids
+  }
+*/
+
+/*
+  int main(void)
+  {
+    sizeof(void); // syntax error
+    // incomplete type 'void' is not allowed
+  }
+*/  
+
+/*
+  void foo(int);    
+  int bar(int);
+
+  int main(void)
+  {
+    foo(12);
+    // "foo(12)" is an expression and its data type is `void`
+
+    (void)bar(12);
+    // "bar(12)" is an expression and its data type is `int`
+    // casting an expression to `void` type
+    // is used to express that bar's return value will be discarded.
+  }
+*/
+
+/*
+  void foo(int);
+  // void function (function does not have a return value)
+
+  int bar(void);
+  // function does not have a parameter variable
+
+  void baz() {}
+  // functions does not give any information about its parameters
+
+  int main(void)
+  {
+    baz(1);
+    baz(1, 2);
+    baz(1, 2, 3);
+    // because of the function does not give
+    // any information about its parameters 
+    // those calls will not be a syntax error
+  }
+*/
+
+/*
+  void foo(int);
+
+  int main(void)
+  {
+    if (foo(2)){} // syntax error
+    // error: void value not ignored as it ought to be
+  }
+*/
+
+/*
+  // void* türünden bir değişkene harhangi bir türden 
+  // bir nesnenin adresi atanabilir.
+  
+  float* foo(void);
+
+  int main(void)
+  {
+    int ival = 5;
+    double dval = 3.4;
+    char str[] = "hello";
+    
+    // -------------------------------------------------------
+
+    int* i_ptr;
+
+    i_ptr = &ival;  // VALID
+    i_ptr = &dval;  // VALID but WRONG
+    i_ptr = str;    // VALID but WRONG
+    i_ptr = foo();  // VALID but WRONG
+
+    // -------------------------------------------------------
+
+    void* v_ptr;
+    i_ptr = &ival;
+
+    v_ptr = &ival;  // VALID
+    v_ptr = &dval;  // VALID
+    v_ptr = str;    // VALID
+    v_ptr = foo();  // VALID
+    v_ptr = &v_ptr; // VALID
+
+    v_ptr = i_ptr;  // VALID
+    v_ptr = &i_ptr; // VALID
+
+    // -------------------------------------------------------
+  }
+*/
+
+/*
+  // void* değişkenlere sadece adres atayınız.
+  // tam sayı, gerçek sayı değerler atamayınız.
+
+  int main(void)
+  {
+    void* v_ptr;
+    int x = 34;
+
+    v_ptr = x;    // VALID but WRONG
+  }
+*/
+
+/*
+  // when a function's parameter variable type is void*
+  // it means that the function can take 
+  // the address of any type of object.
+  void foo(void* vp);
+*/
+
+/*
+  - void* herhangi bir türden nesnenin adresini tutar fakat
+    adresini tuttuğu nesnenin hangi türden olduğunu bilmez.
+  - void* ile bir nesnenin adresini kullanabiliriz, fakat
+    void pointer'ı dereference ederek o nesneye erişemeyiz.
+*/
+
+/*
+  int main(void)
+  {
+    int x = 10;
+    void* v_ptr = &x;
+
+    *v_ptr = 20; // syntax error
+    // warning: dereferencing 'void *' pointer
+    // error: invalid use of void expression
+  }
+*/
+
+/*
+  // void* hangi türden nesnenin adresinin tuttuğunu bilmediği için 
+  // pointer aritmetiğinden de faydalanamayız.
+
+  int main(void)
+  {
+    int arr[10] = { 0 };
+    void* vp = arr;
+
+    ++vp; // syntax error
+    // warning: wrong type argument to increment 
+
+    vp + 1; // syntax error
+    // warning: pointer of type 'void *' used in arithmetic
+
+    void* vp1 = arr;
+    void* vp2 = arr + 10;
+
+    size_t size = vp2 - vp1; // syntax error
+    // warning: pointer of type 'void *' used in subtraction
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int ival = 5;
+    double dval = 3.4;
+    int arr[10] = { 0 };
+    
+    void* vp;
+
+    vp = &ival;           // VALID
+    vp = &dval;           // VALID
+    vp = arr;             // VALID
+    vp = "hello world";   // VALID  
+    vp = NULL;            // VALID
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int x = 5;
+
+    void* vp = &x;
+
+    if (vp == NULL)
+      printf("vp is null pointer\n");
+    else
+      printf("vp is NOT null pointer\n");
+    // output -> vp is NOT null pointer
+
+    // -------------------------------------------------------
+
+    vp = NULL;
+
+    if (vp == NULL)
+      printf("vp is null pointer\n");
+    else
+      printf("vp is NOT null pointer\n");
+    // output -> vp is null pointer
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int x = 5;
+    double dval = 3.4;
+    void* vp = &x;
+
+    // -------------------------------------------------------
+
+    if (vp == &x)
+      printf("vp is equal to &x\n");
+    else
+      printf("vp is NOT equal to &x\n");
+    // output -> vp is equal to &x
+
+    // -------------------------------------------------------
+
+    vp = &dval;
+
+    if (vp == &dval)
+      printf("vp is equal to &dval\n");
+    else
+      printf("vp is NOT equal to &dval\n");
+    // output -> vp is equal to &dval
+
+    // -------------------------------------------------------
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int x = 5;
+
+    void* vp = &x;  // VALID
+    // implicit conversion from int* to void* (int* -> void*)
+
+    int* ip = vp;   // VALID in C, syntax error in C++
+    // implicit conversion from void* to int* (void* -> int*)
+  }
+*/
+
+
+/*
+  // "swap_T" is a generic function
+  void swap_T(void* vp1, void* vp2, size_t size);
+
+  int main(void)
+  {
+    // -------------------------------------------------------
+
+    int x = 5, y = 457;
+
+    swap_T(&x, &y, sizeof(int));
+    swap_T(&x, &y, sizeof x);
+    swap_T(&x, &y, sizeof y);
+    // Those 3 lines are equivalent.
+
+    // -------------------------------------------------------
+
+    double d1 = 3.4, d2 = 5.6;
+
+    swap_T(&d1, &d2, sizeof(double));
+    swap_T(&d1, &d2, sizeof d1);
+    swap_T(&d1, &d2, sizeof d2);
+    // Those 3 lines are equivalent.
+
+    // -------------------------------------------------------
+
+    int arr1[20];
+    int arr2[20];
+
+    swap_T(arr1, arr2, sizeof arr1);
+    swap_T(arr1, arr2, sizeof(int[20]));
+
+    // -------------------------------------------------------
+  }
+*/
+
+
