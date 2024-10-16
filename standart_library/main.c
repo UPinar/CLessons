@@ -903,3 +903,573 @@
     // output -> (hello galaxy) ends with (axy) 
   }
 */
+
+/*
+            ------------------------------------------
+            | generic functions in <string.h> module |
+            ------------------------------------------
+*/
+
+/*
+  -----------------------------------------------------------
+
+  - memset
+  bir bellek bloğundaki bütün byte'lara aynı tam sayı değerini yazar.
+  void* memset(void* vp, int val, size_t block_size);
+
+  -----------------------------------------------------------
+
+  - memcpy
+  bir bellek bloğunu bir yerden başka bir yere kopyalar.
+  void* memcpy(void* vp_dest, const void* vp_source, size_t block_size);
+
+  -----------------------------------------------------------
+
+  - memmove
+  bir bellek bloğunu bir yerden başka bir yere kopyalar.
+  memcpy fonksiyonundan farkı, verdikleri garantiler aynı değil.
+  void* memmove(void* vp_dest, const void* vp_source, size_t block_size);
+
+  -----------------------------------------------------------
+
+  - memchr (generic linear search)
+  bir bellek bloğunda bir karakter arar.
+  void* memchr(const void* vp, int val, size_t block_size);
+
+  -----------------------------------------------------------
+
+  - memcmp
+  iki bellek bloğunu karşılaştırır.
+  int memcmp(const void* vp1, const void* vp2, size_t block_size);
+
+  -----------------------------------------------------------
+*/
+
+/*
+  #include <string.h>  // memset
+  #include "../nutility.h"
+
+  #define SIZE 10
+
+  // memset function's prototype
+  void* memset(void* vp, int val, size_t block_size);
+
+  // memset function's implementation
+  void* memset_T(void* vp, int val, size_t block_size)
+  {
+    char* p = vp;
+
+    while(block_size--)
+      *p++ = (char)val;
+
+    return vp;
+  }
+
+  int main(void)
+  {
+    // ---------------------------------------------------
+
+    int x = 10;
+    printf("x = %d\n", x);  // output -> x = 10
+
+    int* p = memset(&x, 0, sizeof x);
+    printf("x = %d\n", x);  // output -> x = 10
+
+    // ---------------------------------------------------
+
+    if (p == &x)
+      printf("p == &x\n");
+
+    // memset function's return value is the address 
+    // that has been pass to the function as the first parameter
+
+    // ---------------------------------------------------
+
+    int arr[SIZE];
+    randomize();
+    set_array_random(arr, SIZE);
+
+    print_array(arr, SIZE);
+    // output -> 259 521 270 751 716 348 697 310 466 919
+
+    memset(arr, 0, sizeof arr);
+    memset(arr, 0, sizeof arr[0] * SIZE);
+    print_array(arr, SIZE);
+    // output ->  0   0   0   0   0   0   0   0   0   0
+
+    // ---------------------------------------------------
+
+    char str[100] = "hello world live from Istanbul";
+    puts(str);
+    // output -> hello world live from Istanbul
+
+    memset(str + 6, '*', 5);
+    puts(str);
+    // output -> hello ***** live from Istanbul
+
+    strcpy(str + 6, "*****"); 
+    puts(str);
+    // output -> hello *****
+
+    // ---------------------------------------------------
+
+    char str_2[100] = "hello universe live from Istanbul";
+    puts(str_2);
+    // output -> hello universe live from Istanbul
+
+    memset_T(str_2 + 6, '*', 8);
+    puts(str_2);
+    // output -> hello ******** live from Istanbul
+
+    // ---------------------------------------------------
+  }
+*/
+
+/*
+  #include <string.h>  // memset
+  #include <stddef.h>  // size_t
+  #include "../nutility.h"
+
+  #define   SIZE  20
+
+  int main(void)
+  {
+    // ---------------------------------------------------
+
+    int x;
+    memset(&x, 255, sizeof x);
+    // x = 1111'1111 1111'1111 1111'1111 1111'1111
+    printf("x = %d\n", x);  // output -> x = -1
+
+    // ---------------------------------------------------
+
+    unsigned int y;
+    memset(&y, 255, sizeof y);
+    // y = 1111'1111 1111'1111 1111'1111 1111'1111
+    printf("y = %u\n", y);  // output -> y = 4294967295
+
+    // ---------------------------------------------------
+
+    int z;  
+    memset(&z, 1, sizeof z);
+    // z = 0000'0001 0000'0001 0000'0001 0000'0001
+    printf("z = %d\n", z);  // output -> z = 16843009
+
+    // ---------------------------------------------------
+
+    int arr[SIZE];
+    randomize();
+    set_array_random(arr, SIZE);
+    print_array(arr, SIZE);
+    // output ->
+    //  247 913 755 587 368 826 774  61 523 533
+    //  117  42 540 168 706 744 620 502 788  55
+
+    int idx = 5;
+    size_t n = 6;
+
+    memset(arr + idx, 0, n * sizeof(int));
+    print_array(arr, SIZE);
+    // output ->
+    //  247 913 755 587 368   0   0   0   0   0
+    //    0  42 540 168 706 744 620 502 788  55
+
+    // ---------------------------------------------------
+  }
+*/
+
+/*
+  #include <string.h>  // memcpy
+  #include "../nutility.h"
+
+  #define   SIZE  10
+
+  // memcpy function's prototype
+  void* memcpy( void* restrict vp_dest, 
+                const void* restrict vp_source, 
+                size_t block_size);
+
+  // memcpy function's implementation
+  void* memcpy_T( void* restrict vp_dest, 
+                  const void* restrict vp_source, 
+                  size_t block_size)
+  {
+    char* p_dest = vp_dest;
+    const char* p_source = vp_source;
+
+    while(block_size--)
+      *p_dest++ = *p_source++;
+
+    return vp_dest;
+  }
+
+  int main(void)
+  {
+    // ---------------------------------------------------
+
+    int x = 12;
+    int y;
+
+    memcpy(&y, &x, sizeof x);
+    printf("x = %d, y = %d\n", x, y);  
+    // output -> x = 12, y = 12
+
+    // ---------------------------------------------------
+
+    int arr_1[SIZE];
+    int arr_2[SIZE];
+
+    randomize();
+    set_array_random(arr_1, SIZE);
+    print_array(arr_1, SIZE);
+    // output -> 311 718 539 908 583 988 393  42 350 111
+
+    memcpy(arr_2, arr_1, sizeof arr_1);
+    print_array(arr_2, SIZE);
+    // output -> 311 718 539 908 583 988 393  42 350 111
+
+    // ---------------------------------------------------
+
+    char str_1[] = "hello world";
+    char str_2[] = "----- *****";
+
+    puts(str_2);   // output -> ----- *****
+
+    memcpy(str_2 + 6, str_1 + 6, 5);
+    puts(str_2);   // output -> ----- world
+
+    // ---------------------------------------------------
+  }
+*/
+
+/*
+  #include <string.h>  // memcpy, memmove
+  #include "../nutility.h"
+
+  #define   SIZE  100
+
+  // because of the memcpy function's parameter variables 
+  // are restrict pointers, passing overlapped blocks to the function 
+  // is undefined behavior(ub)
+
+  // memmove function's prototype
+  void* memmove(void* vp_dest, const void* vp_source, size_t block_size);
+
+  int main(void)
+  {
+    int arr[SIZE];
+    set_array_random(arr, SIZE);
+
+    // ---------------------------------------------------
+
+    memcpy(arr + 20, arr, 40 * sizeof(int));
+    // block that we are reading from [0-40) and 
+    // block that we are writing to [20-60) are overlapped
+    // undefined behavior(UB)
+
+    // ---------------------------------------------------
+
+    memmove(arr + 20, arr, 40 * sizeof(int));
+    // memmove function guarantees that operations 
+    // on overlapped blocks will not cause undefined behavior(UB)
+    
+    // ---------------------------------------------------
+  }
+*/
+
+/*
+  #include <string.h>  // strcpy, memcpy, memmove, 
+
+  int main(void)
+  {
+    char str[100] = "mara";
+
+    strcpy(str + 3, str);               // undefined behavior(UB)
+    memcpy(str + 3, str, strlen(str));  // undefined behavior(UB)
+
+    memmove(str + 3, str, strlen(str));    // VALID
+    puts(str);  // output -> marmara
+  }
+*/
+
+/*
+  #include <string.h>  // memchr
+
+  // memchr function's prototype
+  void* memchr(const void* vp, int val, size_t block_size);
+
+  // memchr function's implementation
+  void* memchr_T(const void* vp, int val, size_t block_size)
+  {
+    const char* p = vp;
+
+    while(block_size--){
+      if (*p == val)
+        return (char*)p;
+      ++p;
+    }
+
+    return NULL;
+  }
+
+  int main(void)
+  {
+    // ---------------------------------------------------
+
+    unsigned char buf[] = { 1, 3, 5, 0, 2, 6, 4, 8, 9, 2 };
+
+    unsigned char* p1 = memchr(buf, 0, sizeof buf);
+    if (p1)
+      printf("found in %d index\n", (int)(p1 - buf));
+    else
+      printf("not found\n");
+    // output -> found in 3 index
+
+    // ---------------------------------------------------
+
+    char str[] = "hello world hello galaxy hello universe";
+
+    char* p2 = memchr(str + 5, 'h', 20);
+    // search will be applied to the block [5-25)
+
+    if (p2)
+      printf("found in %d index\n", (int)(p2 - str));
+    else
+      printf("not found\n");
+    // output -> found in 12 index
+
+    // ---------------------------------------------------
+  }
+*/
+
+/*
+  // HOMEWORK : Implement a generic strstr function
+
+  #include <stddef.h>  // size_t
+  #include <string.h>  // memcmp
+
+  void* memmem_T( const void* vp_source_block,
+                  size_t source_block_size, 
+                  const void* vp_sub_block,
+                  size_t sub_block_size)
+  {
+    const char* p_source = vp_source_block;
+    const char* p_sub = vp_sub_block;
+
+    while(source_block_size >= sub_block_size)
+    {
+      if (memcmp(p_source, p_sub, sub_block_size) == 0)
+        return (void*)p_source;
+
+      ++p_source;
+      --source_block_size;
+    }
+
+    return NULL;
+  }
+
+  int main(void)
+  {
+    // ---------------------------------------------------
+    
+    char str[] = "world hello galaxy hello universe";
+    char sub_str[] = "hello";
+
+    char* p1 = memmem_T(str, strlen(str), sub_str, strlen(sub_str));
+    if (p1)
+      printf("found in %d index\n", (int)(p1 - str));
+    else
+      printf("not found\n");
+    // output -> found in 6 index
+
+    // ---------------------------------------------------
+
+    int arr[] = { 1, 3, 5, 7, 9, 2, 4, 6, 8, 0 };
+    int sub[] = { 2, 4, 6 };
+
+    int* p2 = memmem_T(arr, sizeof arr, sub, sizeof sub);
+
+    if (p2)
+      printf("found in %d index\n", (int)(p2 - arr));
+    else
+      printf("not found\n");
+    // output -> found in 5 index
+
+    // ---------------------------------------------------
+  }
+*/
+
+/*
+  #include <string.h>   // memcmp
+  #include <stdlib.h>   // rand
+  #include "../nutility.h"
+
+  #define   SIZE  10
+
+  // memcmp function's prototype
+  int memcmp(const void* vp1, const void* vp2, size_t block_size);
+
+  // memcmp function's implementation
+  int memcmp_T(const void* vp1, const void* vp2, size_t block_size)
+  {
+    const unsigned char* p1 = vp1;
+    const unsigned char* p2 = vp2;
+
+    while(block_size--){
+      if (*p1 != *p2)
+        return *p1 > *p2 ? 1 : -1;
+      ++p1, ++p2;
+    }
+
+    return 0;
+  }
+
+  int main(void)
+  {
+    // comparison between blocks will be applied 
+    // assumed that blocks are holding unsigned integral types
+
+    int a[SIZE];
+    int b[SIZE];
+
+    // ---------------------------------------------------
+
+    randomize();
+    set_array_random(a, SIZE);
+
+    memcpy(b, a, sizeof a);
+
+    if (!memcmp(a, b, sizeof a))
+      printf("a and b are equal\n");
+    else
+      printf("a and b are not equal\n");
+    // output -> a and b are equal
+
+    // ---------------------------------------------------
+
+    ++a[rand() % SIZE];
+
+    if (!memcmp(a, b, sizeof a))
+      printf("a and b are equal\n");
+    else
+      printf("a and b are not equal\n");
+    // output -> a and b are not equal
+
+    // ---------------------------------------------------
+  }
+*/
+
+/*
+                          --------------
+                          | Endianness |
+                          --------------
+*/
+
+/*
+  int main(void)
+  {
+    int x = 15;   // 0x00'00'00'0F
+    printf("%p\n", &x);  // output -> 00000050FC9FF90C
+
+    // in Big Endian Architecture, LSByte is at the highest address
+    // 00000050FC9FF90C     0x00    0b0000'0000 (Most Significant Byte) 
+    // 00000050FC9FF90D     0x00    0b0000'0000  
+    // 00000050FC9FF90E     0x00    0b0000'0000
+    // 00000050FC9FF90F     0x0F    0b0000'1111 (Least Significant Byte)
+
+    // in Little Endian Architecture, LSByte is at the lowest address
+    // 00000050FC9FF90C     0x0F    0b0000'1111 (Least Significant Byte)
+    // 00000050FC9FF90D     0x00    0b0000'0000
+    // 00000050FC9FF90E     0x00    0b0000'0000
+    // 00000050FC9FF90F     0x00    0b0000'0000 (Most Significant Byte)
+  }
+*/
+
+/*
+  - from big endian to little endian 2 byte swap operation needed
+  - from little endian to big endian 2 byte swap operation needed
+*/
+
+/*
+  // how to find out the architecture of the system is 
+  // little endian or big endian
+
+  int main(void)
+  {
+    int x = 1;    // 0x00'00'00'01
+
+    // if Little Endian -> 
+    // 0b0000'0001
+    // 0b0000'0000
+    // 0b0000'0000
+    // 0b0000'0000
+
+    // if Big Endian ->
+    // 0b0000'0000
+    // 0b0000'0000
+    // 0b0000'0000
+    // 0b0000'0001
+
+    // if the first byte is 1, then the system is little endian
+    // if the last byte is 1, then the system is big endian
+    
+    // ---------------------------------------------------
+
+    char* p = (char*)&x;
+    // p is pointing the first byte of the integer x
+    // if little indian architecture, *p will be 1
+    // if big indian architecture, *p will be 0
+
+    if (*p)
+      printf("little endian\n");
+    else
+      printf("big endian\n");
+    // output -> little endian
+
+    // ---------------------------------------------------
+
+    if ( *(char*)&x )
+      printf("little endian\n");
+    else
+      printf("big endian\n");
+    // output -> little endian
+
+    // ---------------------------------------------------
+  }
+*/
+
+/*
+  #include <string.h>  // memcmp
+
+  int main(void)
+  {
+    int x = -856;  // 0xFF'FF'FC'A8
+    int y = 981;   // 0x00'00'03'D5
+
+    printf("&x = %p\n", &x);  // output -> &x = 0000008806DFF8BC
+    printf("&y = %p\n", &y);  // output -> &y = 0000008806DFF8B8
+
+    // Little Endian Architecture
+
+    // -- y --
+    // 0000008806DFF8B8     0xD5    0b1101'0101
+    // 0000008806DFF8B9     0x03    0b0000'0011
+    // 0000008806DFF8BA     0x00    0b0000'0000
+    // 0000008806DFF8BB     0x00    0b0000'0000
+
+    // -- x --
+    // 0000008806DFF8BC     0xA8    0b1010'1000
+    // 0000008806DFF8BD     0xFC    0b1111'1100
+    // 0000008806DFF8BE     0xFF    0b1111'1111
+    // 0000008806DFF8BF     0xFF    0b1111'1111
+    
+
+    if (memcmp(&y, &x, sizeof(int)) > 0)
+      printf("y > x\n");
+    // output -> y > x    
+
+    // 0000008806DFF8B8 and 0000008806DFF8BC will be compared
+    // 0xD5 > 0xA8
+    // y > x
+  }
+*/

@@ -6108,10 +6108,88 @@
   }
 */
 
+/*
+  #include <stddef.h> // size_t
+
+  int main(void)
+  {
+    double d1 = 34.23764;
+    double d2;
+
+    const char* p1 = (const char*)&d1;
+    char* p2 = (char*)&d2;
+    size_t n = sizeof(double);
+
+    while (n--)
+      *p2++ = *p1++;
+
+    printf("%f\n", d1);   // output -> 34.237640
+    printf("%f\n", d2);   // output -> 34.237640
+  }
+*/
 
 /*
-  // "swap_T" is a generic function
-  void swap_T(void* vp1, void* vp2, size_t size);
+  #include "../nutility.h"
+
+  // copy_T is a generic function
+  void copy_T(void* vp_dest, const void* vp_src, size_t n)
+  {
+    const char* p_src = vp_src;
+    // const char* p_src = (const char*)vp_src;
+
+    char* p_dest = vp_dest;
+    // char* p_dest = (char*)vp_dest;
+
+    while (n--)
+      *p_dest++ = *p_src++;
+  }
+
+  int main(void)
+  {
+    // -------------------------------------------------------
+
+    double d1 = 2893.12331;
+    double d2;
+    copy_T(&d2, &d1, sizeof(double));
+
+    printf("%f\n", d2); // output -> 2893.123310
+
+    // -------------------------------------------------------
+
+    int i1 = 92383;
+    int i2;
+    copy_T(&i2, &i1, sizeof(int));
+
+    printf("%d\n", i2); // output -> 92383
+
+    // -------------------------------------------------------
+
+    int a[] = { 1, 2, 3, 4, 5 };
+    int b[5];
+    copy_T(b, a, sizeof a);
+
+    print_array(b, 5);  // output -> 1 2 3 4 5
+
+    // -------------------------------------------------------
+  }
+*/
+
+/*
+  #include "../nutility.h"
+
+  // swap_T is a generic function
+  void swap_T(void* vp1, void* vp2, size_t size)
+  {
+    char* p1 = vp1;
+    char* p2 = vp2;
+
+    while (size--)
+    {
+      char temp = *p1;
+      *p1++ = *p2;
+      *p2++ = temp;
+    }
+  }
 
   int main(void)
   {
@@ -6119,30 +6197,196 @@
 
     int x = 5, y = 457;
 
+    printf("x = %d, y = %d\n", x, y);   
+    // output -> x = 5, y = 457
+
     swap_T(&x, &y, sizeof(int));
-    swap_T(&x, &y, sizeof x);
-    swap_T(&x, &y, sizeof y);
-    // Those 3 lines are equivalent.
+
+    printf("x = %d, y = %d\n", x, y);
+    // output -> x = 457, y = 5
 
     // -------------------------------------------------------
 
     double d1 = 3.4, d2 = 5.6;
 
+    printf("d1 = %f, d2 = %f\n", d1, d2);
+    // output -> d1 = 3.400000, d2 = 5.600000
+
     swap_T(&d1, &d2, sizeof(double));
-    swap_T(&d1, &d2, sizeof d1);
-    swap_T(&d1, &d2, sizeof d2);
-    // Those 3 lines are equivalent.
+
+    printf("d1 = %f, d2 = %f\n", d1, d2);
+    // output -> d1 = 5.600000, d2 = 3.400000
 
     // -------------------------------------------------------
 
-    int arr1[20];
-    int arr2[20];
+    int arr1[5] = { 1, 2, 3, 4, 5 };
+    int arr2[5] = { 10, 20, 30, 40, 50 };
 
-    swap_T(arr1, arr2, sizeof arr1);
-    swap_T(arr1, arr2, sizeof(int[20]));
+    print_array(arr1, 5);  // output -> 1 2 3 4 5
+    print_array(arr2, 5);  // output -> 10 20 30 40 50
+
+    swap_T(arr1, arr2, sizeof(int[5]));
+
+    print_array(arr1, 5);  // output -> 10 20 30 40 50
+    print_array(arr2, 5);  // output -> 1 2 3 4 5
 
     // -------------------------------------------------------
   }
 */
 
+/*
+  // Write a generic function that reverse an array
+  // { 1, 2, 3, 4, 5 } ===> { 5, 4, 3, 2, 1 }
 
+  #include <stddef.h> // size_t
+  #include "../nutility.h"
+
+  #define   SIZE  10
+
+  void reverse_arr1_T(void* vp_arr, size_t arr_size, size_t elem_size)
+  {
+    char* p = vp_arr;
+
+    for (size_t i = 0; i < arr_size / 2; ++i)
+    {
+      swap_T( p + i * elem_size, 
+              p + (arr_size - 1 - i) * elem_size, 
+              elem_size);
+    }
+  }
+
+  void reverse_arr2_T(void* vp_arr, size_t arr_size, size_t elem_size)
+  {
+    char* p_first = vp_arr;
+    char* p_last = p_first + (arr_size - 1) * elem_size;
+
+    while(p_first < p_last)
+    {
+      swap_T(p_first, p_last, elem_size);
+      p_first += elem_size;
+      p_last -= elem_size;
+    }
+  }
+    
+  int main(void)
+  {
+    // -------------------------------------------------------
+
+    int arr[SIZE];
+
+    randomize();
+    set_array_random(arr, SIZE);
+    print_array(arr, SIZE);
+    // output ->  848 573 894 227 690 847 619 553 525 677
+
+    reverse_arr1_T(arr, SIZE, sizeof arr[0]);
+    reverse_arr1_T(arr, SIZE, sizeof *arr);
+    reverse_arr1_T(arr, SIZE, sizeof(int));
+    // Those 3 lines are equivalent.
+
+    print_array(arr, SIZE);
+    // output ->  677 525 553 619 847 690 227 894 573 848
+
+    // -------------------------------------------------------
+
+    double d_arr[] = { 1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7 };
+
+    for (size_t i = 0; i < asize(d_arr); ++i)
+      printf("%f ", d_arr[i]);
+    // output -> 
+    //  1.100000 2.200000 3.300000 4.400000 5.500000 6.600000 7.700000
+
+    putchar('\n');
+
+    reverse_arr2_T(d_arr, asize(d_arr), sizeof d_arr[0]);
+
+    for (size_t i = 0; i < asize(d_arr); ++i)
+      printf("%f ", d_arr[i]);
+    // output ->
+    //  7.700000 6.600000 5.500000 4.400000 3.300000 2.200000 1.100000
+
+    // -------------------------------------------------------
+  }
+*/
+
+/*
+  Write a generic function that sort an array ascending
+    - we can write a sort algorithm 
+    - we can find out addresses of the contigious elements.
+    - we can swap those elements
+    - we CAN NOT find out which of them is greater
+      cause we don't know the type of array elements
+      (function pointers will solve this problem)
+      -> if type is int will be pass a funtion pointer that 
+        is pointing to the function that compares two integers
+      -> if type is double will be pass a funtion pointer that
+        is pointing to the function that compares two doubles
+
+      so generic sort function can call those functions by 
+      using function pointers.
+*/
+
+/*
+  void** vpp;
+  - vpp değişkenine herhangi bir türden değişkenin adresini atayamayız.
+  - vpp generic bir pointer değildir.
+  - "*vpp" ifadesi atama operatörünün sol operandı olabilir.
+  - void**, void* türünden bir nesnenin adresi olan türdür.
+
+  void* vp;
+  - vp değişkenine herhangi bir türden değişkenin adresini atayabiliriz.
+  - vp generic bir pointerdır.
+  - "*vp" ifadesi atama operatörünün sol operandı olamaz. Sentaks hatası.
+    
+*/
+
+/*
+  int main(void)
+  {
+    int ival = 10;
+    double dval = 3.4;
+
+    void* vp = &ival;
+    void** vpp = &vp;
+
+    *vpp = &dval;
+    if (vp == &dval)
+      printf("vp is equal to &dval\n");
+    else
+      printf("vp is NOT equal to &dval\n");
+    // output -> vp is equal to &dval
+  }
+*/
+
+/*
+  void foo(void**);
+
+  int main(void)
+  {
+    int x = 10;
+    void* vp = &x;
+
+    // -------------------------------------------------------
+
+    foo(&vp);   
+    // foo fonksiyonu vp değişkeninin değerini değiştirebilir.
+
+    // -------------------------------------------------------
+
+    void** vpp = &vp;
+    **vpp = 34; // syntax error     
+    // error: invalid use of void expression
+    // warning: dereferencing 'void *' pointer
+    // **vpp ===> *vp (dereferencing void pointer)
+
+    // -------------------------------------------------------
+
+    void* vp_arr[10];
+    // farklı türlerin adreslerini tutabilen dizi.
+
+    void* vp1, *vp2, *vp3;
+    void** vpp_arr[] = { &vp1, &vp2, &vp3 };
+
+    // -------------------------------------------------------
+  }
+*/

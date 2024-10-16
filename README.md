@@ -24,7 +24,7 @@
   - return statement
   - function call
   - test functions (query, predicate)
-  - ctype <ctype.h> module
+  - `<ctype.h>` module
   - function prototype(s) | function declaration
 
 ### [Input Output](https://github.com/UPinar/CLessons/tree/master/input_output)
@@ -55,7 +55,7 @@
   - how to get out of a loop (bir döngüden nasıl çıkılır?)
   - infinite loop (sonsuz döngü)[while]
   - `break` statement
-  - <conio.h> header for Microsoft Compiler `_getch()` and `_getche()` functions
+  - `<conio.h>` header for Microsoft Compiler `_getch()` and `_getche()` functions
   - `continue` statement
   - `do while` statement
   - `for` statement
@@ -133,7 +133,7 @@
   - type aliases in standart library
 
 ### [Standart Library](https://github.com/UPinar/CLessons/tree/master/standart_library)
-  - string operations (yazı işlemleri)
+  - string operations (yazı işlemleri) 
     - `strlen` 
     - `strchr` 
     - `strrchr`
@@ -145,6 +145,12 @@
     - string comparison(yazıların karşılaştırılması)
       - lexicographical compare
       - `strcmp`
+  - generic functions in `<string.h>` module
+    - `memset`
+    - `memcpy` and `memmove`
+    - `memchr`
+    - `memcmp`
+      - Endianness
   
 ### [String Literals](https://github.com/UPinar/CLessons/tree/master/string_literals)
 
