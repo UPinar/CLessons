@@ -903,3 +903,309 @@
     // output -> (hello galaxy) ends with (axy) 
   }
 */
+
+/*
+            ------------------------------------------
+            | generic functions in <string.h> module |
+            ------------------------------------------
+*/
+
+/*
+  -----------------------------------------------------------
+
+  - memset
+  bir bellek bloğundaki bütün byte'lara aynı tam sayı değerini yazar.
+  void* memset(void* vp, int val, size_t block_size);
+
+  -----------------------------------------------------------
+
+  - memcpy
+  bir bellek bloğunu bir yerden başka bir yere kopyalar.
+  void* memcpy(void* vp_dest, const void* vp_source, size_t block_size);
+
+  -----------------------------------------------------------
+
+  - memmove
+  bir bellek bloğunu bir yerden başka bir yere kopyalar.
+  memcpy fonksiyonundan farkı, verdikleri garantiler aynı değil.
+  void* memmove(void* vp_dest, const void* vp_source, size_t block_size);
+
+  -----------------------------------------------------------
+
+  - memchr (generic linear search)
+  bir bellek bloğunda bir karakter arar.
+  void* memchr(const void* vp, int val, size_t block_size);
+
+  -----------------------------------------------------------
+
+  - memcmp
+  iki bellek bloğunu karşılaştırır.
+  int memcmp(const void* vp1, const void* vp2, size_t block_size);
+
+  -----------------------------------------------------------
+*/
+
+/*
+  #include <string.h>  // memset
+  #include "../nutility.h"
+
+  #define SIZE 10
+
+  // memset function's prototype
+  void* memset(void* vp, int val, size_t block_size);
+
+  // memset function's implementation
+  void* memset_T(void* vp, int val, size_t block_size)
+  {
+    char* p = vp;
+
+    while(block_size--)
+      *p++ = (char)val;
+
+    return vp;
+  }
+
+  int main(void)
+  {
+    // ---------------------------------------------------
+
+    int x = 10;
+    printf("x = %d\n", x);  // output -> x = 10
+
+    int* p = memset(&x, 0, sizeof x);
+    printf("x = %d\n", x);  // output -> x = 10
+
+    // ---------------------------------------------------
+
+    if (p == &x)
+      printf("p == &x\n");
+
+    // memset function's return value is the address 
+    // that has been pass to the function as the first parameter
+
+    // ---------------------------------------------------
+
+    int arr[SIZE];
+    randomize();
+    set_array_random(arr, SIZE);
+
+    print_array(arr, SIZE);
+    // output -> 259 521 270 751 716 348 697 310 466 919
+
+    memset(arr, 0, sizeof arr);
+    memset(arr, 0, sizeof arr[0] * SIZE);
+    print_array(arr, SIZE);
+    // output ->  0   0   0   0   0   0   0   0   0   0
+
+    // ---------------------------------------------------
+
+    char str[100] = "hello world live from Istanbul";
+    puts(str);
+    // output -> hello world live from Istanbul
+
+    memset(str + 6, '*', 5);
+    puts(str);
+    // output -> hello ***** live from Istanbul
+
+    strcpy(str + 6, "*****"); 
+    puts(str);
+    // output -> hello *****
+
+    // ---------------------------------------------------
+
+    char str_2[100] = "hello universe live from Istanbul";
+    puts(str_2);
+    // output -> hello universe live from Istanbul
+
+    memset_T(str_2 + 6, '*', 8);
+    puts(str_2);
+    // output -> hello ******** live from Istanbul
+
+    // ---------------------------------------------------
+  }
+*/
+
+/*
+  #include <string.h>  // memset
+  #include <stddef.h>  // size_t
+  #include "../nutility.h"
+
+  #define   SIZE  20
+
+  int main(void)
+  {
+    // ---------------------------------------------------
+
+    int x;
+    memset(&x, 255, sizeof x);
+    // x = 1111'1111 1111'1111 1111'1111 1111'1111
+    printf("x = %d\n", x);  // output -> x = -1
+
+    // ---------------------------------------------------
+
+    unsigned int y;
+    memset(&y, 255, sizeof y);
+    // y = 1111'1111 1111'1111 1111'1111 1111'1111
+    printf("y = %u\n", y);  // output -> y = 4294967295
+
+    // ---------------------------------------------------
+
+    int z;  
+    memset(&z, 1, sizeof z);
+    // z = 0000'0001 0000'0001 0000'0001 0000'0001
+    printf("z = %d\n", z);  // output -> z = 16843009
+
+    // ---------------------------------------------------
+
+    int arr[SIZE];
+    randomize();
+    set_array_random(arr, SIZE);
+    print_array(arr, SIZE);
+    // output ->
+    //  247 913 755 587 368 826 774  61 523 533
+    //  117  42 540 168 706 744 620 502 788  55
+
+    int idx = 5;
+    size_t n = 6;
+
+    memset(arr + idx, 0, n * sizeof(int));
+    print_array(arr, SIZE);
+    // output ->
+    //  247 913 755 587 368   0   0   0   0   0
+    //    0  42 540 168 706 744 620 502 788  55
+
+    // ---------------------------------------------------
+  }
+*/
+
+/*
+  #include <string.h>  // memcpy
+  #include "../nutility.h"
+
+  #define   SIZE  10
+
+  // memcpy function's prototype
+  void* memcpy( void* restrict vp_dest, 
+                const void* restrict vp_source, 
+                size_t block_size);
+
+  // memcpy function's implementation
+  void* memcpy_T( void* restrict vp_dest, 
+                  const void* restrict vp_source, 
+                  size_t block_size)
+  {
+    char* p_dest = vp_dest;
+    const char* p_source = vp_source;
+
+    while(block_size--)
+      *p_dest++ = *p_source++;
+
+    return vp_dest;
+  }
+
+  int main(void)
+  {
+    // ---------------------------------------------------
+
+    int x = 12;
+    int y;
+
+    memcpy(&y, &x, sizeof x);
+    printf("x = %d, y = %d\n", x, y);  
+    // output -> x = 12, y = 12
+
+    // ---------------------------------------------------
+
+    int arr_1[SIZE];
+    int arr_2[SIZE];
+
+    randomize();
+    set_array_random(arr_1, SIZE);
+    print_array(arr_1, SIZE);
+    // output -> 311 718 539 908 583 988 393  42 350 111
+
+    memcpy(arr_2, arr_1, sizeof arr_1);
+    print_array(arr_2, SIZE);
+    // output -> 311 718 539 908 583 988 393  42 350 111
+
+    // ---------------------------------------------------
+
+    char str_1[] = "hello world";
+    char str_2[] = "----- *****";
+
+    puts(str_2);   // output -> ----- *****
+
+    memcpy(str_2 + 6, str_1 + 6, 5);
+    puts(str_2);   // output -> ----- world
+
+    // ---------------------------------------------------
+  }
+*/
+
+/*
+  #include <string.h>  // memcpy, memmove
+  #include "../nutility.h"
+
+  #define   SIZE  100
+
+  // because of the memcpy function's parameter variables 
+  // are restrict pointers, passing overlapped blocks to the function 
+  // is undefined behavior(ub)
+
+  // memmove function's prototype
+  void* memmove(void* vp_dest, const void* vp_source, size_t block_size);
+
+  int main(void)
+  {
+    int arr[SIZE];
+    set_array_random(arr, SIZE);
+
+    // ---------------------------------------------------
+
+    memcpy(arr + 20, arr, 40 * sizeof(int));
+    // block that we are reading from [0-40) and 
+    // block that we are writing to [20-60) are overlapped
+    // undefined behavior(UB)
+
+    // ---------------------------------------------------
+
+    memmove(arr + 20, arr, 40 * sizeof(int));
+    // memmove function guarantees that operations 
+    // on overlapped blocks will not cause undefined behavior(UB)
+    
+    // ---------------------------------------------------
+  }
+*/
+
+/*
+  #include <string.h>  // strcpy, memcpy, memmove, 
+
+  int main(void)
+  {
+    char str[100] = "mara";
+
+    strcpy(str + 3, str);               // undefined behavior(UB)
+    memcpy(str + 3, str, strlen(str));  // undefined behavior(UB)
+
+    memmove(str + 3, str, strlen(str));    // VALID
+    puts(str);  // output -> marmara
+  }
+*/
+
+/*
+  #include <string.h>  // memchr
+  #include "../nutility.h"
+
+  #define   SIZE  10
+
+  // memchr function's prototype
+  void* memchr(const void* vp, int val, size_t block_size);
+
+  // memchr function's implementation
+  void* memchr_T(const void* vp, int val, size_t block_size);
+  ;
+
+  int main(void)
+
+  // Lesson_39 : 01:50:00
+*/

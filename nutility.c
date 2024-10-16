@@ -123,6 +123,19 @@ void swap_arrays(int* p_array1, int* p_array2, size_t size)
     swap(p_array1++, p_array2++);
 }
 
+void swap_T(void* vp1, void* vp2, size_t size)
+{
+  char* p1 = vp1;
+  char* p2 = vp2;
+
+  while (size--)
+  {
+    char temp = *p1;
+    *p1++ = *p2;
+    *p2++ = temp;
+  }
+}
+
 const char* p_names[] = {
 "ata", "emrecan", "adem", "burhan", "korhan", "demir", "bilal", 
 "emrecan", "celik", "zahide", "dost", "lale", "baran", "saniye", 

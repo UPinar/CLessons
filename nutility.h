@@ -25,4 +25,6 @@ void get_min_max(const int* p_array, size_t size, int* p_min, int* p_max);
 void copy_array(int* p_dest, const int* p_source, size_t size);
 void swap_arrays(int* p_array1, int* p_array2, size_t size);
 
+void swap_T(void* vp1, void* vp2, size_t size);
+
 #endif // NUTILITY_H
