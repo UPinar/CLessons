@@ -1242,7 +1242,62 @@
   }
 */
 
-// TODO: HOMEWORK : Implement a generic strstr function
+/*
+  // HOMEWORK : Implement a generic strstr function
+
+  #include <stddef.h>  // size_t
+  #include <string.h>  // memcmp
+
+  void* memmem_T( const void* vp_source_block,
+                  size_t source_block_size, 
+                  const void* vp_sub_block,
+                  size_t sub_block_size)
+  {
+    const char* p_source = vp_source_block;
+    const char* p_sub = vp_sub_block;
+
+    while(source_block_size >= sub_block_size)
+    {
+      if (memcmp(p_source, p_sub, sub_block_size) == 0)
+        return (void*)p_source;
+
+      ++p_source;
+      --source_block_size;
+    }
+
+    return NULL;
+  }
+
+  int main(void)
+  {
+    // ---------------------------------------------------
+    
+    char str[] = "world hello galaxy hello universe";
+    char sub_str[] = "hello";
+
+    char* p1 = memmem_T(str, strlen(str), sub_str, strlen(sub_str));
+    if (p1)
+      printf("found in %d index\n", (int)(p1 - str));
+    else
+      printf("not found\n");
+    // output -> found in 6 index
+
+    // ---------------------------------------------------
+
+    int arr[] = { 1, 3, 5, 7, 9, 2, 4, 6, 8, 0 };
+    int sub[] = { 2, 4, 6 };
+
+    int* p2 = memmem_T(arr, sizeof arr, sub, sizeof sub);
+
+    if (p2)
+      printf("found in %d index\n", (int)(p2 - arr));
+    else
+      printf("not found\n");
+    // output -> found in 5 index
+
+    // ---------------------------------------------------
+  }
+*/
 
 /*
   #include <string.h>   // memcmp
