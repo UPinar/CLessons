@@ -6325,3 +6325,68 @@
       so generic sort function can call those functions by 
       using function pointers.
 */
+
+/*
+  void** vpp;
+  - vpp değişkenine herhangi bir türden değişkenin adresini atayamayız.
+  - vpp generic bir pointer değildir.
+  - "*vpp" ifadesi atama operatörünün sol operandı olabilir.
+  - void**, void* türünden bir nesnenin adresi olan türdür.
+
+  void* vp;
+  - vp değişkenine herhangi bir türden değişkenin adresini atayabiliriz.
+  - vp generic bir pointerdır.
+  - "*vp" ifadesi atama operatörünün sol operandı olamaz. Sentaks hatası.
+    
+*/
+
+/*
+  int main(void)
+  {
+    int ival = 10;
+    double dval = 3.4;
+
+    void* vp = &ival;
+    void** vpp = &vp;
+
+    *vpp = &dval;
+    if (vp == &dval)
+      printf("vp is equal to &dval\n");
+    else
+      printf("vp is NOT equal to &dval\n");
+    // output -> vp is equal to &dval
+  }
+*/
+
+/*
+  void foo(void**);
+
+  int main(void)
+  {
+    int x = 10;
+    void* vp = &x;
+
+    // -------------------------------------------------------
+
+    foo(&vp);   
+    // foo fonksiyonu vp değişkeninin değerini değiştirebilir.
+
+    // -------------------------------------------------------
+
+    void** vpp = &vp;
+    **vpp = 34; // syntax error     
+    // error: invalid use of void expression
+    // warning: dereferencing 'void *' pointer
+    // **vpp ===> *vp (dereferencing void pointer)
+
+    // -------------------------------------------------------
+
+    void* vp_arr[10];
+    // farklı türlerin adreslerini tutabilen dizi.
+
+    void* vp1, *vp2, *vp3;
+    void** vpp_arr[] = { &vp1, &vp2, &vp3 };
+
+    // -------------------------------------------------------
+  }
+*/

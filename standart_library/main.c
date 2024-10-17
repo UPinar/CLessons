@@ -1194,18 +1194,227 @@
 
 /*
   #include <string.h>  // memchr
-  #include "../nutility.h"
-
-  #define   SIZE  10
 
   // memchr function's prototype
   void* memchr(const void* vp, int val, size_t block_size);
 
   // memchr function's implementation
-  void* memchr_T(const void* vp, int val, size_t block_size);
-  ;
+  void* memchr_T(const void* vp, int val, size_t block_size)
+  {
+    const char* p = vp;
+
+    while(block_size--){
+      if (*p == val)
+        return (char*)p;
+      ++p;
+    }
+
+    return NULL;
+  }
 
   int main(void)
+  {
+    // ---------------------------------------------------
 
-  // Lesson_39 : 01:50:00
+    unsigned char buf[] = { 1, 3, 5, 0, 2, 6, 4, 8, 9, 2 };
+
+    unsigned char* p1 = memchr(buf, 0, sizeof buf);
+    if (p1)
+      printf("found in %d index\n", (int)(p1 - buf));
+    else
+      printf("not found\n");
+    // output -> found in 3 index
+
+    // ---------------------------------------------------
+
+    char str[] = "hello world hello galaxy hello universe";
+
+    char* p2 = memchr(str + 5, 'h', 20);
+    // search will be applied to the block [5-25)
+
+    if (p2)
+      printf("found in %d index\n", (int)(p2 - str));
+    else
+      printf("not found\n");
+    // output -> found in 12 index
+
+    // ---------------------------------------------------
+  }
+*/
+
+// TODO: HOMEWORK : Implement a generic strstr function
+
+/*
+  #include <string.h>   // memcmp
+  #include <stdlib.h>   // rand
+  #include "../nutility.h"
+
+  #define   SIZE  10
+
+  // memcmp function's prototype
+  int memcmp(const void* vp1, const void* vp2, size_t block_size);
+
+  // memcmp function's implementation
+  int memcmp_T(const void* vp1, const void* vp2, size_t block_size)
+  {
+    const unsigned char* p1 = vp1;
+    const unsigned char* p2 = vp2;
+
+    while(block_size--){
+      if (*p1 != *p2)
+        return *p1 > *p2 ? 1 : -1;
+      ++p1, ++p2;
+    }
+
+    return 0;
+  }
+
+  int main(void)
+  {
+    // comparison between blocks will be applied 
+    // assumed that blocks are holding unsigned integral types
+
+    int a[SIZE];
+    int b[SIZE];
+
+    // ---------------------------------------------------
+
+    randomize();
+    set_array_random(a, SIZE);
+
+    memcpy(b, a, sizeof a);
+
+    if (!memcmp(a, b, sizeof a))
+      printf("a and b are equal\n");
+    else
+      printf("a and b are not equal\n");
+    // output -> a and b are equal
+
+    // ---------------------------------------------------
+
+    ++a[rand() % SIZE];
+
+    if (!memcmp(a, b, sizeof a))
+      printf("a and b are equal\n");
+    else
+      printf("a and b are not equal\n");
+    // output -> a and b are not equal
+
+    // ---------------------------------------------------
+  }
+*/
+
+/*
+                          --------------
+                          | Endianness |
+                          --------------
+*/
+
+/*
+  int main(void)
+  {
+    int x = 15;   // 0x00'00'00'0F
+    printf("%p\n", &x);  // output -> 00000050FC9FF90C
+
+    // in Big Endian Architecture, LSByte is at the highest address
+    // 00000050FC9FF90C     0x00    0b0000'0000 (Most Significant Byte) 
+    // 00000050FC9FF90D     0x00    0b0000'0000  
+    // 00000050FC9FF90E     0x00    0b0000'0000
+    // 00000050FC9FF90F     0x0F    0b0000'1111 (Least Significant Byte)
+
+    // in Little Endian Architecture, LSByte is at the lowest address
+    // 00000050FC9FF90C     0x0F    0b0000'1111 (Least Significant Byte)
+    // 00000050FC9FF90D     0x00    0b0000'0000
+    // 00000050FC9FF90E     0x00    0b0000'0000
+    // 00000050FC9FF90F     0x00    0b0000'0000 (Most Significant Byte)
+  }
+*/
+
+/*
+  - from big endian to little endian 2 byte swap operation needed
+  - from little endian to big endian 2 byte swap operation needed
+*/
+
+/*
+  // how to find out the architecture of the system is 
+  // little endian or big endian
+
+  int main(void)
+  {
+    int x = 1;    // 0x00'00'00'01
+
+    // if Little Endian -> 
+    // 0b0000'0001
+    // 0b0000'0000
+    // 0b0000'0000
+    // 0b0000'0000
+
+    // if Big Endian ->
+    // 0b0000'0000
+    // 0b0000'0000
+    // 0b0000'0000
+    // 0b0000'0001
+
+    // if the first byte is 1, then the system is little endian
+    // if the last byte is 1, then the system is big endian
+    
+    // ---------------------------------------------------
+
+    char* p = (char*)&x;
+    // p is pointing the first byte of the integer x
+    // if little indian architecture, *p will be 1
+    // if big indian architecture, *p will be 0
+
+    if (*p)
+      printf("little endian\n");
+    else
+      printf("big endian\n");
+    // output -> little endian
+
+    // ---------------------------------------------------
+
+    if ( *(char*)&x )
+      printf("little endian\n");
+    else
+      printf("big endian\n");
+    // output -> little endian
+
+    // ---------------------------------------------------
+  }
+*/
+
+/*
+  #include <string.h>  // memcmp
+
+  int main(void)
+  {
+    int x = -856;  // 0xFF'FF'FC'A8
+    int y = 981;   // 0x00'00'03'D5
+
+    printf("&x = %p\n", &x);  // output -> &x = 0000008806DFF8BC
+    printf("&y = %p\n", &y);  // output -> &y = 0000008806DFF8B8
+
+    // Little Endian Architecture
+
+    // -- y --
+    // 0000008806DFF8B8     0xD5    0b1101'0101
+    // 0000008806DFF8B9     0x03    0b0000'0011
+    // 0000008806DFF8BA     0x00    0b0000'0000
+    // 0000008806DFF8BB     0x00    0b0000'0000
+
+    // -- x --
+    // 0000008806DFF8BC     0xA8    0b1010'1000
+    // 0000008806DFF8BD     0xFC    0b1111'1100
+    // 0000008806DFF8BE     0xFF    0b1111'1111
+    // 0000008806DFF8BF     0xFF    0b1111'1111
+    
+
+    if (memcmp(&y, &x, sizeof(int)) > 0)
+      printf("y > x\n");
+    // output -> y > x    
+
+    // 0000008806DFF8B8 and 0000008806DFF8BC will be compared
+    // 0xD5 > 0xA8
+    // y > x
+  }
 */

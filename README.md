@@ -149,6 +149,8 @@
     - `memset`
     - `memcpy` and `memmove`
     - `memchr`
+    - `memcmp`
+      - Endianness
   
 ### [String Literals](https://github.com/UPinar/CLessons/tree/master/string_literals)
 
