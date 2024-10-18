@@ -123,6 +123,7 @@
   - pointer to pointer
   - `const` correctness in pointers
   - `void` pointers
+  - function pointers
   
 ### [`const` Keyword](https://github.com/UPinar/CLessons/tree/master/const_keyword)
   - why using `const` keyword

@@ -551,14 +551,14 @@
     x = 30; // valid
   }
 
-  x = 40; // valid 
+  x = 40;   // valid 
 
   void bar(void)
   {
     x = 50; // valid
   }
 
-  x = 60; // valid
+  x = 60;   // valid
 */
 
 /*
@@ -623,29 +623,32 @@
 */
 
 /*
-  a = 3;  // not valid
-
   void foo(int a)
   {
-    a = 5;  // valid
-      // a identifier is in the block scope of foo function 
+    a = 5;  // VALID
+    // "a" identifier is in the block scope of foo function 
+    // assignment to "a" is valid in its block scope
 
     int b;  
-    // a and b identifiers are in the same block scope  
+    // "a" and "b" identifiers are in the same block scope  
   }
+
+  a = 3;  // syntax error
+  // error: type defaults to 'int' in declaration of 'a' 
+  // "a" identifier is not visible in file scope
 */
 
 /*
   int x = 5;
   double x = 3.14;
-  // NOT VALID, identifiers are in the same scope
+  // NOT VALID, both "x" identifiers are in the same scope
 
   int foo = 4;
   void foo(void)
   {
 
   }
-  // NOT VALID, identifiers are in the same scope
+  // NOT VALID, both "foo" identifiers are in the same scope
 */
 
 /*
@@ -658,7 +661,7 @@
     int a = 555;
     a = 777;  // assigning to local variable
   }
-  // both identifiers are different variables
+  // both "a" identifiers are different variables
 
   //  a:
   //    .long 111
@@ -683,7 +686,7 @@
       int a = 333;
     }
   }
-  // all 3 identifiers are different variables
+  // all 3 "a" identifiers are different variables
 
   // a:
   //   .long 111
@@ -701,44 +704,46 @@
   void func(int a)
   {
     int a = 9;
-    // NOT VALID, both identifiers are in the same block scope
+    // NOT VALID 
+    // both identifiers(function parameter variable, local variable) 
+    // are in the same block scope
   }
 */
 
 /*
-  void foo(void)  // function name foo identifier is in file scope
+  void foo(void)  // function name "foo" identifier is in file scope
   {
-    int foo = 5;  // variable identifier is in block scope
-    // VALID CODE
+    int foo = 5;  // variable "foo" identifier is in block scope
   }
 */
 
 /*
-  // 5 file scope
+  // (5) - file scope
   int main()
   {
-    // 4 - enclosing block scope
+    // (4) - enclosing block scope
     {
-      // 3 - enclosing block scope
+      // (3) - enclosing block scope
       {
-        // 2 - enclosing block scope
+        // (2) - enclosing block scope
         {
-          // 1 - block scope
+          // (1) - block scope
           a = 5;
         }
       }
     }
   }
 
-  // name lookup will be done from 1 to 5.
+  // Name lookup will be done from (1) to (5).
   // Once its find the identifier, name lookup phase is DONE.
   // It will continue with context control, 
-  // name lookup will NEVER start again.
+  // name lookup phase will NEVER start again once its done.
 */
 
 /*
   int a = 111;  
-  // a identifier in block scope will hide a identifier in file scope
+  // "a" identifier in block scope 
+  // will hide "a" identifier in file scope
   // It has been called NAME HIDING, NAME MASKING, NAME SHADOWING
 
   int main(void)
@@ -833,9 +838,9 @@
 */
 
 /*
-                  --------------------------------
+                  -------------------------------
                   | naming - naming conventions |
-                  --------------------------------
+                  -------------------------------
 */
 
 /*
