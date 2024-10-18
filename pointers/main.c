@@ -6390,3 +6390,621 @@
     // -------------------------------------------------------
   }
 */
+
+/*
+                    ---------------------
+                    | function pointers |
+                    ---------------------
+*/
+
+/*
+  bir fonksiyonun adresi, ilgili fonksiyonun
+    - geri dönüş değeri türü
+    - parametre sayısı
+    - parametre türleri
+  ile ilişkilidir.
+*/
+
+/*
+  int f1(int);
+  int f2(int);
+  // f1 and f2 function's addresses are same types.
+
+  double f3(double);
+  double f4(double, double);
+  int f5(double)
+  // f3 and f4 and f5 function's addresses are different types.
+*/
+
+/*
+  #include <stddef.h> // size_t 
+
+  int f1(int);
+  // int(*)(int) is the type of f1 function's address.
+
+  int f2(int, int);
+  // int(*)(int, int) is the type of f2 function's address.
+
+  double f3(double);
+  // double(*)(double) is the type of f3 function's address.
+
+  size_t strlen(const char*);
+  // size_t(*)(const char*) is the type of strlen function's address.
+*/
+
+/*
+  ------------------------------------------------------------------
+  | function                | int f1(int)                          |
+  | function type           | int(int)                             |
+  | function pointer type   | int(*)(int)                          |
+  |----------------------------------------------------------------|
+  | function                | double f2(double, double)            |
+  | function type           | double(double, double)               |  
+  | function pointer type   | double(*)(double, double)            |
+  |----------------------------------------------------------------|
+  | function                | size_t strlen(const char*)           |
+  | function type           | size_t(const char*)                  |
+  | function pointer type   | size_t(*)(const char*)               |
+  |----------------------------------------------------------------|
+  | function                | int strcmp(const char*, const char*) |
+  | function type           | int(const char*, const char*)        | 
+  | function pointer type   | int(*)(const char*, const char*)     | 
+  ------------------------------------------------------------------
+*/
+
+/*
+  C dilinde bir fonksiyonun adresini elde etmek için
+    1. fonksiyon ismini adres operatörünün(&) operandı yapmak.
+    2. fonksiyon ismini kullanmak.
+      (implicit function to pointer conversion)
+*/
+
+/*
+  int foo(int, int);
+
+  int main(void)
+  {
+    &foo; 
+    // "&foo" is an expression and its data type is int(*)(int,int)
+
+    foo;  // function to pointer conversion
+    // "foo" is an expression and its data type is int(*)(int,int)
+  }
+*/
+
+/*
+  int f1(int, int);
+  int f2(int, int);
+
+  void f3(int, int);
+
+  int main(void)
+  {
+    // -------------------------------------------------------
+
+    int(*fp)(int, int) = f1;
+    // "fp" is a function pointer variable.
+
+    int(*fp2)(int, int) = &f2;
+    // "fp2" is a function pointer variable.
+
+    fp2 = f1;   // function to pointer conversion
+    fp2 = &f1;
+    // Those 2 lines are equivalent.
+
+    // -------------------------------------------------------
+
+    int(*fp3)(int, int) = f3;   // syntax error
+    fp3 = f3;                   // syntax error
+    // error: assignment to 'int (*)(int,  int)' 
+    // from incompatible pointer type 'void (*)(int,  int)'
+
+    // -------------------------------------------------------
+  }
+*/
+
+/*
+  typedef int(*FPTR)(int, int);
+
+  int foo(int, int);
+  int bar(int, int);
+  int baz(int, int);
+
+  int main(void)
+  {
+    // -------------------------------------------------------
+
+    FPTR fp1 = foo;
+    int(*fp2)(int, int) = foo;
+    // Those 2 lines are equivalent.
+
+    // -------------------------------------------------------
+
+    FPTR fp3, fp4;
+    fp3 = bar;
+    fp4 = fp3;  // VALID
+
+    // -------------------------------------------------------
+  }
+*/
+
+/*
+  typedef int(*FPTR)(int, int);
+
+  int (*g_fp)(int, int);  
+  FPTR g_fp2;
+  // global pointer variable
+  // static storage duration object.
+
+  void func(void)
+  {
+    int (*fp)(int, int);
+    FPTR fp2;
+    // local pointer variable
+    // automatic storage duration object.
+
+    static int (*s_fp)(int, int);
+    static FPTR s_fp2;
+    // local pointer variable
+    // static storage duration object.
+  }
+
+  void foo(int(*fp_param)(int, int), FPTR fp_param2)
+  {
+    // fp_param is a function pointer parameter variable
+    // automatic storage duration object.
+  }
+*/
+
+/*
+  // Initialize a variable called "fp" with foo's address
+  // Initialize a varibale called "fpp" with fp's address
+ 
+  int foo(int, int);
+
+  int main(void)
+  {
+    int(*fp)(int, int) = foo;
+    // "fp" is a function pointer variable.
+
+    int(**fpp)(int, int) = &fp;
+    // "fpp" is a pointer to a function pointer 
+    // "fpp" is an object pointer.
+  }
+*/
+
+/*
+  typedef int(*FPTR)(int, int);
+
+  int foo(int, int);
+
+  int main(void)
+  {
+    FPTR fp = foo;
+    // "fp" is a function pointer variable.
+
+    FPTR* fpp = &fp;
+    // "fpp" is a pointer to a function pointer
+    // "fpp" is an object pointer.
+  }
+*/
+
+/*
+  // Write an array that holds 10 function pointers  
+  // with the type of foo's address type.
+
+  int foo(int, int);
+
+  int main(void)
+  {
+    int(*fp_arr[10])(int);  
+    // "fp_arr" is an array that holds 10 function pointers
+  }
+*/
+
+/*
+  typedef int(*FPTR)(int);
+
+  int f1(int);
+  int f2(int);
+  int f3(int);
+  int f4(int);
+
+  int main(void)
+  {
+    int(*fp_arr_1[4])(int)  = { f1, f2, f3, f4 };
+    int(*fp_arr_2[4])(int)  = { &f1, &f2, &f3, &f4 };
+    int(*fp_arr_3[])(int)   = { f1, f2, f3, f4 };
+    FPTR fp_arr_4[4] = { &f1, &f2, &f3, &f4 };
+    // Those 4 lines are equivalent.
+  }
+*/
+
+/*
+  void foo(void)
+  {
+    printf("void foo(void) is called\n");
+  }
+
+  int main(void)
+  {
+    foo();    // output -> void foo(void) is called
+    // "()" is a function call(fonksiyon çağrı) operator
+
+    // "foo" identifier(function designator) is 
+    // function call operator's operand
+    // "foo" will be implictly converted to a function pointer
+
+    // operand of the function call operator is a function address,
+    // in this case "foo" function's address
+
+    (&foo)();   // output -> void foo(void) is called
+    // "()" precedence is higher than "&"
+
+
+    void(*fp)(void) = foo;
+    fp();       // output -> void foo(void) is called
+  }
+*/
+
+/*
+  void f1(void){ printf("f1 is called\n"); }
+  void f2(void){ printf("f2 is called\n"); }
+  void f3(void){ printf("f3 is called\n"); }
+
+  int main(void)
+  {
+    void(*fp)(void);
+
+    fp = &f1;
+    fp();   // output -> f1 is called
+
+    fp = f2;
+    fp();   // output -> f2 is called
+
+    fp = f3;
+    fp();   // output -> f3 is called
+  }
+*/
+
+/*
+  void foo(void){ printf("foo is called\n"); }
+
+  int main(void)
+  {
+    // -------------------------------------------------------
+
+    void(*fp)(void) = foo;
+
+    // dereferencing a function pointer is VALID
+
+    fp();       // output -> foo is called
+    (*fp)();    // output -> foo is called
+    // *fp ==> f1  ---  (*fp)() ==> f1()
+    // precedence of "()" is higher than "*"
+
+    // -------------------------------------------------------
+
+    foo();       // output -> foo is called
+    (*foo)();    // output -> foo is called
+    (&foo)();    // output -> foo is called 
+
+    // -------------------------------------------------------
+  }
+*/
+
+/*
+  void f1(void){ printf("f1 is called\n"); }
+  void f2(void){ printf("f2 is called\n"); }
+
+  void foo(void(*fp_param)(void))
+  {
+    // fp_param();
+    (*fp_param)();
+  }
+
+  int main(void)
+  { 
+    foo(f1);    // output -> f1 is called
+    foo(&f1);   // output -> f1 is called
+
+    foo(f2);    // output -> f2 is called
+    foo(&f2);   // output -> f2 is called
+  }
+*/
+
+/*
+  #include <ctype.h>  
+  // isupper, islower, isdigit, isxdigit, ispunct
+
+  void print_chars(int(*fp_ctest)(int))
+  {
+    for (int i = 0; i < 128; ++i)
+      if (fp_ctest(i))
+        putchar(i);
+
+    putchar('\n');
+  }
+
+  int main(void)
+  {
+    print_chars(isupper); 
+    // output -> ABCDEFGHIJKLMNOPQRSTUVWXYZ
+    print_chars(islower);
+    // output -> abcdefghijklmnopqrstuvwxyz
+    print_chars(isdigit);
+    // output -> 0123456789
+    print_chars(isxdigit);
+    // output -> 0123456789ABCDEFabcdef
+    print_chars(ispunct);
+    // output -> !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~
+  }
+*/
+
+/*
+  void print_int_decimal(const void* vp)
+  {
+    int val = *(const int*)vp;
+    printf("(%d)\n", val);
+  }
+
+  void print_int_hex(const void* vp)
+  {
+    int val = *(const int*)vp;
+    printf("(%#x)\n", val);
+  }
+
+  void print_double(const void* vp)
+  {
+    double val = *(const double*)vp;
+    printf("(%f)\n", val);
+  }
+
+  void print_T(const void* vp, void(*fp)(const void*))
+  {
+    fp(vp);
+  }
+
+  int main(void)
+  {
+    int ival = 10;
+    double dval = 3.4;
+
+    print_T(&ival, print_int_decimal);  // output -> (10)
+    print_T(&ival, print_int_hex);      // output -> (0xa)
+    print_T(&dval, print_double);       // output -> (3.400000)
+  }
+*/
+
+/*
+  #include <stdlib.h> // qsort
+  #include "../nutility.h"
+  #include <math.h>   // abs
+
+  #define   SIZE  20
+
+  // qsort is a generic function that sorts an array
+  // qsort function's prototype
+  void qsort( void* vp_arr, 
+              size_t arr_size, 
+              size_t elem_size, 
+              int(*fp_compare)(const void*, const void*));
+
+  int compare_ASC(const void* vp1, const void* vp2)
+  {
+    int lhs = *(const int*)vp1;
+    int rhs = *(const int*)vp2;
+
+    if ( lhs > rhs)
+      return 1;
+    else if ( lhs < rhs)
+      return -1;
+
+    return 0;
+  }
+
+  int compare_DESC(const void* vp1, const void* vp2)
+  {
+    int lhs = *(const int*)vp1;
+    int rhs = *(const int*)vp2;
+
+    if ( lhs < rhs)
+      return 1;
+    else if ( lhs > rhs)
+      return -1;
+
+    return 0;
+  }
+
+  int compare_ASC_ABS(const void* vp1, const void* vp2)
+  {
+    int lhs = *(const int*)vp1;
+    int rhs = *(const int*)vp2;
+
+    if (abs(lhs) > abs(rhs))
+      return 1;
+    else if (abs(lhs) < abs(rhs))
+      return -1;
+
+    return 0;
+  }
+
+  int compare_ASC_ABS_2(const void* vp1, const void* vp2)
+  {
+    return abs(*(const int*)vp1) - abs(*(const int*)vp2);
+  }
+  // compare_ASC_ABS can be written as above but
+  // minus operation can cause overflow and
+  // signed integral type overflow is an undefined behavior(UB)
+
+  void set_array_half_negatives(int* p, int size)
+  {
+    while (size--)
+      *p++ = (rand() % 2 ? 1 : -1) * rand() % 1000;
+  }
+
+  int main(void)
+  {
+
+    int arr[SIZE];
+    set_array_random(arr, SIZE);
+
+    // -------------------------------------------------------
+    
+    print_array(arr, SIZE);
+    // output ->
+    //   41 467 334 500 169 724 478 358 962 464
+    //  705 145 281 827 961 491 995 942 827 436
+
+    // -------------------------------------------------------
+
+    qsort(arr, SIZE, sizeof arr[0], &compare_ASC);
+
+    print_array(arr, SIZE);
+    // output ->
+    //   41 145 169 281 334 358 436 464 467 478
+    //  491 500 705 724 827 827 942 961 962 995
+
+    // -------------------------------------------------------
+
+    qsort(arr, SIZE, sizeof arr[0], &compare_DESC);
+
+    print_array(arr, SIZE);
+    // output ->
+    //  995 962 961 942 827 827 724 705 500 491
+    //  478 467 464 436 358 334 281 169 145  41
+
+    // -------------------------------------------------------
+
+    int arr_2[SIZE];
+    set_array_half_negatives(arr_2, SIZE);
+
+    print_array(arr_2, SIZE);
+    // output ->
+    //  604 -153 -382 716 -895 726 538 912 299 894
+    //  811 -333 664 711 868 644 -757 859 741 778
+
+    qsort(arr_2, SIZE, sizeof arr_2[0], &compare_ASC_ABS);
+    print_array(arr_2, SIZE);
+    // output ->
+    //  -153 299 -333 -382 538 604 644 664 711 716
+    //  726 741 -757 778 811 859 868 894 -895 912
+
+    // -------------------------------------------------------
+  }
+*/
+
+/*
+  #include "../nutility.h"
+  #include <stdlib.h> // qsort
+  #include <stddef.h> // size_t
+
+  int compare_double_ASC(const void* vp1, const void* vp2)
+  {
+    double lhs = *(const double*)vp1;
+    double rhs = *(const double*)vp2;
+
+    if (lhs > rhs) return 1;
+    else if (lhs < rhs) return -1;
+    return 0;
+  }
+
+  int main(void)
+  {
+    double d_arr[] = {1.2, 0.5, 3.4, 2.1, 6.8, -3.4, 5.4, -7.2 };
+    qsort(d_arr, asize(d_arr), sizeof d_arr[0], &compare_double_ASC);
+
+    for (size_t i = 0; i < asize(d_arr); ++i)
+      printf("%f\n", d_arr[i]);
+
+    // output ->
+    //  -7.200000
+    //  -3.400000
+    //  0.500000
+    //  1.200000
+    //  2.100000
+    //  3.400000
+    //  5.400000
+    //  6.800000
+  }
+*/
+
+/*
+  // Write a generic sort function that sorts an array
+
+  #include <stddef.h> // size_t
+  #include "../nutility.h"
+
+  #define  SIZE  20
+
+  void bubble_sort_T( void* vp_arr,
+                      size_t arr_size,
+                      size_t elem_size,
+                      int(*fp_compare)(const void*, const void*))
+  {
+    char* p_arr = vp_arr;
+
+    void* lhs_elem;
+    void* rhs_elem;
+
+    for (size_t i = 0; i < arr_size - 1; ++i){
+      for (size_t k = 0; k < arr_size - 1 - i; ++k){
+
+        lhs_elem  = p_arr + k * elem_size;
+        rhs_elem  = p_arr + (k + 1) * elem_size;
+
+        if (fp_compare(lhs_elem, rhs_elem) > 0)
+          swap_T(lhs_elem, rhs_elem, elem_size);
+      }
+    }
+  }
+
+  int compare_ASC(const void* vp1, const void* vp2)
+  {
+    int lhs = *(const int*)vp1;
+    int rhs = *(const int*)vp2;
+
+    if ( lhs > rhs)
+      return 1;
+    else if ( lhs < rhs)
+      return -1;
+
+    return 0;
+  }
+
+  int compare_DESC(const void* vp1, const void* vp2)
+  {
+    int lhs = *(const int*)vp1;
+    int rhs = *(const int*)vp2;
+
+    if ( lhs < rhs)
+      return 1;
+    else if ( lhs > rhs)
+      return -1;
+
+    return 0;
+  }
+
+  int main(void)
+  {
+    int arr[SIZE];
+    randomize();
+    set_array_random(arr, SIZE);
+    print_array(arr, SIZE);
+    // output ->
+    //  807 488 667 988 116 170 658 765 321 553
+    //  829 904 701 528 853 761 468 820 195 790
+
+    bubble_sort_T(arr, SIZE, sizeof arr[0], &compare_ASC);
+    print_array(arr, SIZE);
+    // output ->
+    //  116 170 195 321 468 488 528 553 658 667
+    //  701 761 765 790 807 820 829 853 904 988
+
+    bubble_sort_T(arr, SIZE, sizeof arr[0], &compare_DESC);
+    print_array(arr, SIZE);
+    // output ->
+    //  988 904 853 829 820 807 790 765 761 701
+    //  667 658 553 528 488 468 321 195 170 116
+  }
+*/
