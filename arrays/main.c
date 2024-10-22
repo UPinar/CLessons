@@ -1588,3 +1588,146 @@
     // output -> size = 4000, count = 12
   }
 */
+
+/*
+                  ----------------------------
+                  | multi-dimensional arrays |
+                  ----------------------------
+*/
+
+/*
+  #include "../nutility.h"
+
+  int main(void)
+  {
+    int arr[10];  
+    // arr's element type is int
+
+    size_t arr_size = asize(arr);
+    printf("arr_size = %zu\n", arr_size);
+    // output -> arr_size = 10
+
+    int md_arr[10][20];
+    // md_arr's element type is int[20]
+
+    size_t md_arr_size = asize(md_arr);
+    printf("md_arr_size = %zu\n", md_arr_size);
+    // output -> md_arr_size = 10
+  }
+*/
+
+/*
+  int main(void)
+  {
+    // elemanları double[5] türünden olan 10 elemanlı bir dizi
+    double md_arr[10][5];
+
+    // elemenalar char*[20] türünden olan 5 elemanlı bir dizi
+    char* md_arr2[5][20];
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int arr[10][20];
+
+    for(int i = 0; i < 10; ++i)
+      arr[i]; 
+    // döngünün her turunda arr[i] int[20] türünden farklı dizi olacak
+  }
+*/
+
+/*
+  typedef int INT_ARR20[20];
+
+  int main(void)
+  {
+    // ----------------------------------------------
+
+    int arr_1[10][20];
+    INT_ARR20 arr_2[10];
+    // Those 2 lines are equivalent.
+
+    // ----------------------------------------------
+
+    INT_ARR20 arr_3[11], arr_4[22];
+
+    int arr_5[11][20];  // arr_3 and arr_5 are equivalent
+    int arr_6[22][20];  // arr_4 and arr_6 are equivalent
+
+    // ----------------------------------------------
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int arr[5];   
+    // "arr"'s data type is int[5]
+    // "arr"'s element's type is int
+
+    int md_arr[4][8];
+    // "md_arr"'s data type is int[4][8]
+    // "md_arr"'s element's type is int[8]
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int arr_1[10];
+    int arr_2[10];
+    int arr_3[10];
+    int arr_4[10];
+    int arr_5[10];
+    // arr_1 to arr_5 are not guaranteed to be contiguous in memory.
+
+
+    int md_arr[5][10];
+    // md_arr's element's(int[10]) are contiguous in memory.
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int md_arr[5][10];
+
+    printf("sizeof(md_arr) = %zu\n", sizeof(md_arr));
+    // output -> sizeof(md_arr) = 200
+
+    printf("sizeof(md_arr[0]) = %zu\n", sizeof(md_arr[0]));
+    // output -> sizeof(md_arr[0]) = 40
+
+    printf("sizeof(md_arr[0][0]) = %zu\n", sizeof(md_arr[0][0]));
+    // output -> sizeof(md_arr[0][0]) = 4
+  }
+*/
+
+/*
+  #include "../nutility.h"
+
+  int main(void)
+  {
+    int md_arr[5][10];
+
+    printf("%zu\n", asize(md_arr));     // output -> 5
+    // 5 elemanlı, elemanları int[10] türünden olan bir dizi
+
+    printf("%zu\n", asize(md_arr[0]));  // output -> 10
+    // 10 elemanlı, elemanları int türünden olan bir dizi
+  }
+*/
+
+/*
+  // We need to hold the grades of each student
+  // There are 5 schools 
+  // each school has 8 classes 
+  // each class has 20 students
+
+  int main(void)
+  {
+    int grades[5][8][20];
+  }
+*/
