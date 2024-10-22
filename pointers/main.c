@@ -224,7 +224,7 @@
 /*
   int g;        // zero initialized (static storage duration)
 
-  int main(){
+  int main(void){
     int x;      // defining without initialization (garbage value)
     int y = 10; // defining with initialization
 
@@ -1198,7 +1198,7 @@
   void bar(int* p);
   // Those 2 functions are equivalent
 
-  int main()
+  int main(void)
   {
     int a[100] = { 1, 2, 3, 4, 5 };
 
@@ -1223,7 +1223,7 @@
   // in-out parameter
   void bar(int* p);
 
-  int main()
+  int main(void)
   {
     int x;  // indeterminate(garbage) value
 
@@ -6777,234 +6777,438 @@
 */
 
 /*
-  #include <stdlib.h> // qsort
-  #include "../nutility.h"
-  #include <math.h>   // abs
+  // ------------------------------------------------
 
-  #define   SIZE  20
+  typedef int (*FPTYPE_1)(const char*, const char*);
 
-  // qsort is a generic function that sorts an array
-  // qsort function's prototype
-  void qsort( void* vp_arr, 
-              size_t arr_size, 
-              size_t elem_size, 
-              int(*fp_compare)(const void*, const void*));
+  int foo_1(int, int);
 
-  int compare_ASC(const void* vp1, const void* vp2)
+  int (*bar_1(void))(int, int)
   {
-    int lhs = *(const int*)vp1;
-    int rhs = *(const int*)vp2;
-
-    if ( lhs > rhs)
-      return 1;
-    else if ( lhs < rhs)
-      return -1;
-
-    return 0;
+    return foo_1;
   }
 
-  int compare_DESC(const void* vp1, const void* vp2)
+  FPTYPE_1 bar_1_2(void)
   {
-    int lhs = *(const int*)vp1;
-    int rhs = *(const int*)vp2;
-
-    if ( lhs < rhs)
-      return 1;
-    else if ( lhs > rhs)
-      return -1;
-
-    return 0;
+    return foo_1;
   }
 
-  int compare_ASC_ABS(const void* vp1, const void* vp2)
+  // ------------------------------------------------
+
+  typedef int (*FPTYPE_2)(const char*, const char*);
+
+  int foo_2(const char*, const char*);
+
+  int (*bar_2(void))(const char*, const char*)
   {
-    int lhs = *(const int*)vp1;
-    int rhs = *(const int*)vp2;
-
-    if (abs(lhs) > abs(rhs))
-      return 1;
-    else if (abs(lhs) < abs(rhs))
-      return -1;
-
-    return 0;
+    return foo_2;
   }
 
-  int compare_ASC_ABS_2(const void* vp1, const void* vp2)
+  FPTYPE_2 bar_2_2(void)
   {
-    return abs(*(const int*)vp1) - abs(*(const int*)vp2);
+    return foo_2;
   }
-  // compare_ASC_ABS can be written as above but
-  // minus operation can cause overflow and
-  // signed integral type overflow is an undefined behavior(UB)
 
-  void set_array_half_negatives(int* p, int size)
+  // ------------------------------------------------
+*/
+
+/*
+  int g_arr[5] = { 1, 2, 3, 4, 5 };
+
+  // --------------------------------------------------
+
+  // Write a function that returns first element of g_arr
+
+  int* foo(void)
   {
-    while (size--)
-      *p++ = (rand() % 2 ? 1 : -1) * rand() % 1000;
+    return g_arr;
   }
+
+  // --------------------------------------------------
+
+  // Write a function that returns whole g_arr(return array pointer)
+
+  int (*bar_1(void))[5]
+  {
+    return &g_arr;
+  }
+
+  typedef int INTARR5[5];
+  typedef int(*P_INTARR5)[5];
+
+  P_INTARR5 BAR_2(void)
+  {
+    return &g_arr;
+  }
+
+  INTARR5* BAR_3(void)
+  {
+    return &g_arr;
+  }
+
+  // --------------------------------------------------
+*/
+
+/*
+  void foo() {}
+  void bar(void) {}
 
   int main(void)
   {
+    foo();        // VALID
+    foo(1);       // VALID
+    foo(1, 2);    // VALID
+    foo(1, 2, 3); // VALID
 
-    int arr[SIZE];
-    set_array_random(arr, SIZE);
-
-    // -------------------------------------------------------
-    
-    print_array(arr, SIZE);
-    // output ->
-    //   41 467 334 500 169 724 478 358 962 464
-    //  705 145 281 827 961 491 995 942 827 436
-
-    // -------------------------------------------------------
-
-    qsort(arr, SIZE, sizeof arr[0], &compare_ASC);
-
-    print_array(arr, SIZE);
-    // output ->
-    //   41 145 169 281 334 358 436 464 467 478
-    //  491 500 705 724 827 827 942 961 962 995
-
-    // -------------------------------------------------------
-
-    qsort(arr, SIZE, sizeof arr[0], &compare_DESC);
-
-    print_array(arr, SIZE);
-    // output ->
-    //  995 962 961 942 827 827 724 705 500 491
-    //  478 467 464 436 358 334 281 169 145  41
-
-    // -------------------------------------------------------
-
-    int arr_2[SIZE];
-    set_array_half_negatives(arr_2, SIZE);
-
-    print_array(arr_2, SIZE);
-    // output ->
-    //  604 -153 -382 716 -895 726 538 912 299 894
-    //  811 -333 664 711 868 644 -757 859 741 778
-
-    qsort(arr_2, SIZE, sizeof arr_2[0], &compare_ASC_ABS);
-    print_array(arr_2, SIZE);
-    // output ->
-    //  -153 299 -333 -382 538 604 644 664 711 716
-    //  726 741 -757 778 811 859 868 894 -895 912
-
-    // -------------------------------------------------------
+    bar();        // VALID
+    bar(1);       // syntax error
+    // error: too many arguments to function 'bar'
   }
 */
 
 /*
-  #include "../nutility.h"
-  #include <stdlib.h> // qsort
-  #include <stddef.h> // size_t
-
-  int compare_double_ASC(const void* vp1, const void* vp2)
-  {
-    double lhs = *(const double*)vp1;
-    double rhs = *(const double*)vp2;
-
-    if (lhs > rhs) return 1;
-    else if (lhs < rhs) return -1;
-    return 0;
-  }
+  void f1(void);
+  void f2(int);
+  void f3(int, int);
+  void f4(int, int, int);
+  void f5(double);
+  void f6(double, double);
 
   int main(void)
   {
-    double d_arr[] = {1.2, 0.5, 3.4, 2.1, 6.8, -3.4, 5.4, -7.2 };
-    qsort(d_arr, asize(d_arr), sizeof d_arr[0], &compare_double_ASC);
+    // --------------------------------------------------
 
-    for (size_t i = 0; i < asize(d_arr); ++i)
-      printf("%f\n", d_arr[i]);
+    void(*fp1)() = f1;  // VALID
+    fp1 = f2;           // VALID
+    fp1 = &f3;          // VALID
+    fp1 = f4;           // VALID
+    fp1 = &f5;          // VALID
+    fp1 = f6;           // VALID
 
-    // output ->
-    //  -7.200000
-    //  -3.400000
-    //  0.500000
-    //  1.200000
-    //  2.100000
-    //  3.400000
-    //  5.400000
-    //  6.800000
+    // --------------------------------------------------
+
+    void(*fp2)(void) = f1;  // VALID
+
+    fp2 = f2; // syntax error
+    // error: initialization of 'void (*)(void)' 
+    // from incompatible pointer type 'void (*)(int)'
+
+    // --------------------------------------------------
   }
 */
 
 /*
-  // Write a generic sort function that sorts an array
+  //  <----- check default.h & default.c ---->
 
-  #include <stddef.h> // size_t
-  #include "../nutility.h"
+  #include "default.h"
 
-  #define  SIZE  20
+  void f3(void){ printf("f3 function is called\n"); }
 
-  void bubble_sort_T( void* vp_arr,
-                      size_t arr_size,
-                      size_t elem_size,
-                      int(*fp_compare)(const void*, const void*))
+  int main(void)
   {
-    char* p_arr = vp_arr;
+    f1();   // output -> f2 function is called
 
-    void* lhs_elem;
-    void* rhs_elem;
+    FP_TYPE default_fp = set_f1(f3);
+    // f1 function's default behaviour has been changed.
+    // "default_fp" function pointer variable points to
+    // default function that f1 is calling befor
 
-    for (size_t i = 0; i < arr_size - 1; ++i){
-      for (size_t k = 0; k < arr_size - 1 - i; ++k){
+    f1();   // output -> f3 function is called
 
-        lhs_elem  = p_arr + k * elem_size;
-        rhs_elem  = p_arr + (k + 1) * elem_size;
+    set_f1(default_fp);
+    // f1 function's default behaviour has been changed back
+    // to its original behaviour.
 
-        if (fp_compare(lhs_elem, rhs_elem) > 0)
-          swap_T(lhs_elem, rhs_elem, elem_size);
-      }
-    }
+    f1();   // output -> f2 function is called
+  }
+*/
+
+/*
+                  ---------------------------
+                  | function pointer arrays |
+                  ---------------------------
+*/
+
+/*
+  int f1(int, int);
+  int f2(int, int);
+  int f3(int, int);
+  int f4(int, int);
+  int f5(int, int);
+
+  int main(void)
+  {
+    int(*fp_arr[5])(int, int);
+
+    fp_arr[2] = f1;
+    fp_arr[3] = f2;
+    fp_arr[4] = f3;
+    fp_arr[0] = f4;
+    fp_arr[1] = f5;
+
+    int(*fp_arr_2[])(int, int) = { f1, f2 };
+
+    int(*fp_arr_3[])(int, int) = { [2] = f2 };
+  }
+*/
+
+/*
+  void f1(int x, int y)
+  {
+    printf("f1 is called x = %d, y = %d\n", x, y);
   }
 
-  int compare_ASC(const void* vp1, const void* vp2)
+  void f2(int x, int y)
   {
-    int lhs = *(const int*)vp1;
-    int rhs = *(const int*)vp2;
-
-    if ( lhs > rhs)
-      return 1;
-    else if ( lhs < rhs)
-      return -1;
-
-    return 0;
+    printf("f2 is called x = %d, y = %d\n", x, y);
   }
 
-  int compare_DESC(const void* vp1, const void* vp2)
+  void f3(int x, int y)
   {
-    int lhs = *(const int*)vp1;
-    int rhs = *(const int*)vp2;
-
-    if ( lhs < rhs)
-      return 1;
-    else if ( lhs > rhs)
-      return -1;
-
-    return 0;
+    printf("f3 is called x = %d, y = %d\n", x, y);
   }
 
   int main(void)
   {
-    int arr[SIZE];
-    randomize();
-    set_array_random(arr, SIZE);
-    print_array(arr, SIZE);
-    // output ->
-    //  807 488 667 988 116 170 658 765 321 553
-    //  829 904 701 528 853 761 468 820 195 790
+    void(*fp_arr[])(int, int) = { f1, f2, f3 };
 
-    bubble_sort_T(arr, SIZE, sizeof arr[0], &compare_ASC);
-    print_array(arr, SIZE);
-    // output ->
-    //  116 170 195 321 468 488 528 553 658 667
-    //  701 761 765 790 807 820 829 853 904 988
+    for (int i = 0; i < 3; ++i)
+      fp_arr[i](i, i);
 
-    bubble_sort_T(arr, SIZE, sizeof arr[0], &compare_DESC);
-    print_array(arr, SIZE);
     // output ->
-    //  988 904 853 829 820 807 790 765 761 701
-    //  667 658 553 528 488 468 321 195 170 116
+    //  f1 is called x = 0, y = 0
+    //  f2 is called x = 1, y = 1
+    //  f3 is called x = 2, y = 2
+  }
+*/
+
+/*
+  Kullanım alanı :
+  - lojik ilişki içindeki fonksiyonların adreslerini bir dizide tutmak
+    ve bu diziye bir indeks oluşturarak, client kodun istediği 
+    fonksiyonu çağırmak. (jumptable)
+
+  Örneğin bir otomasyon programında tuşlar var ve kullanıcı bir tuşa
+  bastığında bir event'in gerçekleşmesi gerekiyor.
+  Eventler fonksiyonlar şeklinde ifade edilmiş. Bu fonksiyonların
+  adresleri bir fonksiyon pointer dizisinde tutulmuş. Kullanıcı 
+  hangi tuşa bastıysa o tuş fonksiyon pointer dizisinde gerekli 
+  indekse dönüştürülüp o indeksteki fonksiyon çağırılıyor.
+    Her tuş bir fonksiyon adresine map edilmiş durumda.
+*/
+
+/*
+  #include <ctype.h>
+
+  void print_menu(void)
+  {
+    printf(
+      "[1] isupper\n"
+      "[2] islower\n"
+      "[3] isalpha\n"
+      "[4] isdigit\n"
+      "[5] isalnum\n"
+      "[6] isxdigit\n"
+      "[7] ispunct\n"
+      );
+  }
+
+  int get_option(void)
+  {
+    print_menu();
+    int option;
+
+    printf("Enter an option : ");
+    scanf("%d", &option);
+    return option;
+  }
+
+  int(*g_fp_arr[])(int) = {
+    NULL,
+    &isupper,
+    &islower,
+    &isalpha,
+    &isdigit,
+    &isalnum,
+    &isxdigit,
+    &ispunct,
+  };
+
+  int main(void)
+  {
+    printf("Enter a character : ");
+    int ch = getchar();
+
+    int op = get_option();
+
+    if (g_fp_arr[op](ch))
+      printf("Character is in the set\n");
+    else
+      printf("Character is NOT in the set\n");
+
+    // input -> Enter a character : A
+    // input -> Enter an option : 1 ----> (isupper)
+    // output -> Character is in the set
+
+    // input -> Enter a character : 5
+    // input -> Enter an option : 1 ----> (isupper)
+    // output -> Character is NOT in the set
+
+    // input -> Enter a character : F
+    // input -> Enter an option : 6 ----> (isxdigit)
+    // output -> Character is in the set
+  }
+*/
+
+/*
+  #include <ctype.h>
+  #include <string.h> // strcmp
+  #include <stddef.h> // size_t
+  #include "../nutility.h"
+
+  typedef int(*FP_CTEST)(int);
+
+  FP_CTEST g_fp_arr[] = {
+    &isupper,
+    &islower,
+    &isalpha,
+    &isdigit,
+    &isalnum,
+    &isxdigit,
+    &ispunct,
+  };
+
+  const char* const fp_names[] = {
+    "isupper",
+    "islower",
+    "isalpha",
+    "isdigit",
+    "isalnum",
+    "isxdigit",
+    "ispunct",
+  };
+
+  int main(void)
+  {
+    int ch;
+    printf("Enter a character : ");
+    ch = getchar();
+
+    char function_name[40];
+    printf("Enter a function name : ");
+    scanf("%s", function_name);
+
+    size_t i = 0;
+    for (;i < asize(fp_names) && strcmp(function_name, fp_names[i]); ++i)
+      ; // null statement
+
+    if (i == asize(fp_names))
+      printf("Invalid function name\n");
+    else if (g_fp_arr[i](ch))
+      printf("Character is in the set\n");
+    else
+      printf("Character is NOT in the set\n");
+
+    // input -> Enter a character : A
+    // input -> Enter a function name : isupper
+    // output -> Character is in the set
+
+    // input -> Enter a character : 5
+    // input -> Enter a function name : isupper
+    // output -> Character is NOT in the set
+
+    // input -> Enter a character : 9
+    // input -> Enter a function name : isdigit
+    // output -> Character is in the set
+
+    // input -> Enter a character : 9
+    // input -> Enter a function name : isfunction
+    // output -> Invalid function name
+  }
+*/
+
+/*
+  void Jump(void) { printf("Jump is called\n"); }         // Space
+  void Run(void)  { printf("Run is called\n"); }          // Shift
+  void Forward(void) { printf("Forward is called\n"); }   // W
+  void Backward(void) { printf("Backward is called\n"); } // S
+  void Left(void) { printf("Left is called\n"); }         // A
+  void Right(void) { printf("Right is called\n"); }       // D
+
+  void(*g_fp_arr[])(void) = {
+    Jump, Run, Forward, Backward, Left, Right };
+*/
+
+/*
+  void f1(void);
+  void f2(int);
+  void f3(int, int);
+  void f4(int, int, int);
+  void f5(double);
+  void f6(double, double);
+
+  int main(void)
+  {
+    void(*fp_arr[])() = { f1, &f2, f3, &f4, f5, &f6 };
+  }
+*/
+
+/*
+  // <----- check register.h & register.c ---->
+
+  #include "register.h"
+
+  void f1(void) { printf("f1 function is called\n"); }
+  void f2(void) { printf("f2 function is called\n"); }
+  void f3(void) { printf("f3 function is called\n"); }
+  void f4(void) { printf("f4 function is called\n"); }
+  void f5(void) { printf("f5 function is called\n"); }
+
+  int main(void)
+  {
+    register_fn(f1);
+    register_fn(f2);
+    register_fn(f3);
+    register_fn(f4);
+    register_fn(f5);
+
+    call_registered_fns();
+    // output ->
+    //  f5 function is called
+    //  f4 function is called
+    //  f3 function is called
+    //  f2 function is called
+    //  f1 function is called
+  }
+*/
+
+/*
+  #include <stdlib.h> // exit, atexit
+
+  void f1(void) { printf("f1 function is called\n"); }
+  void f2(void) { printf("f2 function is called\n"); }
+  void f3(void) { printf("f3 function is called\n"); }
+  void f4(void) { printf("f4 function is called\n"); }
+  void f5(void) { printf("f5 function is called\n"); }
+
+  int main(void)
+  {
+    atexit(f1);
+    atexit(f2);
+    atexit(f3);
+    atexit(f4);
+    atexit(f5);
+
+    printf("[0] main started\n");
+    exit(1);
+    printf("[1] main continues\n");
+
+    // output ->
+    //  [0] main started
+    //  f5 function is called
+    //  f4 function is called
+    //  f3 function is called
+    //  f2 function is called
+    //  f1 function is called
   }
 */

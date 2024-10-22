@@ -99,6 +99,7 @@
   - bubble sort
   - merge algorithm 
   - binary search
+  - multi-dimensional arrays
 
 ### [String](https://github.com/UPinar/CLessons/tree/master/string)
   - NTBS (null terminated byte stream)
@@ -124,6 +125,7 @@
   - `const` correctness in pointers
   - `void` pointers
   - function pointers
+  - function pointer arrays
   
 ### [`const` Keyword](https://github.com/UPinar/CLessons/tree/master/const_keyword)
   - why using `const` keyword
@@ -134,7 +136,7 @@
   - type aliases in standart library
 
 ### [Standart Library](https://github.com/UPinar/CLessons/tree/master/standart_library)
-  - string operations (yazı işlemleri) 
+  - string operations in `<string.h>` module
     - `strlen` 
     - `strchr` 
     - `strrchr`
@@ -152,6 +154,7 @@
     - `memchr`
     - `memcmp`
       - Endianness
+  - `qsort` and `bsearch` in `<stdlib.h>` module
   
 ### [String Literals](https://github.com/UPinar/CLessons/tree/master/string_literals)
 

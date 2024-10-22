@@ -1473,3 +1473,418 @@
     // y > x
   }
 */
+
+/*
+        ----------------------------------------------------
+        | qsort and bsearch functions in <stdlib.h> module |
+        ----------------------------------------------------
+*/
+
+/*
+  #include <stdlib.h> // qsort
+  #include "../nutility.h"
+  #include <math.h>   // abs
+
+  #define   SIZE  20
+
+  // qsort is a generic function that sorts an array
+  // qsort function's prototype
+  void qsort( void* vp_arr, 
+              size_t arr_size, 
+              size_t elem_size, 
+              int(*fp_compare)(const void*, const void*));
+
+  int compare_ASC(const void* vp1, const void* vp2)
+  {
+    int lhs = *(const int*)vp1;
+    int rhs = *(const int*)vp2;
+
+    if ( lhs > rhs)
+      return 1;
+    else if ( lhs < rhs)
+      return -1;
+
+    return 0;
+  }
+
+  int compare_DESC(const void* vp1, const void* vp2)
+  {
+    int lhs = *(const int*)vp1;
+    int rhs = *(const int*)vp2;
+
+    if ( lhs < rhs)
+      return 1;
+    else if ( lhs > rhs)
+      return -1;
+
+    return 0;
+  }
+
+  int compare_ASC_ABS(const void* vp1, const void* vp2)
+  {
+    int lhs = *(const int*)vp1;
+    int rhs = *(const int*)vp2;
+
+    if (abs(lhs) > abs(rhs))
+      return 1;
+    else if (abs(lhs) < abs(rhs))
+      return -1;
+
+    return 0;
+  }
+
+  int compare_ASC_ABS_2(const void* vp1, const void* vp2)
+  {
+    return abs(*(const int*)vp1) - abs(*(const int*)vp2);
+  }
+  // compare_ASC_ABS can be written as above but
+  // minus operation can cause overflow and
+  // signed integral type overflow is an undefined behavior(UB)
+
+  void set_array_half_negatives(int* p, int size)
+  {
+    while (size--)
+      *p++ = (rand() % 2 ? 1 : -1) * rand() % 1000;
+  }
+
+  int main(void)
+  {
+
+    int arr[SIZE];
+    set_array_random(arr, SIZE);
+
+    // -------------------------------------------------------
+    
+    print_array(arr, SIZE);
+    // output ->
+    //   41 467 334 500 169 724 478 358 962 464
+    //  705 145 281 827 961 491 995 942 827 436
+
+    // -------------------------------------------------------
+
+    qsort(arr, SIZE, sizeof arr[0], &compare_ASC);
+
+    print_array(arr, SIZE);
+    // output ->
+    //   41 145 169 281 334 358 436 464 467 478
+    //  491 500 705 724 827 827 942 961 962 995
+
+    // -------------------------------------------------------
+
+    qsort(arr, SIZE, sizeof arr[0], &compare_DESC);
+
+    print_array(arr, SIZE);
+    // output ->
+    //  995 962 961 942 827 827 724 705 500 491
+    //  478 467 464 436 358 334 281 169 145  41
+
+    // -------------------------------------------------------
+
+    int arr_2[SIZE];
+    set_array_half_negatives(arr_2, SIZE);
+
+    print_array(arr_2, SIZE);
+    // output ->
+    //  604 -153 -382 716 -895 726 538 912 299 894
+    //  811 -333 664 711 868 644 -757 859 741 778
+
+    qsort(arr_2, SIZE, sizeof arr_2[0], &compare_ASC_ABS);
+    print_array(arr_2, SIZE);
+    // output ->
+    //  -153 299 -333 -382 538 604 644 664 711 716
+    //  726 741 -757 778 811 859 868 894 -895 912
+
+    // -------------------------------------------------------
+  }
+*/
+
+/*
+  #include "../nutility.h"
+  #include <stdlib.h> // qsort
+  #include <stddef.h> // size_t
+
+  int compare_double_ASC(const void* vp1, const void* vp2)
+  {
+    double lhs = *(const double*)vp1;
+    double rhs = *(const double*)vp2;
+
+    if (lhs > rhs) return 1;
+    else if (lhs < rhs) return -1;
+    return 0;
+  }
+
+  int main(void)
+  {
+    double d_arr[] = {1.2, 0.5, 3.4, 2.1, 6.8, -3.4, 5.4, -7.2 };
+    qsort(d_arr, asize(d_arr), sizeof d_arr[0], &compare_double_ASC);
+
+    for (size_t i = 0; i < asize(d_arr); ++i)
+      printf("%f\n", d_arr[i]);
+
+    // output ->
+    //  -7.200000
+    //  -3.400000
+    //  0.500000
+    //  1.200000
+    //  2.100000
+    //  3.400000
+    //  5.400000
+    //  6.800000
+  }
+*/
+
+/*
+  // Write a generic sort function that sorts an array
+
+  #include <stddef.h> // size_t
+  #include "../nutility.h"
+
+  #define  SIZE  20
+
+  void bubble_sort_T( void* vp_arr,
+                      size_t arr_size,
+                      size_t elem_size,
+                      int(*fp_compare)(const void*, const void*))
+  {
+    char* p_arr = vp_arr;
+
+    void* lhs_elem;
+    void* rhs_elem;
+
+    for (size_t i = 0; i < arr_size - 1; ++i){
+      for (size_t k = 0; k < arr_size - 1 - i; ++k){
+
+        lhs_elem  = p_arr + k * elem_size;
+        rhs_elem  = p_arr + (k + 1) * elem_size;
+
+        if (fp_compare(lhs_elem, rhs_elem) > 0)
+          swap_T(lhs_elem, rhs_elem, elem_size);
+      }
+    }
+  }
+
+  int compare_ASC(const void* vp1, const void* vp2)
+  {
+    int lhs = *(const int*)vp1;
+    int rhs = *(const int*)vp2;
+
+    if ( lhs > rhs)
+      return 1;
+    else if ( lhs < rhs)
+      return -1;
+
+    return 0;
+  }
+
+  int compare_DESC(const void* vp1, const void* vp2)
+  {
+    int lhs = *(const int*)vp1;
+    int rhs = *(const int*)vp2;
+
+    if ( lhs < rhs)
+      return 1;
+    else if ( lhs > rhs)
+      return -1;
+
+    return 0;
+  }
+
+  int main(void)
+  {
+    int arr[SIZE];
+    randomize();
+    set_array_random(arr, SIZE);
+    print_array(arr, SIZE);
+    // output ->
+    //  807 488 667 988 116 170 658 765 321 553
+    //  829 904 701 528 853 761 468 820 195 790
+
+
+    bubble_sort_T(arr, SIZE, sizeof arr[0], &compare_ASC);
+    print_array(arr, SIZE);
+    // output ->
+    //  116 170 195 321 468 488 528 553 658 667
+    //  701 761 765 790 807 820 829 853 904 988
+
+
+    bubble_sort_T(arr, SIZE, sizeof arr[0], &compare_DESC);
+    print_array(arr, SIZE);
+    // output ->
+    //  988 904 853 829 820 807 790 765 761 701
+    //  667 658 553 528 488 468 321 195 170 116
+  }
+*/
+
+/*
+  #include <string.h> // memcmp
+  #include "../nutility.h"
+
+  #define   SIZE  20  
+
+  void* search_T( const void* vp_arr, 
+                  size_t arr_size, 
+                  size_t elem_size, 
+                  const void* vp_key)
+  {
+    const char* p_arr = vp_arr;
+    const char* p_key = vp_key;
+
+    while (arr_size--)
+    {
+      if (!memcmp(p_arr, p_key, elem_size))
+        return (void*)p_arr;
+
+      p_arr += elem_size;
+    }
+
+    return NULL;
+  }
+
+  int main()
+  {
+    int arr[SIZE];
+    set_array_random(arr, SIZE);
+    print_array(arr, SIZE);
+    // output ->
+    //   41 467 334 500 169 724 478 358 962 464
+    //  705 145 281 827 961 491 995 942 827 436
+
+    int key = 145;
+    int* p_key = search_T(arr, SIZE, sizeof *arr, &key);
+
+    if (p_key)
+      printf("key found at index %zu\n", p_key - arr);
+    else
+      printf("key not found\n");
+
+    // output -> key found at index 11
+  }
+*/
+
+/*
+  #include <stdlib.h>   // bsearch
+  #include "../nutility.h"
+
+  #define   SIZE  20  
+
+  // we know that array elements can not cause overflow or underflow
+  // elements : [0 - 1000)
+  int compare_ASC(const void* vp1, const void* vp2)
+  {
+    return *(const int*)vp1 - *(const int*)vp2;
+  }
+
+  int main()
+  {
+    int arr[SIZE];
+    set_array_random(arr, SIZE);
+
+    qsort(arr, SIZE, sizeof arr[0], &compare_ASC);
+    print_array(arr, SIZE);
+    // output ->
+    //   41 145 169 281 334 358 436 464 467 478
+    //  491 500 705 724 827 827 942 961 962 995
+
+    int key1 = 705;
+    int key2 = 711;
+
+    // -------------------------------------------------------
+
+    int* p_key1 = bsearch(&key1, arr, SIZE, sizeof arr[0], compare_ASC);
+
+    if (p_key1)
+      printf("key1 = %d found at index %zu\n", key1, p_key1 - arr);
+    else
+      printf("key1 = %d, not found\n", key1);
+    // output -> key1 = 705 found at index 12
+
+    // -------------------------------------------------------
+
+    int* p_key2 = bsearch(&key2, arr, SIZE, sizeof arr[0], compare_ASC);
+
+    if (p_key2)
+      printf("key2 = %d found at index %zu\n", key2, p_key2 - arr);
+    else
+      printf("key2 = %d, not found\n", key2);
+    // output -> key2 = 711, not found
+
+    // -------------------------------------------------------
+  }
+*/
+
+/*
+  #include <stddef.h> // size_t
+  #include <stdlib.h> // rand
+
+  #include "../nutility.h"
+
+  #define SIZE 40
+
+  void set_arr_random(int* p_arr, size_t size)
+  {
+    while(size--)
+      *p_arr++ = rand() % 10;
+  }
+
+  int compare_ASC(const void* vp1, const void* vp2)
+  {
+    return *(const int*)vp1 - *(const int*)vp2;
+  }
+
+  int main()
+  {
+    int arr[SIZE];
+    set_arr_random(arr, SIZE);
+
+    qsort(arr, SIZE, sizeof arr[0], &compare_ASC);
+    print_array(arr, SIZE);
+    // output ->
+    //  0   1   1   1   1   1   1   1   2   2
+    //  2   2   2   2   3   4   4   4   4   4
+    //  5   5   5   5   5   6   6   6   7   7
+    //  7   7   7   8   8   8   8   9   9   9
+
+    int key = 5;
+    int* p_key = bsearch(&key, arr, SIZE, sizeof arr[0], compare_ASC);
+
+    printf("key = %d found at index %zu\n", key, p_key - arr);
+    // output -> key = 5 found at index 24
+
+    // bsearch is not giving the first occurence of the key
+    //  0   1   1   1   1   1   1   1   2   2
+    //  2   2   2   2   3   4   4   4   4   4
+    //  5   5   5   5  [5]  6   6   6   7   7
+    //  7   7   7   8   8   8   8   9   9   9
+  }
+*/
+
+/*
+  // HOMEWORK : sort const char* array lexicographically 
+  //            with qsort algorithm
+
+  #include "../nutility.h"
+  #include <stdlib.h> // qsort
+  #include <string.h> // strcmp
+
+  int compare_str(const void* vp1, const void* vp2)
+  {
+    const char* p1 = *(const char**)vp1;
+    const char* p2 = *(const char**)vp2;
+
+    return strcmp(p1, p2);
+  }
+
+  int main(void)
+  {
+    for (size_t i = 0; i < PNAMES_SIZE; ++i)
+      printf("%s ", p_names[i]);
+
+    qsort(p_names, PNAMES_SIZE, sizeof p_names[0], &compare_str);
+
+    printf("\n------------------------------------\n");
+
+    for (size_t i = 0; i < PNAMES_SIZE; ++i)
+      printf("%s ", p_names[i]); 
+  }
+*/
+
