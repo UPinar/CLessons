@@ -1731,3 +1731,949 @@
     int grades[5][8][20];
   }
 */
+
+/*
+  int main(void)
+  {
+    int arr[4][3] = { { 1, 1, 1 }, 
+                      { 2, 2, 2 }, 
+                      { 3, 3, 3 }, 
+                      { 4, 4, 4 }, };
+
+    for (int i = 0; i < 4; ++i){
+      for (int k = 0; k < 3; ++k){
+        printf("%d ", arr[i][k]);
+      }
+      printf("\n");
+    }
+    // output ->
+    //  1 1 1
+    //  2 2 2
+    //  3 3 3
+    //  4 4 4
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int arr[4][3] = { { 1, 1, 1 }, 
+                      { 2, 2, 2 }, 
+                      { 3, 3, 3 },};
+
+    for (int i = 0; i < 4; ++i){
+      for (int k = 0; k < 3; ++k){
+        printf("%d ", arr[i][k]);
+      }
+      printf("\n");
+    }
+    // output ->
+    //  1 1 1
+    //  2 2 2
+    //  3 3 3
+    //  0 0 0
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int arr[4][3] = { { 1 }, { 2, 2 }, { 3, 3, 3 } };
+
+    for (int i = 0; i < 4; ++i){
+      for (int k = 0; k < 3; ++k){
+        printf("%d ", arr[i][k]);
+      }
+      printf("\n");
+    }
+    // output ->
+    //  1 0 0
+    //  2 2 0
+    //  3 3 3
+    //  0 0 0
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int arr[4][3] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 1 };
+
+    for (int i = 0; i < 4; ++i){
+      for (int k = 0; k < 3; ++k){
+        printf("%d ", arr[i][k]);
+      }
+      printf("\n");
+    }
+    // output ->
+    //  1 2 3
+    //  4 5 6
+    //  7 8 9
+    //  1 0 0
+  }
+*/
+
+/*
+  typedef int INT_ARR3[3];
+
+  int main(void)
+  {
+    int arr_1[][] = 
+      { 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4 }; // syntax error
+    // error: array type has incomplete element type 'int[]'
+    
+    int arr_2[4][] = 
+      { 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4 }; // syntax error
+    // error: array type has incomplete element type 'int[]'
+
+    int arr_3[][3] = 
+      { 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4 }; // VALID
+
+    // dizilere ilk değer verilirken(initialization),
+    // dizinin boyutunu yazmak zorunlu değil.
+    // ilk üç örnekte, dizinin boyutunu ilk köşeli parantez belirtiyor.
+    // elemanlarının türünü ikinci köşeli parantez belirtiyor.
+
+    INT_ARR3 arr_4[4] =
+      { 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4 }; // VALID
+
+    INT_ARR3 arr_5[] = 
+      { 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4 }; // VALID
+  }
+*/
+
+/*
+  // designated initializer(C99)
+
+  int main(void)
+  {
+    int arr[5][4] = { [2] = { 3, 3, 3, 3 }, [4] = { 5, 5, 5, 5 } };
+    
+    int arr_2[][4] = { [2] = { 3, 3, 3, 3 }, [5] = { 6, 6, 6, 6 } };
+    // arr_2 dizisinin 5 indisli elemanı olduğu için 
+    // dizinin boyutu 6 olur.
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int arr[5][4] = { [2] = { 3, 3, 3, 3 }, [4] = { 5, 5, 5, 5 } }; 
+
+    for (int i = 0; i < 5; ++i){
+      for (int k = 0; k < 4; ++k){
+        printf("%d ", arr[i][k]);
+      }
+      printf("\n");
+    }
+    // output ->
+    //  0 0 0 0
+    //  0 0 0 0
+    //  3 3 3 3
+    //  0 0 0 0
+    //  5 5 5 5
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int arr[5][4] = { 
+      [2] = { 3, 3, 3, 3 }, 
+      [4] = { 5, 5, 5, 5 },
+      [3] = { [0] = 6, [1] = 7, [2] = 8, [3] = 9 } 
+    }; 
+
+    for (int i = 0; i < 5; ++i){
+      for (int k = 0; k < 4; ++k){
+        printf("%d ", arr[i][k]);
+      }
+      printf("\n");
+    }
+    // output ->
+    //  0 0 0 0
+    //  0 0 0 0
+    //  3 3 3 3
+    //  6 7 8 9
+    //  5 5 5 5
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int arr[5][4] = { 
+      { 1, 1, 1, 1 },
+      { 2, 2, 2, 2 },
+      { 3, 3, 3, 3 },
+      { 4, 4, 4, 4 },
+      { 5, 5, 5, 5 },
+    };
+
+    int N = 5 * 4;
+    int* p = &arr[0][0];    
+
+    // &arr[0][0] ---> &(*(*(arr + 0) + 0)) ---> &**arr ---> *arr
+
+    while (N--) 
+      printf("%d ", *p++);
+    // output -> 1 1 1 1 2 2 2 2 3 3 3 3 4 4 4 4 5 5 5 5
+  }
+*/
+
+/*
+  #include "../nutility.h"
+
+  int main(void)
+  {
+    int arr[5][4] = { 
+      { 1, 1, 1, 1 },
+      { 2, 2, 2, 2 },
+      { 3, 3, 3, 3 },
+      { 4, 4, 4, 4 },
+      { 5, 5, 5, 5 },
+    };
+
+    for (int i = 0; i < 5; ++i){
+      print_array(arr[i], 4);
+      // print_array(&arr[i][0], 4);
+      // Those 2 lines are equivalent.
+    }
+    // output ->
+    //    1   1   1   1
+    //  ---------------------------------------
+    //    2   2   2   2
+    //  ---------------------------------------
+    //    3   3   3   3
+    //  ---------------------------------------
+    //    4   4   4   4
+    //  ---------------------------------------
+    //    5   5   5   5
+    //  ---------------------------------------
+
+    // &arr[i][0] ---> &(*(*(arr + i) + 0)) 
+    //            ---> &**(arr + i) 
+    //            ---> *(arr + i)
+    //            ---> arr[i]
+
+    // arr[i] is an array
+    // when "arr[i]" expression is being used array decay happens
+    // "arr[i]" will become the address of the 
+    // first elemenent of that array
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int arr[5][4] = { 
+      { 1, 1, 1, 1 },
+      { 2, 2, 2, 2 },
+      { 3, 3, 3, 3 },
+      { 4, 4, 4, 4 },
+      { 5, 5, 5, 5 },
+    };
+
+    // ----------------------------------------------
+
+    int* p = arr; // syntax error
+    // error: initialization of 'int *' from incompatible pointer type 
+    // 'int (*)[4]'
+    
+    // "arr" will decay to &arr[0]
+    // "arr[0]"'s type is int[4]
+    // "&arr[0]"'s type is int(*)[4] ("arr"'s type is int(*)[4])
+
+    // ----------------------------------------------
+
+    int (*p2)[4] = arr; // VALID
+    // p2 pointer değişkeni, arr dizisinin
+    // ilk elemanı olan 4 elemanlı int diziyi gösterir.
+
+    *p2;
+
+    // "*p2"'s data type is int[4]
+    // "++*p2" 4 elemanlı 1 indisli int diziyi gösterir.
+
+    // ----------------------------------------------
+  }
+*/
+
+/*
+  #include <stddef.h> // size_t
+  #include "../nutility.h"
+
+  int main(void)
+  {
+    int arr[5][4] = { 
+      { 1, 1, 1, 1 },
+      { 2, 2, 2, 2 },
+      { 3, 3, 3, 3 },
+      { 4, 4, 4, 4 },
+      { 5, 5, 5, 5 },
+    };
+
+    int (*p)[4] = arr;
+    size_t N = 5;
+
+    while(N--)
+      print_array(*p++, 4);
+
+    // output ->
+    //    1   1   1   1
+    //  ---------------------------------------
+    //    2   2   2   2
+    //  ---------------------------------------
+    //    3   3   3   3
+    //  ---------------------------------------
+    //    4   4   4   4
+    //  ---------------------------------------
+    //    5   5   5   5
+    //  ---------------------------------------
+
+    // döngünün her turunda "*p" ifadesi
+    // arr dizisinin tuttuğu 4 elemanlı int dizilerin 
+    // bir sonrakini gösterir.
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int arr[5][4] = { 
+      { 1, 1, 1, 1 },
+      { 2, 2, 2, 2 },
+      { 3, 3, 3, 3 },
+      { 4, 4, 4, 4 },
+      { 5, 5, 5, 5 },
+    };
+
+    int (*p_arr)[4] = arr; 
+
+    for (int i = 0; i < 5; ++i)
+      printf("%p %p %p\n", &arr[i], arr + i, p_arr++);
+    
+    // output ->
+    //  000000CCEFBFFAE0 000000CCEFBFFAE0 000000CCEFBFFAE0
+    //  000000CCEFBFFAF0 000000CCEFBFFAF0 000000CCEFBFFAF0
+    //  000000CCEFBFFB00 000000CCEFBFFB00 000000CCEFBFFB00
+    //  000000CCEFBFFB10 000000CCEFBFFB10 000000CCEFBFFB10
+    //  000000CCEFBFFB20 000000CCEFBFFB20 000000CCEFBFFB20
+
+    // increased by 0x10 (16 = 4 * sizeof int) in each iteration
+
+    // &(*(arr + i)) ---> &*(arr + i) ---> arr + i
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int arr[4] = { 0 };
+
+    // ----------------------------------------------
+
+    printf("%p %p\n", arr, arr + 1);
+    // output -> 0000004A1C3FF930 0000004A1C3FF934
+    printf("%p %p\n", &arr[0], &arr[0] + 1);
+    // output -> 0000004A1C3FF930 0000004A1C3FF934
+
+    // "arr" will decay to &arr[0] 
+    // &arr[0] ---> &(*(arr + 0)) ---> arr
+
+    // ----------------------------------------------
+
+    printf("%p %p\n", &arr, &arr + 1);
+    // output -> 0000004A1C3FF930 0000004A1C3FF940
+
+    // ----------------------------------------------
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int arr[2][4] = { 
+      { 1, 1, 1, 1 },
+      { 2, 2, 2, 2 },
+    };
+
+    int* p1 = (int*)arr;
+    int* p2 = arr[0];
+    int* p3 = &arr[0][0];
+
+    // arr[0] is also an array and will decay to &arr[0][0]
+
+    // &arr[0][0] ---> &(*(*(arr + 0) + 0)) 
+    //            ---> &**arr
+    //            ---> *arr 
+    //            ---> *(arr + 0)
+    //            ---> arr[0] 
+
+
+    for (int i = 0; i < 8; ++i)
+      printf("%d %d %d\n", *p1++, *p2++, *p3++);
+    // output ->
+    //  1 1 1
+    //  1 1 1
+    //  1 1 1
+    //  1 1 1
+    //  2 2 2
+    //  2 2 2
+    //  2 2 2
+    //  2 2 2
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int arr[5][4] = { 
+      { 1, 1, 1, 1 },
+      { 2, 2, 2, 2 },
+      { 3, 3, 3, 3 },
+      { 4, 4, 4, 4 },
+      { 5, 5, 5, 5 },
+    };
+
+    int (*p)[4] = arr;
+
+    for (int i = 0; i < 5; ++i){
+      for (int k = 0; k < 4; ++k){
+        printf("%d ", (*p)[k]);
+      }
+      ++p;
+      printf("\n");
+    }
+    // output ->
+    //  1 1 1 1
+    //  2 2 2 2
+    //  3 3 3 3
+    //  4 4 4 4
+    //  5 5 5 5
+  }
+*/
+
+/*
+  #include <stddef.h> // size_t
+
+  void arr1_call(int(*p)[20], size_t arr_size);
+  void arr2_call(int(*p)[4], size_t arr_size);
+  void arr3_call(int(*p)[8], size_t arr_size);
+
+  int main(void)
+  {
+    int arr1[10][20];
+    int arr2[5][4];
+    int arr3[6][8];
+
+    arr1_call(arr1, 10);
+    arr2_call(arr2, 5);
+    arr3_call(arr3, 6);
+
+    int arr4[9][20];
+    arr1_call(arr4, 9); // VALID 
+    // arr1 and arr4 array's elements type are same (int[20])
+  }
+*/
+
+/*
+  #include <stddef.h>       // size_t
+  #include <stdlib.h>       // rand
+
+  #include "../nutility.h"
+
+  void set_matrix20(int (*p)[20], size_t arr_size)
+  {
+    for (size_t i = 0; i < arr_size; ++i){
+      for (size_t k = 0; k < 20; ++k){
+        p[i][k] = rand() % 10;
+      }
+    }
+  }
+
+  void print_matrix20(const int (*p)[20], size_t arr_size)
+  {
+    for (size_t i = 0; i < arr_size; ++i){
+      for (size_t k = 0; k < 20; ++k){
+        printf("%d ", p[i][k]); 
+      }
+      printf("\n");
+    }
+    printf("\n---------------------------------------\n");
+  }
+
+  void set_matrix4(int (*p)[4], size_t arr_size)
+  {
+    for (size_t i = 0; i < arr_size; ++i){
+      for (size_t k = 0; k < 4; ++k){
+        p[i][k] = rand() % 10;
+      }
+    }
+  }
+
+  void print_matrix4(const int (*p)[4], size_t arr_size)
+  {
+    for (size_t i = 0; i < arr_size; ++i){
+      for (size_t k = 0; k < 4; ++k){
+        printf("%d ", p[i][k]); 
+      }
+      printf("\n");
+    }
+    printf("\n---------------------------------------\n");
+  }
+
+  void set_matrix8(int (*p)[8], size_t arr_size)
+  {
+    for (size_t i = 0; i < arr_size; ++i){
+      for (size_t k = 0; k < 8; ++k){
+        p[i][k] = rand() % 10;
+      }
+    }
+  }
+
+  void print_matrix8(const int (*p)[8], size_t arr_size)
+  {
+    for (size_t i = 0; i < arr_size; ++i){
+      for (size_t k = 0; k < 8; ++k){
+        printf("%d ", p[i][k]); 
+      }
+      printf("\n");
+    }
+    printf("\n---------------------------------------\n");
+  }
+
+  int main()
+  {
+    int arr1[10][20];
+    int arr2[5][4];
+    int arr3[6][8];
+    int arr4[3][20];
+
+    randomize();
+
+    set_matrix20(arr1, 10);
+    set_matrix4(arr2, 5);
+    set_matrix8(arr3, 6);
+    set_matrix20(arr4, 9);
+
+    // ----------------------------------------------
+
+    print_matrix20(arr1, 10);
+    // output ->
+    //  2 7 9 7 3 9 6 9 1 9 6 2 3 5 8 8 8 1 6 5
+    //  4 3 9 1 6 7 1 4 4 6 8 9 9 4 9 2 9 2 3 1
+    //  2 0 9 1 8 4 2 7 8 7 8 4 5 7 9 2 2 1 7 8
+    //  5 9 5 8 5 3 9 7 4 8 9 4 9 8 5 7 5 6 3 4
+    //  2 9 5 1 1 4 2 4 0 7 3 5 9 7 5 0 0 3 1 4
+    //  5 5 8 5 2 7 0 8 1 5 5 2 1 4 6 4 6 1 2 8
+    //  8 1 2 2 6 0 2 2 0 6 1 2 1 2 4 9 1 4 6 8
+    //  2 0 9 5 7 0 2 0 9 5 4 6 6 6 2 5 3 2 1 4
+    //  7 9 8 2 4 5 8 1 7 1 4 9 6 2 8 2 2 8 0 1
+    //  1 8 2 8 3 0 7 5 9 5 7 8 4 4 7 7 0 3 0 8
+
+    // ----------------------------------------------
+
+    print_matrix20(arr4, 3);
+    // output ->
+    //  6 1 1 1 2 0 9 0 2 2 0 4 1 0 0 6 7 8 0 6
+    //  3 4 6 5 6 2 4 2 6 0 9 4 2 6 8 9 7 8 6 4
+    //  5 5 1 4 9 6 5 1 6 4 9 8 2 3 0 2 3 8 8 9
+
+    // ----------------------------------------------
+
+    print_matrix4(arr2, 5);
+    // output ->
+    //  2 2 9 8
+    //  9 0 4 8
+    //  9 1 0 6
+    //  3 8 4 3
+    //  9 9 2 2
+
+    // ----------------------------------------------
+
+    print_matrix8(arr3, 6);
+    // output ->
+    //  1 3 3 6 0 7 9 7
+    //  6 5 6 8 0 1 5 4
+    //  2 4 8 1 4 6 5 2
+    //  0 8 6 7 0 5 4 2
+    //  8 8 6 7 9 4 4 7
+    //  6 2 8 3 9 4 0 0
+
+    // ----------------------------------------------
+  }
+*/
+
+/*
+  // using functional macros to create generic functions
+
+  #include <stddef.h>       // size_t
+  #include <stdlib.h>       // rand
+
+  #define   generate_set_matrix_function(s)                 \
+  void set_matrix##s(int (*p)[s], size_t arr_size)          \
+  {                                                         \
+    for (size_t i = 0; i < arr_size; ++i){                  \
+      for (size_t k = 0; k < s; ++k){                       \
+        p[i][k] = rand() % 10;                              \
+      }                                                     \
+    }                                                       \
+  }                                                         \
+
+  #define   generate_print_matrix_function(s)               \
+  void print_matrix##s(const int (*p)[s], size_t arr_size)  \
+  {                                                         \
+    for (size_t i = 0; i < arr_size; ++i){                  \
+      for (size_t k = 0; k < s; ++k){                       \
+        printf("%d ", p[i][k]);                             \
+      }                                                     \
+      printf("\n");                                         \
+    }                                                       \
+    printf("\n---------------------------------------\n");  \
+  }                                                         \
+
+  generate_set_matrix_function(20)
+  generate_print_matrix_function(20)
+  generate_set_matrix_function(4)
+  generate_print_matrix_function(4)
+  generate_set_matrix_function(8)
+  generate_print_matrix_function(8)
+
+  int main()
+  {
+    int arr1[10][20];
+    int arr2[5][4];
+    int arr3[6][8];
+    int arr4[3][20];
+
+    set_matrix20(arr1, 10);
+    print_matrix20(arr1, 10);
+
+    set_matrix4(arr2, 5);
+    print_matrix4(arr2, 5);
+
+    set_matrix8(arr3, 6);
+    print_matrix8(arr3, 6);
+
+    set_matrix20(arr4, 3);
+    print_matrix20(arr4, 3);
+  }
+*/
+
+/*
+  #include <stdlib.h>   // rand
+  #include <stddef.h>   // size_t
+
+  void set_matrix(int* p, size_t row, size_t col)
+  {
+    for (size_t i = 0; i < row; ++i){
+      for (size_t k = 0; k < col; ++k){
+        p[i * col + k] = rand() % 10;
+      }
+    }
+  }
+
+  void print_matrix(const int* p, size_t row, size_t col)
+  {
+    for (size_t i = 0; i < row; ++i){
+      for (size_t k = 0; k < col; ++k){
+        printf("%d ", p[i * col + k]);
+      }
+      printf("\n");
+    }
+    printf("\n---------------------------------------\n");
+  }
+
+  int main()
+  {
+    int arr1[10][20];     // arr1 can be used int[200] array
+    int arr2[5][4];       // arr2 can be used int[20] array
+    int arr3[6][8];       // arr3 can be used int[48] array
+
+    set_matrix((int*)arr1, 10, 20);
+    print_matrix((const int*)arr1, 10, 20);
+
+    set_matrix(arr2[0], 5, 4);
+    print_matrix(arr2[0], 5, 4);
+
+    set_matrix(&arr3[0][0], 6, 8);
+    print_matrix(&arr3[0][0], 6, 8);
+  }
+*/
+
+/*
+  void func(int* p);  
+  void func(int p[]);       // array to pointer conversion
+  // Those 2 lines are same. (function redeclaration)
+
+  void bar(int** p);
+  void bar(int* p[]);       // array to pointer conversion
+  // Those 2 lines are same. (function redeclaration)
+
+  void foo(int (*p)[20]);
+  void foo(int p[][20]);    // array to pointer conversion
+  // Those 2 lines are same. (function redeclaration)
+
+  typedef int (*FPTR)(int);
+
+  void baz(int(*p)(int));
+  void baz(FPTR p);
+  void baz(int p(int));     // function to function pointer conversion
+  // Those 3 lines are same. (function redeclaration)
+*/
+
+/*
+  int main(void)
+  {
+    char names[10][20];  
+    // it can hold 10 char[20] arrays. 
+
+    char* p[10];    
+    // pointer array (can hold 10 string addresses)
+    // it can hold 10 string literal addresses
+    // it can hold 10 string array(char[]) addresses
+  }
+*/
+
+/*
+*/
+
+/*
+  #include <string.h>   // strlen
+
+  int main(void)
+  {
+    char names[10][20] = {
+      "Kemal", "Veli", "Hasan", "Huseyin", "Mehmet",
+      "Ayse", "Fatma", "Zeynep", "Ali" , "Necati",
+    };
+    // strings(char arrays) are not static storage duration objects
+    // they are char arrays(char[20]) [Null Terminate Byte Streams]
+
+    names[0][0] = 'C';    // VALID
+    // because of string is not a string literal 
+    // it is exactly a char array
+    // it can be modified
+
+    for (int i = 0; i < 10; ++i)
+      printf("%s ", names[i]);
+    // output ->
+    // Cemal Veli Hasan Huseyin Mehmet Ayse Fatma Zeynep Ali Necati
+
+    for (int i = 0; i < 10; ++i)
+      printf("%s %zu\n", names[i], strlen(names[i])); 
+    // output ->
+    //  Veli 4
+    //  Hasan 5
+    //  Huseyin 7
+    //  Mehmet 6
+    //  Ayse 4
+    //  Fatma 5
+    //  Zeynep 6
+    //  Ali 3
+    //  Necati 6
+  }
+*/
+
+/*
+  #include <string.h>   // strcat
+
+  int main(void)
+  {
+    char names[10][20] = {
+      "Kemal", "Veli", "Hasan", "Huseyin", "Mehmet",
+      "Ayse", "Fatma", "Zeynep", "Ali" , "Necati",
+    };
+
+    for (int i = 0; i < 10; ++i)
+      strcat(names[i], "can");
+
+    for(int i = 0; i < 10; ++i)
+      printf("%s\n", names[i]);
+    // output ->
+    //  Kemalcan
+    //  Velican
+    //  Hasancan
+    //  Huseyincan
+    //  Mehmetcan
+    //  Aysecan
+    //  Fatmacan
+    //  Zeynepcan
+    //  Alican
+    //  Necatican
+  }
+*/
+
+/*
+  int main(void)
+  {
+    char* names[10] = {
+      "Kemal", "Veli", "Hasan", "Huseyin", "Mehmet",
+      "Ayse", "Fatma", "Zeynep", "Ali" , "Necati",
+    };
+
+    // elements of names array are string literals
+    // string literals are static storage duration objects
+    // and they are read-only objects
+    // trying to modify them is undefined behavior(UB)
+
+    for (int i = 0; i < 10; ++i)
+      strcat(names[i], "can");    // undefined behavior(UB)
+  }
+*/
+
+/*
+  #include <string.h> // strcpy, strcmp
+
+  #define   SIZE    10
+
+  // max 19 character strings(NTBS)
+  void name_swap(char* p1, char* p2)  
+  {
+    char temp_name[20];
+    strcpy(temp_name, p1);
+    strcpy(p1, p2);
+    strcpy(p2, temp_name);
+  }
+
+  int main(void)
+  {
+    char names[SIZE][20] = {
+      "Kemal", "Veli", "Hasan", "Huseyin", "Mehmet",
+      "Ayse", "Fatma", "Zeynep", "Ali" , "Necati",
+    };
+
+    // bubble sort
+    for (int i = 0; i < SIZE - 1; ++i){
+      for (int k = 0; k < SIZE - 1 - i; ++k){
+        if (strcmp(names[k], names[k + 1]) > 0)
+          name_swap(names[k], names[k + 1]);
+      }
+    }
+
+    for (int i = 0; i < SIZE; ++i)
+      printf("%s ", names[i]);
+    // output ->
+    //  Ali Ayse Fatma Hasan Huseyin Kemal Mehmet Necati Veli Zeynep
+  }
+*/
+
+/*
+  #include <string.h> // strcpy, strcmp
+
+  #define   SIZE    10
+
+  void print_names(const char(*p)[20], size_t size)
+  {
+    while (size--)
+      printf("%s ", *p++);
+    printf("\n");
+  }
+
+  // max 19 character strings(NTBS)
+  void name_swap(char* p1, char* p2)  
+  {
+    char temp_name[20];
+    strcpy(temp_name, p1);
+    strcpy(p1, p2);
+    strcpy(p2, temp_name);
+  }
+
+  void sort_names(char(*p)[20], size_t size)
+  {
+    for (size_t i = 0; i < size - 1; ++i)
+      for (size_t k = 0; k < size - 1 - i; ++k)
+        if (strcmp(p[k], p[k + 1]) > 0)
+          name_swap(p[k], p[k + 1]);
+  }
+
+  int main(void)
+  {
+    char names[SIZE][20] = {
+      "Kemal", "Veli", "Hasan", "Huseyin", "Mehmet",
+      "Ayse", "Fatma", "Zeynep", "Ali" , "Necati",
+    };
+
+    print_names(names, SIZE);
+    // output ->
+    // Kemal Veli Hasan Huseyin Mehmet Ayse Fatma Zeynep Ali Necati
+
+    sort_names(names, SIZE);
+    print_names(names, SIZE);
+    // output ->
+    //  Ali Ayse Fatma Hasan Huseyin Kemal Mehmet Necati Veli Zeynep
+  }
+*/
+
+/*
+  int main(void)
+  {
+    char names[100][20];
+    char* p_names[100];
+
+    for (int i = 0; i < 100; ++i)
+    {
+      p_names[i] = names[i];
+      // "names[i]"'s data type is char[20]
+      // names[i] will decay to pointer(char*)
+      // "p[i]"'s data type is char*
+    }
+  }
+*/
+
+/*
+  #include "../nutility.h"
+  #include <stddef.h>   // size_t
+  #include <stdlib.h>   // qsort
+  #include <string.h>   // strcmp
+
+  int s_compare(const void* vp1, const void* vp2)
+  {
+    const char* p1 = *(const char**)vp1;
+    const char* p2 = *(const char**)vp2;
+
+    return strcmp(p1, p2);
+  }
+
+  int main(void)
+  {
+    char names[][20] = {
+      "ata", "emrecan", "adem", "burhan", "korhan", "demir", "bilal", 
+      "emrecan", "celik", "zahide", "dost", "lale", "baran", "saniye", 
+      "poyraz", "saadet", "aynur", "yeliz", "berivan", "mukerrem", 
+      "melih", "necati", "cezmi", "muslum", "azize", "atif", "rupen", 
+      "alev", "haldun", "hulusi", "yelda", "billur", "yasemin", "tarcan", 
+      "yasar", "tarkan", "refik", "berk", "kenan", "izzet", "adnan", };
+
+    char* p_names[asize(names)];
+
+    for (size_t i = 0; i < asize(names); ++i)
+      p_names[i] = names[i];
+
+    // swapping char arrays are expensive
+    // think about we will swap c_arr1('hello') and c_arr2('world')
+    // we need to create a temporary char[] and
+    // copying c_arr1 to temp array will copy 6 characters including '\0'
+    // copying c_arr2 to c_arr1 will copy 6 characters including '\0'
+    // copying temp array to c_arr2 will copy 6 characters including '\0'
+    // (18 copy operation)
+
+    // swapping char pointers are cheap
+    // we will reach strings by dereferencing the pointer 
+    // that points to the string
+    // after comparison operation 
+    // we will swap pointers (3 copy operation)
+
+    qsort(p_names, asize(p_names), sizeof(char*), s_compare);
+
+    for (size_t i = 0; i < asize(p_names); ++i)
+      printf("%s ", p_names[i]);
+    // output ->
+    // adem adnan alev ata atif aynur azize baran berivan 
+    // berk bilal billur burhan celik cezmi demir dost emrecan 
+    // emrecan haldun hulusi izzet kenan korhan lale melih mukerrem 
+    // muslum necati poyraz refik rupen saadet saniye tarcan tarkan 
+    // yasar yasemin yelda yeliz zahide
+  }
+*/
