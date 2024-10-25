@@ -142,12 +142,14 @@
     - `strrchr`
     - `strstr`
     - `strpbrk`
-    - `strcpy`
+    - `strcpy` and `strncpy`
     - overlapped blocks and `restrict` keyword
-    - `strcat`
+    - `strcat` and `strncat`
     - string comparison(yazıların karşılaştırılması)
       - lexicographical compare
-      - `strcmp`
+      - `strcmp` and `strncmp`
+    - `strspn` and `strcspn`
+    - `strtok`
   - generic functions in `<string.h>` module
     - `memset`
     - `memcpy` and `memmove`
@@ -155,6 +157,15 @@
     - `memcmp`
       - Endianness
   - `qsort` and `bsearch` in `<stdlib.h>` module
+  - conversion functions between strings and numbers in `stdlib.h` module
+    - `atoi` and `atof` and `atol` and `atoll`
+    - `strtol` and `strtoll` and `strtoul` and `strtoull`
+    - `strtof` and `strtod` and `strtold`
+  - formatted input-output functions in `stdio.h` module
+    - `printf` and `sprintf`
+    - `scanf` and `sscanf`
+  - process termination functions in `stdlib.h` module
+    - `exit`
   
 ### [String Literals](https://github.com/UPinar/CLessons/tree/master/string_literals)
 

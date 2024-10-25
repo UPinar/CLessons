@@ -18,6 +18,10 @@
     it can execute its operation using '\0'(null) character.
 */
 
+// ---------------------------------------------------
+// ---------------------| puts |----------------------
+// ---------------------------------------------------
+
 /*
   #include <stdio.h>  // puts, putchar
 
@@ -72,6 +76,10 @@
   ...
   strspn, strcspn, strncpy, strncat, strncmp, strpbrk, strtok,
 */
+
+// -----------------------------------------------------
+// ---------------------| strlen |----------------------
+// -----------------------------------------------------
 
 /*
   #include <string.h> // strlen
@@ -172,6 +180,10 @@
   }
 */
 
+// -----------------------------------------------------
+// ---------------------| strchr |----------------------
+// -----------------------------------------------------
+
 /*
   #include <string.h> // strchr
 
@@ -261,6 +273,10 @@
   }
 */
 
+// ------------------------------------------------------
+// ---------------------| strrchr |----------------------
+// ------------------------------------------------------
+
 /*
   #include <string.h>  // strrchr
 
@@ -330,6 +346,10 @@
   }
 */
 
+// -----------------------------------------------------
+// ---------------------| strstr |----------------------
+// -----------------------------------------------------
+
 /*
   // Homework - implementation of strstr function
 
@@ -380,6 +400,10 @@
     //  world
   }
 */
+
+// ------------------------------------------------------
+// ---------------------| strpbrk |----------------------
+// ------------------------------------------------------
 
 /*
   #include <string.h>  // strpbrk
@@ -480,6 +504,10 @@
     char* strrev(char* p_str);
 */
 
+// -----------------------------------------------------
+// ---------------------| strcpy |----------------------
+// -----------------------------------------------------
+
 /*
   #include <string.h>  // strcpy
 
@@ -554,6 +582,150 @@
   }
 */
 
+// ------------------------------------------------------
+// ---------------------| strncpy |----------------------
+// ------------------------------------------------------
+
+/*
+  #include <string.h>  // strncpy
+
+  // strncpy function's prototype
+  char* strncpy(char* p_dest, const char* p_source, size_t N);
+*/
+
+/*
+  #include <string.h>  // strncpy
+
+  #define SIZE 100
+
+  int main(void)
+  {
+    char dest_str[SIZE];
+    char source_str[SIZE] = "hello world";
+
+    strncpy(dest_str, source_str, 5);
+    // dest_str string is not NTBS(NULL-terminated byte string)
+
+    puts(dest_str);  // undefined behavior(UB)
+  }
+*/
+
+/*
+  #include <string.h>  // strncpy
+
+  #define SIZE 100
+
+  int main(void)
+  {
+    char dest_str[SIZE];
+    char source_str[SIZE] = "hello world";
+
+    strncpy(dest_str, source_str, 12);
+    // 12th character is null character
+
+    puts(dest_str); // output -> hello world
+  }
+*/
+
+/*
+  #include <string.h>  // strncpy
+
+  #define SIZE 100
+
+  int main(void)
+  {
+    char dest_str[SIZE];
+    char source_str[SIZE] = "hello world";
+
+    strncpy(dest_str, source_str, 20);
+    // if N is more than (strlen(source_str) + 1)
+
+    // dest_str's remaining elements will be guaranteed to
+    // filled with null characters after source_str's null character
+    // is being copied.
+
+    // |h|e|l|l|o| |w|o|r|l|d|\0|\0|\0|\0|\0|\0|\0|\0|\0|
+    //                          |-----------------------|
+    // guaranteed to be filled with null characters
+    // after source_str's null character is being copied
+
+    puts(dest_str); // output -> hello world
+
+    for(int i = 0; i < 20; ++i)
+      printf("|%d", dest_str[i]);
+    // output -> 
+    // |104|101|108|108|111|32|119|111|114|108|100|0|0|0|0|0|0|0|0|0
+  }
+*/
+
+/*
+  #include <string.h>  // strncpy
+
+  #define SIZE 100
+
+  int main(void)
+  {
+    char dest_str[SIZE];
+    char dest_str_2[SIZE];
+    char source_str[SIZE] = "hello world";
+
+    strncpy(dest_str, source_str, 5);
+    dest_str[5] = '\0';
+    puts(dest_str); // output -> hello
+
+    // --- Idiomatic way --
+    strncpy(dest_str_2, source_str, 5)[5] = '\0';
+    puts(dest_str_2); // output -> hello
+  }
+*/
+
+/*
+  #include <string.h>  // strncpy, memcpy
+
+  #define SIZE 100
+
+  int main(void)
+  {
+    char dest_str[SIZE] = "hello _____ we are live from Istanbul";
+    char source_str[SIZE] = "xxxxx yyyyy zzzzz";
+
+    puts(dest_str);
+    // output -> hello _____ we are live from Istanbul
+
+    // ------------------------------------------------
+
+    strncpy(dest_str + 6, source_str, 5);
+    puts(dest_str); 
+    // output -> hello xxxxx we are live from Istanbul
+
+    strncpy(dest_str + 6, source_str + 6, 5);
+    puts(dest_str);
+    // output -> hello yyyyy we are live from Istanbul
+
+    strncpy(dest_str + 6, source_str + 12, 5);
+    puts(dest_str);
+    // output -> hello zzzzz we are live from Istanbul
+
+    // ------------------------------------------------
+
+    // same operation can also be done with memcpy function
+
+    memcpy(dest_str + 6, source_str, 5);
+    puts(dest_str);
+    // output -> hello xxxxx we are live from Istanbul
+
+    memcpy(dest_str + 6, source_str + 5, 5);
+    puts(dest_str);
+    // output -> hello yyyyy we are live from Istanbul
+
+    memcpy(dest_str + 6, source_str + 12, 5);
+    puts(dest_str);
+    // output -> hello zzzzz we are live from Istanbul
+
+    // ------------------------------------------------
+  }
+*/
+
 /*
           --------------------------------------------
           | overlapped blocks and `restrict` keyword |
@@ -617,6 +789,10 @@
   copying s2 string to s1 string's null character's address
 */
 
+// -----------------------------------------------------
+// ---------------------| strcat |----------------------
+// -----------------------------------------------------
+
 /*
   #include <string.h>  // strcpy, strcat, strlen, strchr
 
@@ -675,6 +851,63 @@
     puts(s5);   // output -> Hello Galaxy
 
     // ---------------------------------------------------
+  }
+*/
+
+// ------------------------------------------------------
+// ---------------------| strncat |----------------------
+// ------------------------------------------------------
+
+/*
+  #include <string.h>  // strncat
+
+  // strncat function's prototype
+  char* strncat(char *restrict p_dest, 
+                const char *restrict p_source, 
+                size_t N );
+*/
+
+/*
+  #include <string.h>  // strncat
+
+  #define SIZE 100
+
+  int main(void)
+  {
+    char s1[SIZE] = "hello ";
+    char s2[SIZE] = "world";
+
+    printf("(%s)\n", s1); // output -> (hello )
+
+    strncat(s1, s2, 3);
+    printf("(%s)\n", s1); // output -> (hello wor)
+
+    strncat(s1, s2 + 3, 2);
+    printf("(%s)\n", s1); // output -> (hello world)
+
+    // strncat function is adding null character('\0')
+    // after the last character that has been copied
+  }
+*/
+
+/*
+  #include <string.h>  // strncat
+
+  #define SIZE 100
+
+  int main(void)
+  {
+    char s1[SIZE] = "hello ";
+    char s2[SIZE] = "world";
+
+    printf("(%s)\n", s1); // output -> (hello )
+
+    strncat(s1, s2, 50);
+    printf("(%s)\n", s1); // output -> (hello world)
+
+    // N is greater than (strlen(s2) + 1) 
+    // it will copy all characters + null character from s2
+    // and after copying null character, it will stop.
   }
 */
 
@@ -769,6 +1002,10 @@
 
   -----------------------------------------------------
 */
+
+// -----------------------------------------------------
+// ---------------------| strcmp |----------------------
+// -----------------------------------------------------
 
 /*
   #include <string.h> // strcmp
@@ -891,7 +1128,7 @@
     return !strcmp(p_source + len_source - len_key, p_key);
   }
 
-  int main()
+  int main(void)
   {
     char str[SIZE] = "hello galaxy";
     char end[] = "axy";
@@ -901,6 +1138,244 @@
     else
       printf("(%s) does not end with (%s)\n", str, end);
     // output -> (hello galaxy) ends with (axy) 
+  }
+*/
+
+// ------------------------------------------------------
+// ---------------------| strncmp |----------------------
+// ------------------------------------------------------
+
+/*
+  #include <string.h>  // strncmp
+
+  // strncmp function's prototype
+  int strncmp(const char* p_dest, const char* p_source, size_t N);
+*/
+
+/*
+  #include <string.h>  // strncmp
+
+  #define   SIZE  100
+
+  int main(void)
+  {
+    char s1[SIZE] = "antalya";
+    char s2[SIZE] = "antakya";
+
+    if (!strncmp(s1, s2, 4))
+      printf("(%s) and (%s) are equal\n", s1, s2);
+    else
+      printf("(%s) and (%s) are not equal\n", s1, s2);
+    // output -> (antalya) and (antakya) are equal
+
+
+    int strncmp_result = strncmp(s1, s2, 5);
+    if (!strncmp_result)
+      printf("(%s) and (%s) are equal\n", s1, s2);
+    else{
+      printf("(%s) and (%s) are NOT equal\n", s1, s2);
+      if (strncmp_result > 0)
+        printf("(%s) > (%s)\n", s1, s2);
+      else
+        printf("(%s) < (%s)\n", s1, s2);
+    }
+    // output -> 
+    //  (antalya) and (antakya) are NOT equal
+    //  (antalya) > (antakya)
+  }
+*/
+
+/*
+  #include <string.h>  // strncmp
+
+  #define   SIZE  100
+
+  int main(void)
+  {
+    char s1[SIZE] = "ant";
+    char s2[SIZE] = "antakya";
+
+    if (strncmp(s2, s1, 6) > 0)
+      printf("(%s) > (%s)\n", s2, s1);
+    else
+      printf("(%s) <= (%s)\n", s2, s1);
+    // output -> (antakya) > (ant)
+
+    // s1 strings null character is int 3rd index(4th character)
+    // strncmp is comparing 6 characters from s2 and s1
+    // after 4th character comparison, function will stop comparing
+    // so no undefined behaviour.
+  }
+*/
+
+// -----------------------------------------------------
+// ---------------------| strspn |----------------------
+// -----------------------------------------------------
+
+/*
+  #include <string.h>
+
+  // strspn function's prototype
+  size_t strspn(const char* p_string, const char* p_characters);
+
+  // finding a span of characters in a string
+  // which are in the character set(p_characters)
+*/
+
+/*
+  #include <string.h>   // strspn
+  #include <stddef.h>   // size_t
+
+  #define SIZE 100
+
+  int main(void)
+  {
+    char s1[SIZE] = "12345hello world";
+
+    printf("string with span = %s\n", s1);
+    // output -> string with span = 12345hello world
+
+    size_t span_length = strspn(s1, "0123456789");
+    printf("span length = %zu\n", span_length);
+
+    printf("string without span = %s\n", s1 + span_length);
+    // output -> string without span = hello world
+  }
+*/
+
+// ------------------------------------------------------
+// ---------------------| strcspn |----------------------
+// ------------------------------------------------------
+
+/*
+  #include <string.h>
+
+  // strcspn function's prototype
+  size_t strcspn(const char* p_string, const char* p_characters);
+
+  // finding a span of characters in a string
+  // which are NOT in the character set(p_characters)
+*/
+
+/*
+  #include <string.h>   // strcspn
+  #include <stddef.h>   // size_t
+
+  #define SIZE 100
+
+  int main(void)
+  {
+    char s1[SIZE] = "galaxy_19283 has been invaded by aliens";
+
+    size_t span_length = strcspn(s1, "0123456789");
+
+    printf("span length = %zu\n", span_length); 
+     // output -> span length = 7
+  }
+*/
+
+// -----------------------------------------------------
+// ---------------------| strtok |----------------------
+// -----------------------------------------------------
+
+/*
+  #include <string.h>  // strtok
+
+  // strtok function's prototype
+  char* strtok(char* p_str, const char* p_seperator_characters);
+*/
+
+/*
+  #include <string.h>  // strtok
+
+  #define SIZE 100
+
+  int main(void)
+  {
+    char str[SIZE] = "::!!!...::!";
+
+    char* p_token = strtok(str, "!..::");
+    // when function does not have any token it wil return NULL
+
+    if (!p_token)
+      printf("no token inside string\n");
+    else
+      printf("token = (%s)\n", p_token);
+    // output -> no token inside string
+  }
+*/
+
+/*
+  #include <string.h>  // strtok
+
+  #define SIZE 100
+
+  int main(void)
+  {
+    char str[SIZE] = "hello world_we_are_live_from_Istanbul";
+
+    char* p_token = strtok(str, " \t");
+    // first call to strtok function must have 
+    // string's address in its first parameter
+    // later calls must have NULL in its first parameter
+    // seperators can be different in each call
+
+    while(p_token) {
+      printf("token = (%s)\n", p_token);
+      p_token = strtok(NULL, "_");
+    }
+    // output ->
+    //  token = (hello)
+    //  token = (world)
+    //  token = (we)
+    //  token = (are)
+    //  token = (live)
+    //  token = (from)
+    //  token = (Istanbul)
+  }
+*/
+
+/*
+  // strtok function is changing seperator characters 
+  // with null character
+
+  #include <string.h>   // strtok, strlen
+  #include <stddef.h>   // size_t
+
+  #define SIZE 100
+
+  int main(void)
+  {
+    char str[SIZE] = "hello_world_galaxy";
+
+    size_t len = strlen(str);
+
+    for (size_t i = 0; i < len; ++i)
+      printf("|%d|", str[i]);
+    // output ->
+    // |104||101||108||108||111||95|
+    // |119||111||114||108||100||95|
+    // |103||97||108||97||120||121|
+
+    // 95 is '_' in ASCII table
+
+    putchar('\n');
+
+    char* p_token = strtok(str, "_");
+    while(p_token) {
+      printf("token = (%s)\n", p_token);
+      p_token = strtok(NULL, "_");
+    }
+
+    for (size_t i = 0; i < len; ++i)
+      printf("|%d|", str[i]);
+
+    // output ->
+    // |104||101||108||108||111||0|
+    // |119||111||114||108||100||0|
+    // |103||97||108||97||120||121|
+
+    // 0 is null character('\0') in ASCII table
   }
 */
 
@@ -944,6 +1419,10 @@
 
   -----------------------------------------------------------
 */
+
+// -----------------------------------------------------
+// ---------------------| memset |----------------------
+// -----------------------------------------------------
 
 /*
   #include <string.h>  // memset
@@ -1078,6 +1557,10 @@
   }
 */
 
+// -----------------------------------------------------
+// ---------------------| memcpy |----------------------
+// -----------------------------------------------------
+
 /*
   #include <string.h>  // memcpy
   #include "../nutility.h"
@@ -1142,6 +1625,10 @@
   }
 */
 
+// ------------------------------------------------------
+// ---------------------| memmove |----------------------
+// ------------------------------------------------------
+
 /*
   #include <string.h>  // memcpy, memmove
   #include "../nutility.h"
@@ -1178,7 +1665,7 @@
 */
 
 /*
-  #include <string.h>  // strcpy, memcpy, memmove, 
+  #include <string.h>  // strcpy, memcpy, memmove
 
   int main(void)
   {
@@ -1191,6 +1678,10 @@
     puts(str);  // output -> marmara
   }
 */
+
+// -----------------------------------------------------
+// ---------------------| memchr |----------------------
+// -----------------------------------------------------
 
 /*
   #include <string.h>  // memchr
@@ -1298,6 +1789,10 @@
     // ---------------------------------------------------
   }
 */
+
+// -----------------------------------------------------
+// ---------------------| memcmp |----------------------
+// -----------------------------------------------------
 
 /*
   #include <string.h>   // memcmp
@@ -1479,6 +1974,10 @@
         | qsort and bsearch functions in <stdlib.h> module |
         ----------------------------------------------------
 */
+
+// ----------------------------------------------------
+// ---------------------| qsort |----------------------
+// ----------------------------------------------------
 
 /*
   #include <stdlib.h> // qsort
@@ -1740,7 +2239,7 @@
     return NULL;
   }
 
-  int main()
+  int main(void)
   {
     int arr[SIZE];
     set_array_random(arr, SIZE);
@@ -1761,6 +2260,10 @@
   }
 */
 
+// ------------------------------------------------------
+// ---------------------| bsearch |----------------------
+// ------------------------------------------------------
+
 /*
   #include <stdlib.h>   // bsearch
   #include "../nutility.h"
@@ -1774,7 +2277,7 @@
     return *(const int*)vp1 - *(const int*)vp2;
   }
 
-  int main()
+  int main(void)
   {
     int arr[SIZE];
     set_array_random(arr, SIZE);
@@ -1831,7 +2334,7 @@
     return *(const int*)vp1 - *(const int*)vp2;
   }
 
-  int main()
+  int main(void)
   {
     int arr[SIZE];
     set_arr_random(arr, SIZE);
@@ -1885,6 +2388,555 @@
 
     for (size_t i = 0; i < PNAMES_SIZE; ++i)
       printf("%s ", p_names[i]); 
+  }
+*/
+
+/*
+  ------------------------------------------------------------------
+  | conversion functions between strings and numbers in `stdlib.h` |
+  ------------------------------------------------------------------
+*/
+
+/*
+  // primitive conversion function
+
+  int main(void)
+  {
+    char str[] = "12345";
+    int ival = 0;
+
+    for (int i = 0; str[i] != '\0'; ++i){
+      ival = ival * 10 + str[i] - '0';
+    }
+
+    printf("ival = %d\n", ival);  // output -> ival = 12345
+  }
+*/
+
+// -----------------------------------------------------
+// ---------------------| atoi |------------------------
+// -----------------------------------------------------
+
+/*
+  #include <stdlib.h>  // atoi
+  // alphabetic to integer conversion (atoi)
+
+  // atoi function's prototype
+  int atoi(const char* p); 
+*/
+
+/*
+  #include <stdlib.h>  // atoi
+  #include <limits.h>  // INT_MAX
+
+  int main(void)
+  {
+    int ival = 0;
+
+    // ---------------------------------------------------
+
+    char str_1[] = "12345";
+    ival = atoi(str_1);
+    printf("ival = %d\n", ival);  // output -> ival = 12345
+
+    // ---------------------------------------------------
+
+    char str_2[] = "    345";
+    ival = atoi(str_2);
+    printf("ival = %d\n", ival);  // output -> ival = 345
+
+    // ---------------------------------------------------
+
+    char str_3[] = "    +764hello";
+    ival = atoi(str_3);
+    printf("ival = %d\n", ival);  // output -> ival = 764
+
+    // ---------------------------------------------------
+
+    char str_4[] = "hello";
+    ival = atoi(str_4);
+    printf("ival = %d\n", ival);  // output -> ival = 0
+
+    // if no integer found, 0 will be returned
+
+    // ---------------------------------------------------
+
+    char str_5[] = "0x45";
+    ival = atoi(str_5);
+    printf("ival = %d\n", ival);  // output -> ival = 0
+
+    // ---------------------------------------------------
+
+    printf("INT_MAX = %d\n", INT_MAX);  
+    // output -> INT_MAX = 2147483647
+
+    char str_6[] = "2997483647";
+    ival = atoi(str_6);   // undefined behaviour(UB)
+
+    // string must be representable in an integer
+
+    // ---------------------------------------------------
+  }
+*/
+
+/*
+  #include <stdlib.h>  // atoi
+
+  #define SIZE 100
+
+  int main(void)
+  {
+    // format => dd-mm-yyyy
+    char date_str[SIZE] = "01-01-2001";
+
+    int day = atoi(date_str);
+    int mon = atoi(date_str + 3);
+    int year = atoi(date_str + 6);
+
+    printf("day = %d, mon = %d, year = %d\n", day, mon, year);
+    // output -> day = 1, mon = 1, year = 2001
+  }
+*/
+
+// -----------------------------------------------------
+// ---------------------| atof |------------------------
+// -----------------------------------------------------
+
+/*
+  #include <stdlib.h>  // atof
+  // alphabetic to double conversion (atof)
+
+  // atof function's prototype
+  double atof(const char* p); 
+*/
+
+/*
+  #include <stdlib.h>  // atof
+
+  #define SIZE 100
+
+  int main(void)
+  {
+    char str[SIZE] = "456hello";
+
+    int ival = atoi(str);
+    double dval = atof(str);
+
+    printf("ival = %d\n", ival);  // output -> ival = 456
+    printf("dval = %f\n", dval);  // output -> dval = 456.000000
+  }
+*/
+
+/*
+  #include <stdlib.h>  // atof
+
+  #define SIZE 100
+
+  int main(void)
+  {
+    char str[SIZE] = "456.123hello";
+
+    int ival = atoi(str);
+    double dval = atof(str);
+
+    printf("ival = %d\n", ival);  // output -> ival = 456
+    printf("dval = %f\n", dval);  // output -> dval = 456.123000
+  }
+*/
+
+/*
+  #include <stdlib.h>  // atof
+
+  #define SIZE 100
+
+  int main(void)
+  {
+    char str[SIZE] = "12.9e3hello";
+
+    int ival = atoi(str);
+    double dval = atof(str);
+
+    printf("ival = %d\n", ival);  // output -> ival = 12
+    printf("dval = %f\n", dval);  // output -> dval = 12900.000000
+  }
+*/
+
+// -----------------------------------------------------
+// ---------------------| atol |------------------------
+// -----------------------------------------------------
+
+/*
+  #include <stdlib.h>  // atol
+  // alphabetic to long conversion (atol)
+
+  // atol function's prototype
+  long atol(const char* p); 
+*/
+
+// ------------------------------------------------------
+// ---------------------| atoll |------------------------
+// ------------------------------------------------------
+
+/*
+  #include <stdlib.h>  // atoll
+  // alphabetic to long long conversion (atoll)
+
+  // atoll function's prototype
+  long long atoll(const char* p); 
+*/
+
+/*
+  #include <stdlib.h>  // atoi
+  #include <limits.h>  // INT_MAX, LLONG_MAX
+
+  int main(void)
+  {
+    printf("INT_MAX = %d\n", INT_MAX);  
+    // output -> INT_MAX = 2147483647
+
+    printf("LLONG_MAX = %lld\n", LLONG_MAX);
+    // output -> LLONG_MAX = 9223372036854775807
+
+    char str[] = "1239223372036854775";
+    long long llval = atoll(str);
+
+    printf("llval = %lld\n", llval);  
+    // output -> llval = 1239223372036854775
+
+    // ---------------------------------------------------
+  }
+*/
+
+// --------------------------------------------------------
+// ---------------------| strtol |-------------------------
+// __ https://en.cppreference.com/w/c/string/byte/strtol __
+// --------------------------------------------------------
+
+// --------------------------------------------------------
+// ---------------------| strtoll |------------------------
+// --------------------------------------------------------
+
+// --------------------------------------------------------
+// ---------------------| strtoul |------------------------
+// --------------------------------------------------------
+
+// --------------------------------------------------------
+// ---------------------| strtoull |-----------------------
+// --------------------------------------------------------
+
+/*
+  #include <stdlib.h>  // strtol
+
+  // strtol function's prototype
+  long strtol(const char* p_str, char** p_strend_address, int base);
+  // out param : p_strend_address
+  
+  // when unwanted character found in the string,
+  // strtol function stops conversion and writes that address 
+  // to p_strend_address parameter
+*/
+
+/*
+  #include <stdlib.h>  // strtol
+
+  int main(void)
+  {
+    char str[] = "12345hello";
+
+    char* p_strend;
+
+    long lval = strtol(str, &p_strend, 10);
+    printf("lval = %ld\n", lval);  // output -> lval = 12345
+
+    // ---------------------------------------------------
+
+    printf("%s\n", p_strend);  // output -> hello
+
+    printf("%p %p\n", str + 5, p_strend);
+    // output -> 000000AD25DFF746 000000AD25DFF746
+
+    printf("index that conversion stops : %zu\n", p_strend - str);
+    // output -> index that conversion stops : 5
+    
+    // ---------------------------------------------------
+  }
+*/
+
+/*
+  // when base parameter has been changed
+
+  #include <stdlib.h>  // strtol
+
+  int main(void)
+  {
+    char str[] = "12345feza";
+
+    char* p_strend;
+
+    long lval = strtol(str, &p_strend, 16);
+    printf("lval = %ld\n", lval);  
+    // output -> lval = 19088894
+
+    // 0X12345fe = 19088894
+
+    // ---------------------------------------------------
+
+    printf("%s\n", p_strend);  // output -> za
+
+    printf("%p %p\n", str + 7, p_strend);
+    // output -> 000000E96FDFFDC9 000000E96FDFFDC9
+
+    printf("index that conversion stops : %zu\n", p_strend - str);
+    // output -> index that conversion stops : 7
+    
+    // ---------------------------------------------------
+  }
+*/
+
+/*
+  // when 2nd parameter does not need to be known
+  // wanted to be ignored - NULL can be passed
+
+  #include <stdlib.h>  // strtol
+
+  int main(void)
+  {
+    char str[] = "12345feza";
+
+    long lval = strtol(str, NULL, 10);
+    printf("lval = %ld\n", lval);  
+    // output -> lval = 12345
+  }
+*/
+
+
+/*
+  #include <stdlib.h>  // strtol
+
+  int main(void)
+  {
+    char str[] = "0xf0hello";
+
+    long lval = strtol(str, NULL, 16);
+    printf("lval = %ld\n", lval);  
+    // output -> lval = 240
+  }
+*/
+
+
+// --------------------------------------------------------
+// ---------------------| strtof |-------------------------
+// --------------------------------------------------------
+
+// --------------------------------------------------------
+// ---------------------| strtod |-------------------------
+// --------------------------------------------------------
+
+// --------------------------------------------------------
+// ---------------------| strtold |------------------------
+// --------------------------------------------------------
+
+/*
+  #include <stdlib.h>  // strtod
+
+  int main(void)
+  {
+    char str[] = "+003456.98hello";
+    char* p_strend;
+
+    double dval = strtod(str, &p_strend);
+    printf("dval = %f\n", dval);  // output -> dval = 3456.980000
+
+    // ---------------------------------------------------
+
+    printf("index that conversion stops : %zu\n", p_strend - str);
+    // output -> index that conversion stops : 10
+
+    puts(p_strend);  // output -> hello
+
+    // ---------------------------------------------------
+  }
+*/
+
+/*
+  #include <stdlib.h>  // strtod
+
+  int main(void)
+  {
+    char str[] = "+003456.98e3hello";
+
+    double dval = strtod(str, NULL);
+
+    printf("dval = %f\n", dval);  
+    // output -> dval = 3456980.000000
+  }
+*/
+
+/*
+        --------------------------------------------------
+        | formatted output functions in `stdio.h` module |
+        --------------------------------------------------
+*/
+
+// --------------------------------------------------------
+// ---------------------| printf |-------------------------
+// --------------------------------------------------------
+
+/*
+  #include <stdio.h>  // printf
+
+  // printf function's prototype
+  int printf(const char* p_format_str, ...);
+
+  // `printf` -> formatted output to standart output 
+*/
+
+// --------------------------------------------------------
+// ---------------------| sprintf |------------------------
+// --------------------------------------------------------
+
+/*
+  #include <stdio.h>   // printf, sprintf
+
+  // sprintf function's prototype
+  int sprintf(char* p, const char* p_format_str, ...);
+
+  // `sprintf` -> formatted output to a memory
+*/
+
+/*
+  #include <stdio.h>   // sprintf
+
+  #define SIZE 100
+
+  int main(void)
+  {
+    int ival = 1234567;
+    char str[SIZE];
+
+    int buffer_len = sprintf(str, "(%d)", ival);
+
+    printf("buffer_len = %d\n", buffer_len);  
+    // output -> buffer_len = 9
+
+    // buffer_len is the character count of the string
+    // that is written to the buffer
+    // it can be used as the index of the null character
+
+    printf("%s\n", str);  
+    // output -> (1234567)
+  }
+*/
+
+/*
+  #include <stdio.h>   // sprintf
+
+  #define SIZE 100
+
+  int main(void)
+  {
+    char str[SIZE] = "output";
+
+    int day = 4;
+    int mon = 4;
+    int year = 2004;
+
+    // To create a file format string : output_04_04_2004.txt
+
+    char file_name[SIZE];
+
+    sprintf(file_name, "%s_%02d_%02d_%d.txt", str, day, mon, year);
+    printf("%s\n", file_name);
+    // output -> output_04_04_2004.txt
+  }
+*/
+
+// --------------------------------------------------------
+// ------------------------| scanf |-----------------------
+// --------------------------------------------------------
+
+/*
+  #include <stdio.h>  // scanf
+
+  // scanf function's prototype
+  int scanf(const char* p_format_str, ...);
+
+  // `scanf` -> formatted input from standart output 
+*/
+
+// --------------------------------------------------------
+// ---------------------| sscanf |-------------------------
+// --------------------------------------------------------
+
+/*
+  #include <stdio.h>   // sscanf
+
+  // sscanf function's prototype
+  int sscanf(const char* p_buffer_str, const char* p_format_str, ...);
+
+  // `sscanf` -> formatted input from memory
+*/
+
+/*
+  #include <stdio.h>   // sscanf
+
+  #define SIZE 100
+
+  int main(void)
+  {
+    char str[SIZE] = "8273 19238 45.392";
+
+    int ival_1, ival_2;
+    double dval;
+
+    sscanf(str, "%d%d%lf", &ival_1, &ival_2, &dval);
+
+    printf("ival_1 = %d\n", ival_1);  
+    // output -> ival_1 = 8273
+    printf("ival_2 = %d\n", ival_2);  
+    // output -> ival_2 = 19238
+    printf("dval = %f\n", dval);      
+    // output -> dval = 45.392000
+  }
+*/
+
+/*
+        ------------------------------------------------------
+        | process termination functions in `stdlib.h` module |
+        ------------------------------------------------------
+*/
+
+/*
+  - normal termination  : 
+    runtimedaki çalışma ismi exit() olan fonksiyona yapılan 
+    çağrı ile sonlanmışsa normal termination.
+
+  - abnormal termination
+    runtimedaki çalışma ismi abort() olan fonksiyona yapılan 
+    çağrı ile sonlanmışsa abnormal termination.
+*/
+
+// --------------------------------------------------------
+// ---------------------| exit |---------------------------
+// --------------------------------------------------------
+
+/*
+  #include <stdlib.h>   // exit
+
+  // exit function's prototype
+  void exit(int);
+
+  // exit fonksiyonuna gönderilen değer(exit code) 
+  // program sonlandırılırken işletim sistemine iletilir.
+*/
+
+/*
+  #include <stdlib.h>  
+  int main(void)
+  {
+    return 182732;
+    // exit(182732);
+    // Those 2 lines are equivalent.
   }
 */
 
