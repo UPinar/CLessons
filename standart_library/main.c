@@ -1204,7 +1204,7 @@
     // s1 strings null character is int 3rd index(4th character)
     // strncmp is comparing 6 characters from s2 and s1
     // after 4th character comparison, function will stop comparing
-    // so no undefined behaviour.
+    // so no undefined behavior.
   }
 */
 
@@ -2471,7 +2471,7 @@
     // output -> INT_MAX = 2147483647
 
     char str_6[] = "2997483647";
-    ival = atoi(str_6);   // undefined behaviour(UB)
+    ival = atoi(str_6);   // undefined behavior(UB)
 
     // string must be representable in an integer
 
@@ -2852,7 +2852,7 @@
 */
 
 // --------------------------------------------------------
-// ------------------------| scanf |-----------------------
+// ----------------------| scanf |-------------------------
 // --------------------------------------------------------
 
 /*
@@ -2901,9 +2901,9 @@
 */
 
 /*
-        ------------------------------------------------------
-        | process termination functions in `stdlib.h` module |
-        ------------------------------------------------------
+      ------------------------------------------------------
+      | process termination functions in `stdlib.h` module |
+      ------------------------------------------------------
 */
 
 /*
@@ -2917,7 +2917,7 @@
 */
 
 // --------------------------------------------------------
-// ---------------------| exit |---------------------------
+// -----------------------| exit |-------------------------
 // --------------------------------------------------------
 
 /*
@@ -2932,6 +2932,7 @@
 
 /*
   #include <stdlib.h>  
+
   int main(void)
   {
     return 182732;
@@ -2940,3 +2941,261 @@
   }
 */
 
+/*
+  #include <stdlib.h>  // exit, EXIT_SUCCESS, EXIT_FAILURE
+
+  int main(void)
+  {
+    exit(0);
+    exit(EXIT_SUCCESS);  
+    // Those 2 lines are equivalent.
+
+    exit(1);
+    exit(EXIT_FAILURE);  
+    // Those 2 lines are equivalent.
+
+    // EXIT_SUCCESS and EXIT_FAILURE are symbolic constants
+  }
+*/
+
+/*
+  void f2(void)
+  {
+    printf("f2 function started\n");
+    printf("f2 function ended\n");
+  }
+
+  void f1(void)
+  {
+    printf("f1 function started\n");
+    f2();
+    printf("f1 function ended\n");
+  }
+
+  int main(void)
+  {
+    printf("main function started\n");
+    f1();
+    printf("main function ended\n");
+
+    // output ->
+    //  main function started
+    //  f1 function started
+    //  f2 function started
+    //  f2 function ended
+    //  f1 function ended
+    //  main function ended
+  }
+*/
+
+/*
+  #include <stdlib.h>  // exit, EXIT_FAILURE
+
+  void f2(void)
+  {
+    printf("f2 function started\n");
+    exit(EXIT_FAILURE); // ----------------> normal termination
+    printf("f2 function ended\n");
+  }
+
+  void f1(void)
+  {
+    printf("f1 function started\n");
+    f2();
+    printf("f1 function ended\n");
+  }
+
+  int main(void)
+  {
+    printf("main function started\n");
+    f1();
+    printf("main function ended\n");
+
+    // output ->
+    //  main function started
+    //  f1 function started
+    //  f2 function started
+  }
+*/
+
+// --------------------------------------------------------
+// ----------------------| atexit |------------------------
+// --------------------------------------------------------
+
+/*
+  #include <stdlib.h>   // atexit
+
+  // atexit function's prototype
+  int atexit(void(*)(void));
+*/
+
+/*
+  #include <stdlib.h>   // atexit, exit
+
+  void foo(void)
+  {
+    printf("foo function called\n");
+    printf("foo function ended\n");
+  }
+
+  void f2(void)
+  {
+    printf("f2 function started\n");
+    exit(EXIT_SUCCESS); // ----------------> normal termination
+    printf("f2 function ended\n");
+  }
+
+  void f1(void)
+  {
+    printf("f1 function started\n");
+    f2();
+    printf("f1 function ended\n");
+  }
+
+  int main(void)
+  {
+    printf("main function started\n");
+    atexit(&foo);
+    f1();
+    printf("main function ended\n");
+
+    // output ->
+    //  main function started
+    //  f1 function started
+    //  f2 function started
+    //  foo function called
+    //  foo function ended
+
+    // before program termination registered function with atexit
+    // will be called (in this scenario "foo")
+  }
+*/
+
+/*
+  #include <stdlib.h>   // atexit, exit
+
+  void foo(void)
+  {
+    printf("foo function called\n");
+    printf("foo function ended\n");
+  }
+
+  void bar(void)
+  {
+    printf("bar function called\n");
+    printf("bar function ended\n");
+  }
+
+  void f2(void)
+  {
+    printf("f2 function started\n");
+    exit(EXIT_SUCCESS); // ----------------> normal termination
+    printf("f2 function ended\n");
+  }
+
+  void f1(void)
+  {
+    printf("f1 function started\n");
+    f2();
+    printf("f1 function ended\n");
+  }
+
+  int main(void)
+  {
+    printf("main function started\n");
+    atexit(&foo);
+    atexit(&bar);
+    f1();
+    printf("main function ended\n");
+
+    // output ->
+    //  main function started
+    //  f1 function started
+    //  f2 function started
+    //  bar function called
+    //  bar function ended
+    //  foo function called
+    //  foo function ended
+
+    // before program termination registered functions with atexit
+    // will be called in reverse order of registration.
+    //  - LIFO(Last In First Out)
+    //  - FILO(First In Last Out)
+
+    // -- foo registered first, bar registered second.
+    // -- bar will call first and foo will call second.
+  }
+*/
+
+/*
+  - Birçok programda, program çalışırken kaynaklar ediniliyor 
+    ve programın düzgün bir şekilde sonlanması için 
+    bu kaynakların geri verilmesi gerekiyor. (cleanup)
+    - açılan bir dosyanın kapatılması.
+    - yapılmış veritabanı bağlantısının sonlandırılması.
+    - socket bağlantısının sonlandırılması.
+
+  - Cleanup operasyonlarının yapılabilmesi için `atexit` 
+    fonksiyonu ile cleanup fonksiyonları kaydedilir.
+    Böylece program sonlandığı zaman kaynakların geri verilmeme 
+    ihtimali ortadan kalkar. 
+*/
+
+// --------------------------------------------------------
+// -----------------------| abort |------------------------
+// --------------------------------------------------------
+
+/*
+  #include <stdlib.h>   // abort
+
+  // abort function's prototype
+  void abort(void);
+
+  // abort'un çağrılması ile hiçbir önlem alınmadan program sonlanır.
+*/
+
+/*
+  Q. neden abort fonksiyonuna ihtiyaç duyulur ?
+    - debug sürecinde hatanın daha iyi teşhis edilebilmesi.
+    - program abort ile sonlandığında, abort hata akımına(error stream)
+    abort ile programın sonlandığına dair bir mesaj yazar.
+      - (debug aşamasında programın çökmediğini abort ile sonlandığını
+        anlamak)
+*/
+
+/*
+  #include <stdlib.h>   // abort, atexit
+
+  void foo(void)
+  {
+    printf("foo function called\n");
+    printf("foo function ended\n");
+  }
+
+  void f2(void)
+  {
+    printf("f2 function started\n");
+    abort();  // ----------------> abnormal termination
+    printf("f2 function ended\n");
+  }
+
+  void f1(void)
+  {
+    printf("f1 function started\n");
+    f2();
+    printf("f1 function ended\n");
+  }
+
+  int main(void)
+  {
+    printf("main function started\n");
+    atexit(&foo);
+    f1();
+    printf("main function ended\n");
+
+    // output ->
+    //  main function started
+    //  f1 function started
+    //  f2 function started
+  }
+*/

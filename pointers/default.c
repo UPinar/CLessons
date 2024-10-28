@@ -5,7 +5,7 @@ FP_TYPE g_fp = &f2;
 void f1(void)
 {
   g_fp();
-  // f1 function's default behaviour is to call 
+  // f1 function's default behavior is to call 
   // function that "g_fp" global function pointer variable holds
 }
 

@@ -383,7 +383,7 @@
   int main(void)
   {
     int x;
-    int y = x + 5;  // undefined behaviour (using indeterminate value)
+    int y = x + 5;  // undefined behavior (using indeterminate value)
   }
 */
 
@@ -391,12 +391,12 @@
   int main(void)
   {
     int x;
-    ++x; // undefined behaviour (using indeterminate value)
+    ++x; // undefined behavior (using indeterminate value)
   }
 */
 
 /*
-  undefined behaviour (tanımsız davranış)
+  undefined behavior (tanımsız davranış)
     There is no guarantee in run-time, what will happen in the program.
     -> using indeterminate value
     -> overflow and underflow in signed integer types
@@ -404,7 +404,7 @@
     -> x << y  if (y >= x) 
 
   In optimization phase, compiler assumes that there is not any
-  undefined behaviour in the code!
+  undefined behavior in the code!
 */
 
 /*
@@ -413,7 +413,7 @@
     int a;
     int b = 0;
 
-    int y = a / b;  // if b = 0 -> undefined behaviour
+    int y = a / b;  // if b = 0 -> undefined behavior
 
     // always false condition
     if (b == 0){  
@@ -823,7 +823,7 @@
     int x = x;  
     // initialization happening inside the block scope
     // so x will initialize with its indeterminate(garbage) value
-    ++x;  // undefined behaviour
+    ++x;  // undefined behavior
   }
 
   // x:

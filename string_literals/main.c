@@ -166,7 +166,7 @@
     puts(p);  // output -> hello
 
 
-    p[0] = 'H'; // undefined behaviour(UB)
+    p[0] = 'H'; // undefined behavior(UB)
     // string literals are read-only data
     // trying to modify a string literal is UB
   }
@@ -181,7 +181,7 @@
 
     char* ptr = "hello";
 
-    strcpy(ptr, "world");   // undefined behaviour(UB)
+    strcpy(ptr, "world");   // undefined behavior(UB)
     // trying to modify a string literal is UB
 
     // if a string literal will sent to a function
@@ -207,7 +207,7 @@
   {
     char* p = "hello world";
 
-    *p = 'H'; // undefined behaviour(UB)
+    *p = 'H'; // undefined behavior(UB)
     // not a syntax error but UB, trying to modify a string literal
 
     const char* p2 = "hello world";
@@ -234,8 +234,8 @@
     // "Universe" is a string literal and it is 
     // a static storage duration array
 
-    p[0] = 'u'; // undefined behaviour(UB)
-    *p = 'u';   // undefined behaviour(UB)
+    p[0] = 'u'; // undefined behavior(UB)
+    *p = 'u';   // undefined behavior(UB)
 
     // ---------------------------------------------------
   }
@@ -249,9 +249,9 @@
     // when same string literals 
     // used as a static storage duration array more than once
     // depends on the compiler, it will store that literal once or more
-    // inside the read only memory (unspecified behaviour)
+    // inside the read only memory (unspecified behavior)
 
-    if (p1 == p2) {} // unspecified behaviour
+    if (p1 == p2) {} // unspecified behavior
   }
 */
 
@@ -448,7 +448,7 @@
     strcpy(str_1, "hello world");
     puts(str_1);  // output -> hello world
 
-    strcat(str_2, "hello world"); // undefined behaviour(UB)
+    strcat(str_2, "hello world"); // undefined behavior(UB)
     // strcat will copy to the address of the null character,
     // because of str_2 is an automatic storage duration array
     // an is not been initialized, it has indetermined(garbage)

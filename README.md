@@ -26,6 +26,7 @@
   - test functions (query, predicate)
   - `<ctype.h>` module
   - function prototype(s) | function declaration
+  - function wrappers
 
 ### [Input Output](https://github.com/UPinar/CLessons/tree/master/input_output)
   - standart C library
@@ -165,7 +166,12 @@
     - `printf` and `sprintf`
     - `scanf` and `sscanf`
   - process termination functions in `stdlib.h` module
-    - `exit`
+    - `exit` and `atexit`
+    - `abort`
   
 ### [String Literals](https://github.com/UPinar/CLessons/tree/master/string_literals)
 
+### [Dynamic Memory Management](https://github.com/UPinar/CLessons/tree/master/dynamic_memory_management)
+  - `malloc`
+  - `free`
+  - `calloc`

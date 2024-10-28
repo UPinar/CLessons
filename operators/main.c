@@ -163,7 +163,7 @@
   int main(void){
     int x = 2000000000; // 2'000'000'000
     int y = 2000000000; // 2'000'000'000
-    printf("%d + %d = %d\n", x, y, x + y);  // Undefined Behaviour(ub)
+    printf("%d + %d = %d\n", x, y, x + y);  // Undefined behavior(ub)
 
 
     unsigned int a = 3000000000; // 3'000'000'000
@@ -177,10 +177,10 @@
 
     // ! WARNING !
     // In SIGNED integer types, overflow happening when addition 
-    // and substraction IS Undefined Behaviour(UB)
+    // and substraction IS Undefined behavior(UB)
 
     // In UNSIGNED integer types overflow happening when addition 
-    // and substraction IS NOT Undefined Behaviour(UB)
+    // and substraction IS NOT Undefined behavior(UB)
 
     // x + y  -> R value expression
     // x - y  -> R value expression
@@ -224,13 +224,13 @@
   5 / 2   expressions type is int and value is 2
   7 / 10  expressions type is int and value is 0
 
-  x / y -> for integral types undefined behaviour(UB) when y = 0
+  x / y -> for integral types undefined behavior(UB) when y = 0
   
   x % y -> modulus operator's operands must be integral types
 
   ! WARNING !
     In SIGNED integer types, overflow happening when multiplication 
-    IS Undefined Behaviour(UB)
+    IS Undefined behavior(UB)
 */
 
 /*
@@ -773,7 +773,7 @@
 
 /*
           --------------------------------------------------
-          | short circuit behaviour (kısa devre davranışı) |
+          | short circuit behavior (kısa devre davranışı) |
           --------------------------------------------------
 */
 
@@ -791,7 +791,7 @@
     int y = 555;
 
     int z = x && ++y;
-    // short circuit behaviour happens
+    // short circuit behavior happens
 
     printf("z = %d\n", z);  // output -> z = 0
     printf("y = %d\n", y);  // output -> y = 555
@@ -804,7 +804,7 @@
     int y = 555;
 
     int z = x && ++y;
-    // no short circuit behaviour in this code
+    // no short circuit behavior in this code
 
     printf("z = %d\n", z);  // output -> z = 1
     printf("y = %d\n", y);  // output -> y = 556
@@ -817,7 +817,7 @@
     int y = 555;
 
     int z = x || ++y;
-    // short circuit behaviour happens
+    // short circuit behavior happens
 
     printf("z = %d\n", z);  // output -> z = 1
     printf("y = %d\n", y);  // output -> y = 555
@@ -829,7 +829,7 @@
     int arr[10] = { 0 };
 
     for (int i = 0; i < 10 && arr[i] == 5; ++i){
-      // using short circuit behaviour in the expression 
+      // using short circuit behavior in the expression 
       // there is no way that reaching out of arrays boundries.
       // because of the left operand of logical AND
     }
@@ -1347,18 +1347,18 @@
 /*
   when side effect applied to an object and there is no sequence point
   and that object has been used more than once in an expression
-    -> Undefined Behaviour (ub)
+    -> Undefined behavior (ub)
 */
 
 /*
   int main(void){
     int x = 5;
 
-    int y = ++x + x;  // Undefined Behaviour(ub)
+    int y = ++x + x;  // Undefined behavior(ub)
     // x has a side effect(++x) but has been used twice in the same
     // expression without having a sequence point.
 
-    int y = ++x * x;  // Undefined Behaviour(ub)
+    int y = ++x * x;  // Undefined behavior(ub)
     int y = ++x && x; // Valid -> && creates sequence point
   }
 */
@@ -1367,7 +1367,7 @@
   int main(void){
     int x = 5;
 
-    x = x++;  // Undefined Behaviour(ub)
+    x = x++;  // Undefined behavior(ub)
     // assignment operator is not creating a sequence point.
   }
 */
@@ -1375,7 +1375,7 @@
 /*
   int main(void){
     int x = 5;
-    int y =  x + (x = 9);   // undefined behaviour (UB)
+    int y =  x + (x = 9);   // undefined behavior (UB)
 
     // () paranthesis is not creating a sequence point
   }
@@ -1972,7 +1972,7 @@
     int a[10] = { 0 };
     unsigned x = sizeof(a[20]); // VALID 
     // no code will be generated for a[20] expression
-    // so no undefined behaviour, valid code
+    // so no undefined behavior, valid code
 
     printf("x = %u\n", x);  // output -> x = 4
   }
@@ -1984,7 +1984,7 @@
     int y = 0;
 
     unsigned k = sizeof(x / y); // VALID
-    // no undefined behaviour
+    // no undefined behavior
 
     printf("k = %u\n", k);  // output -> k = 4
   }

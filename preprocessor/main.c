@@ -469,7 +469,7 @@
 
   int main(void){
     int a = 6;
-    int b = SQUARE(a++);    // undefined behaviour(UB)
+    int b = SQUARE(a++);    // undefined behavior(UB)
 
     // int b = ((a++) * (a++));   -> compiler sees
     //  there is no sequence point 
@@ -1164,7 +1164,7 @@
   #define   SIZE  200 
   // code
 
-  // undefined behaviour(UB) -> redefinition of 'SIZE'
+  // undefined behavior(UB) -> redefinition of 'SIZE'
 */
 
 /*
@@ -1178,7 +1178,7 @@
   #define SIZE 500
   }
 
-  // undefined behaviour(UB) -> redefinition of 'SIZE'
+  // undefined behavior(UB) -> redefinition of 'SIZE'
   // macros does not have scope
 */
 

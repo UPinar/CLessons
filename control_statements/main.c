@@ -159,8 +159,8 @@
 
 /*
   if (i < size && a[i] != 0)  
-    using short curcuit behaviour in if statement for 
-    not getting undefined behaviour in a[i] expression.
+    using short curcuit behavior in if statement for 
+    not getting undefined behavior in a[i] expression.
 
 
   if (foo() && bar() && baz() && i > 0)

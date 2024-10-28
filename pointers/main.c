@@ -2627,7 +2627,7 @@
     int a[5] = { 0 };
 
     foo(a, a + 5);      // VALID
-    foo(a + 4, a + 2);  // undefined behaviour(ub)
+    foo(a + 4, a + 2);  // undefined behavior(ub)
 
     // first argument needs to be less than 
     // or equal to the second argument
@@ -4064,7 +4064,7 @@
   if (p != NULL && *p != '\0') {}
   if (p && *p) {}
 
-    when p = NULL -> *p will be undefined behaviour 
+    when p = NULL -> *p will be undefined behavior 
     because of the short circuit when p = NULL,
     *p will not be evaluated
 
@@ -4076,7 +4076,7 @@
   if (p == NULL || *p == '\0') {}
   if (!p || !*p) {}
 
-    when p = NULL -> *p will be undefined behaviour 
+    when p = NULL -> *p will be undefined behavior 
     because of the short circuit when p = NULL,
     *p will not be evaluated
 */
@@ -4670,7 +4670,7 @@
       *p_names[i] = '*';   // syntax error
       // error: assignment of read-only location '*p_names[i]'
       
-    // if p_names's type was char* p_names[] -> undefined behaviour(ub)
+    // if p_names's type was char* p_names[] -> undefined behavior(ub)
     // because of string literals are immutable objects
     // changing characters of a string literal is UB
   }
@@ -4897,7 +4897,7 @@
     // // {"ata", "emrecanadem", NULL}
 
     // when its being forgotten and the last element of the array
-    // has been dereferenced it will be undefined behaviour(ub)
+    // has been dereferenced it will be undefined behavior(ub)
     // (null pointer dereferencing)
   }
 */
@@ -6909,15 +6909,15 @@
     f1();   // output -> f2 function is called
 
     FP_TYPE default_fp = set_f1(f3);
-    // f1 function's default behaviour has been changed.
+    // f1 function's default behavior has been changed.
     // "default_fp" function pointer variable points to
     // default function that f1 is calling befor
 
     f1();   // output -> f3 function is called
 
     set_f1(default_fp);
-    // f1 function's default behaviour has been changed back
-    // to its original behaviour.
+    // f1 function's default behavior has been changed back
+    // to its original behavior.
 
     f1();   // output -> f2 function is called
   }

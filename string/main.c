@@ -85,7 +85,7 @@
     for (int i = 0; s[i] != '\0'; ++i){
       printf("%c", s[i]);
     }
-    // undefined behaviour(UB)
+    // undefined behavior(UB)
   }
 */
 
@@ -225,8 +225,8 @@
     // it is not NTBS
 
     puts(str);  // VALID
-    puts(str2); // undefined behaviour(UB)
-    puts(str3); // undefined behaviour(UB)
+    puts(str2); // undefined behavior(UB)
+    puts(str3); // undefined behavior(UB)
   }
 */
 
@@ -245,7 +245,7 @@
     // char array's size is 5 
     // there is no null character at the end of the array
 
-    puts(str);  // undefined behaviour(UB)
+    puts(str);  // undefined behavior(UB)
   }
 */
 
@@ -262,7 +262,7 @@
     // char array's size is 5 
     // but not NTBS(does not include '\0' character)
 
-    puts(str2); // undefined behaviour(UB)
+    puts(str2); // undefined behavior(UB)
   }
 */
 

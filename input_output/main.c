@@ -690,7 +690,7 @@
 
 /*
   -> in printf() function, if format specifier count is GREATER than 
-  variadic arguments count, it will be undefined behaviour
+  variadic arguments count, it will be undefined behavior
 
   printf("a = %d, b = %d\n", a);  
   // format specifier count = 2, variadic argument count = 1 (UB)
@@ -702,7 +702,7 @@
   // format specifier count = 2, variadic argument count = 3 VALID
 
   -> in printf() function, if format specifier type is differ from
-  variadic argument type, it will be undefined behaviour
+  variadic argument type, it will be undefined behavior
 
   unsigned int x = 476;
   printf("x = %f", x);  // (UB)

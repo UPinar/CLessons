@@ -142,7 +142,7 @@
   }
 
   // compiler can change order of the statements or delete some of them
-  // inside function body if the observable behaviour is not changing 
+  // inside function body if the observable behavior is not changing 
   // it has been called (as if rule)
 */
 
@@ -465,7 +465,7 @@
     int z = foo(x) + bar(y) * 5;
     // Question: foo or bar function will be called before ?
     // Answer: it depends on the compiler 
-    // This situation is being called UNSPECIFIED BEHAVIOUR
+    // This situation is being called UNSPECIFIED BEHAVIOR
   }
 */
 
@@ -494,8 +494,8 @@
 */
 
 /*
-  Every implementation-defined should be unspecified behaviour
-  but not every unspecified behaviour is implementation-defined.
+  Every implementation-defined should be unspecified behavior
+  but not every unspecified behavior is implementation-defined.
 
   If it is an implementation-defined, it should be documented by
   the compiler and the compiler should generate the same code 
@@ -506,7 +506,7 @@
   sizeof(int) // implementation-defined
   // sizeof(int) can be 2, 4, 8 byte in different compilers
   // it is implementation-defined and in every compiler it has been 
-  // documented, changing compiler can change the programs behaviour.
+  // documented, changing compiler can change the programs behavior.
 
   char // implementation-defined
   // char type can be unsigned char or signed char
@@ -1068,4 +1068,123 @@
   int func(int y);
   int func(int);
   // those 3 are function redeclarations
+*/
+
+/*
+                    ---------------------
+                    | function wrappers |
+                    ---------------------
+*/
+
+/*
+  function wrapper :
+    bir fonksiyonu çağıran başka bir fonksiyon oluşturmak.
+
+    1. augmentation
+    2. default argument wrapper
+    3. changing parameter order
+*/
+
+/*
+  // 1. augmentation
+
+  #include <stdlib.h>   // malloc, exit, EXIT_FAILURE, free
+
+  // malloc function wrapper that controls the return value
+  void* malloc_wrapper_1(size_t N)
+  {
+    void* vp = malloc(N);
+
+    if (!vp){
+      fprintf(stderr, "Memory allocation failed!\n");
+      exit(EXIT_FAILURE);
+    }
+
+    return vp;
+  }
+
+  // malloc function wrapper that controls the return value
+  // and writes error message that has been passed as argument
+  void* malloc_wrapper_2(size_t N, const char* p_err_msg)
+  {
+    void* vp = malloc(N);
+
+    if (!vp){
+      fprintf(stderr, "%s\n", p_err_msg);
+      exit(EXIT_FAILURE);
+    }
+
+    return vp;
+  }
+
+  int main(void)
+  {
+    size_t N = 20;
+
+    int* p1 = malloc_wrapper_1(N * sizeof(int));
+
+    int* p2 = malloc_wrapper_2( N * sizeof(int), 
+                                "memory block allocation failed!");
+
+    free(p1);
+    free(p2);
+  }
+*/
+
+/*
+  // default argument wrapper
+
+  #include <stdlib.h>   // strtol
+
+  // strtol function wrappers that simulate default argument
+
+  // this function wrapper increased argument count of strtol function
+  long strtol_wrapper(const char* p, char** pp_end)
+  {
+    return strtol(p, pp_end, 10);
+  }
+
+  // if 2nd parameter will be ignored
+  long strtol_wrapper_2(const char* p)
+  {
+    return strtol(p, NULL, 10);
+  }
+*/
+
+/*
+  // changing parameter order
+
+  #include <stdlib.h>
+
+  // - we want to change set parameter to be the first parameter 
+  //  and get parameter to be the second parameter
+  // - we want value will always passed as a decimal(base 10) number
+  char* itoa_wrapper(char* buffer, int val)
+  {
+    return _itoa(val, buffer, 10);
+  }
+
+  int main(void)
+  {
+    // _itoa is not a standart C function 
+    // compiler can give this function as an extension
+
+    // ---------------------------------------------------------
+
+    int x = 2138;
+    char buffer[100];
+
+    _itoa(x, buffer, 10);  
+    puts(buffer);  // output -> 2138
+
+    // ---------------------------------------------------------
+
+    int y = 99999;
+    char buffer_2[100];
+
+    itoa_wrapper(buffer_2, y);
+    puts(buffer_2);  // output -> 99999
+
+    // ---------------------------------------------------------
+  }
 */
