@@ -550,3 +550,760 @@
     free(p);
   }
 */
+
+// ---------------------------------------------------------
+// -----------------------| strdup |------------------------
+// ---------------------------------------------------------
+
+/*
+  #include <string.h>   // strdup, _strrev(non-standard)
+  #include <stdlib.h>   // free
+
+  #define   SIZE  100
+
+  // strdup function's prototype
+  char* strdup(const char* p);    // (C23)
+
+  int main(void)
+  { 
+    char str[SIZE] = "hello world";
+    char* pd = strdup(str); 
+    // allocate dynamic memory and copy the string
+
+    printf("str = %s\n", pd); // output -> hello world
+    printf("pd = %s\n", pd);  // output -> hello world
+
+    _strrev(pd);  // non-standard function
+    printf("pd = %s\n", pd);  // output -> pd = dlrow olleh
+
+    free(pd);
+    pd = NULL;
+  }
+*/
+
+/*
+  #include <stdlib.h>   // malloc
+  #include <string.h>   // strlen, strcpy , _strrev(non-standard)
+
+  #define   SIZE  100
+
+  // strdup function's implementation
+  char* Strdup(const char* p)
+  {
+    char* pd = malloc(strlen(p) + 1);
+
+    if (!pd)
+      return NULL;
+
+    return strcpy(pd, p);
+  }
+
+  int main(void)
+  {
+    char str[SIZE] = "hello world";
+    char* pd = Strdup(str); 
+
+    printf("str = %s\n", pd); // output -> hello world
+    printf("pd = %s\n", pd);  // output -> hello world
+
+    _strrev(pd);
+    printf("pd = %s\n", pd);  // output -> pd = dlrow olleh
+
+    free(pd);
+    pd = NULL;
+  }
+*/
+
+// ---------------------------------------------------------
+// ---------------- concatenation of strings ---------------
+// ---------------------------------------------------------
+
+/*
+  #include <string.h>   // strlen, strcpy, strcat
+  #include <stdlib.h>   // malloc, free
+
+  #define   SIZE  100
+
+  // there is NO standard function does this operation
+  char* Strconcat(const char* p1, const char* p2)
+  {
+    char* pd = malloc(strlen(p1) + strlen(p2) + 1);
+
+    if (!pd)
+      return NULL;
+
+    return strcat(strcpy(pd, p1), p2);
+  }
+
+  int main(void)
+  {
+    char str1[SIZE] = "hello world";
+    char str2[SIZE] = "we are live from Istanbul";
+
+    char* str3 = Strconcat(str1, str2);
+
+    printf("str1 = %s\n", str1);
+    // output -> str1 = hello world
+    printf("str2 = %s\n", str2);
+    // output -> str2 = we are live from Istanbul
+    printf("str3 = %s\n", str3);
+    // output -> str3 = hello worldwe are live from Istanbul
+
+    free(str3);
+    str3 = NULL;
+  }
+*/
+
+/*
+  #include <string.h>   // strlen, strcpy, strcat
+  #include <stdlib.h>   // malloc, free
+
+  #define   SIZE  100
+
+  char* Strconcat(const char* p1, const char* p2)
+  {
+    char* pd = malloc(strlen(p1) + strlen(p2) + 1);
+
+    if (!pd)
+      return NULL;
+
+    return strcat(strcpy(pd, p1), p2);
+  }
+
+  int main(void)
+  {
+    char* str = Strconcat(Strconcat("hello ", "world"), "galaxy");
+    // ------------------ MEMORY LEAK ------------------
+
+    // pointer to the memory block that is returned by
+    // `Strconcat("hello ", "world")` 
+    // is lost because it directly passed to next function 
+    // as an argument so NO chance to free that memory block
+
+    printf("str = %s\n", str);
+    // output -> str = hello worldgalaxy
+
+    free(str);
+    str = NULL;
+  }
+*/
+
+/*
+  #include <stddef.h>   // size_t
+  #include <stdlib.h>   // malloc, free, qsort
+  #include "../nutility.h"  
+
+  int fn_compare_int(const void* vp1, const void* vp2)
+  {
+    return *(const int*)vp1 - *(const int*)vp2;
+  }
+
+  int* create_random_array(size_t size)
+  {
+    int* pd_arr = (int*)malloc(size * sizeof(int));
+
+    if (!pd_arr)
+      return NULL;
+
+    return set_array_random_2(pd_arr, size);
+  }
+
+  int main(void)
+  {
+    size_t N = 20;
+
+    int* p_arr = create_random_array(N);
+    print_array(p_arr, N);
+    // output -> 
+    //   41 467 334 500 169 724 478 358 962 464
+    //  705 145 281 827 961 491 995 942 827 436
+
+    qsort(p_arr, N, sizeof(*p_arr), &fn_compare_int);
+
+    print_array(p_arr, N);
+    // output ->
+    //   41 145 169 281 334 358 436 464 467 478
+    //  491 500 705 724 827 827 942 961 962 995
+
+    free(p_arr);
+    p_arr = NULL;
+  }
+*/
+
+/*
+  #include "../nutility.h"
+  #include <stdlib.h>   // malloc, free
+
+  #define ARRAY_COUNT 3
+
+  int* create_random_array(size_t size)
+  {
+    int* pd_arr = (int*)malloc(size * sizeof(int));
+
+    if (!pd_arr)
+      return NULL;
+
+    return set_array_random_2(pd_arr, size);
+  }
+
+  int main(void)
+  {
+    int* array_of_p_arr[ARRAY_COUNT];
+
+    for (size_t i = 0; i < ARRAY_COUNT; ++i)
+      array_of_p_arr[i] = create_random_array(i * 2 + 5);
+
+    for (size_t i = 0; i < ARRAY_COUNT; ++i)
+      print_array(array_of_p_arr[i], i * 2 + 5);
+    
+    // output ->
+    //   41 467 334 500 169
+    //  ---------------------------------------
+    //  724 478 358 962 464 705 145
+    //  ---------------------------------------
+    //  281 827 961 491 995 942 827 436 391
+    //  ---------------------------------------
+
+    for(size_t i = 0; i < ARRAY_COUNT; ++i)
+      free(array_of_p_arr[i]);
+  }
+*/
+
+/*
+  We want to create a password generator
+
+  - (1) address can be passed by the caller and
+    we can generate the password in that address (out param)
+  constraints:
+    -> user needs to create a buffer (1)
+
+  - returning the address of the generated password
+    (no argument is passed)
+    - (2) password array will be a static local array
+    - (3) password array will be a dynamic array
+  constraints:
+    -> user does not need to create a buffer (2 and 3)
+    -> if static local array is used, every call will return 
+        the same address (2)
+    -> if dynamic array is used, user will get different addresses
+        but need to free the memory block every time (3)
+*/
+
+/*
+  // (1) password implementation
+
+  #include <stdlib.h>   // rand
+  #include "../nutility.h"
+
+  #define   SIZE      100
+  #define   PSW_LEN   16
+
+  char* get_random_password(char* p)
+  {
+    char* p_ret = p;
+
+    for (size_t i = 0; i < PSW_LEN; ++i)
+      *p++ = (char)(rand() % 26) + 'A';
+    *p = '\0';
+
+    return p_ret;
+  }
+
+  int main(void)
+  {
+    randomize();  
+
+    char password[SIZE];
+    get_random_password(password);
+    puts(password); // output -> PHQGHUMEAYLNLFDX
+  }
+*/
+
+/*
+  // (2) password implementation
+
+  #include <stdlib.h>   // rand
+  #include "../nutility.h"
+
+  #define   SIZE          100
+  #define   PSW_LEN       16
+  #define   PSW_ARR_SIZE  5
+
+  char* get_random_password(void)
+  {
+    static char password[SIZE];
+    char* p = password;
+
+    for (size_t i = 0; i < PSW_LEN; ++i)
+      *p++ = (char)(rand() % 26) + 'A';
+    *p = '\0';
+
+    printf("address = %p, password = %s\n", password, password);
+
+    return password;
+  }
+
+  int main(void)
+  {
+    randomize();  
+
+    char* psw_arr[PSW_ARR_SIZE];
+
+    for (size_t i = 0; i < PSW_ARR_SIZE; ++i)
+      psw_arr[i] = get_random_password();
+    // output ->
+    //  address = 00007FF6039FA0A0, password = YWELTEPDXNBYRMXA
+    //  address = 00007FF6039FA0A0, password = MTNQEMBROFIDDAQK
+    //  address = 00007FF6039FA0A0, password = EIFTCQMRKTSZFQVO
+    //  address = 00007FF6039FA0A0, password = VNWHLIEOSXZRKGUI
+    //  address = 00007FF6039FA0A0, password = BUAUVGCMVEOVSFMB
+
+    // MTNQEMBROFIDDAQK overrides YWELTEPDXNBYRMXA
+    // EIFTCQMRKTSZFQVO overrides MTNQEMBROFIDDAQK
+    // VNWHLIEOSXZRKGUI overrides EIFTCQMRKTSZFQVO
+    // BUAUVGCMVEOVSFMB overrides VNWHLIEOSXZRKGUI
+
+    // every call to get_random_password will
+    // override the previous password
+    // because of static local array is used
+    // password will be always been created at the same address
+
+    for (size_t i = 0; i < PSW_ARR_SIZE; ++i)
+      puts(psw_arr[i]);
+    // output ->
+    //  BUAUVGCMVEOVSFMB
+    //  BUAUVGCMVEOVSFMB
+    //  BUAUVGCMVEOVSFMB
+    //  BUAUVGCMVEOVSFMB
+    //  BUAUVGCMVEOVSFMB
+  }
+*/
+
+/*
+  // (3) password implementation
+
+  #include <stdlib.h>   // rand, free
+  #include <string.h>   // strdup
+  #include "../nutility.h"
+
+  #define   SIZE          100
+  #define   PSW_LEN       16
+  #define   PSW_ARR_SIZE  5
+
+  char* get_random_password(void)
+  {
+    char password[SIZE];
+    char* p = password;
+
+    for (size_t i = 0; i < PSW_LEN; ++i)
+      *p++ = (char)(rand() % 26) + 'A';
+    *p = '\0';
+
+    return strdup(password);  // dynamic memory allocation
+  }
+
+  int main(void)
+  {
+    randomize();  
+
+    char* psw_arr[PSW_ARR_SIZE];
+
+    for (size_t i = 0; i < PSW_ARR_SIZE; ++i)
+      psw_arr[i] = get_random_password();
+
+    for (size_t i = 0; i < PSW_ARR_SIZE; ++i)
+      puts(psw_arr[i]);
+    // output ->
+    //  VGMYUCRWACMALFJI
+    //  EJJFBPMBACGYSQQJ
+    //  NBXBAMSXBNWBRKLD
+    //  XYQWBOSXFNQDYPYA
+    //  KRWRHIWNZQOBAXXX
+
+    for (size_t i = 0; i < PSW_ARR_SIZE; ++i)
+      free(psw_arr[i]);
+  }
+*/
+
+/*
+  ------------------------------------------------------
+
+  void func(T*);
+  - eğer bir fonksiyonun parametresi bir pointer ise,
+    bu fonksiyona NULL göndermek tanımsız davranış mı
+    yoksa sunulan bir opsiyon mu?
+
+  ------------------------------------------------------
+
+  T* func(void);
+  - fonksiyonun geri dönüş değeri bir adres ise,
+    bu fonksiyonun geri dönüş değeri NULL olabilir mi?
+  - fonksiyon static ömürlü bir nesne adresi mi döndürüyor?
+  - fonksiyon dinamik ömürlü bir nesne adresi mi döndürüyor?
+
+  ------------------------------------------------------
+
+  T* func(T*);
+  - fonksiyon benden aldığı adresi bana geri mi döndürüyor?
+
+  ------------------------------------------------------
+*/
+
+// ---------------------------------------------------------
+// ---------------------------------------------------------
+// ---------------------------------------------------------
+// ---------------------------------------------------------
+
+/*
+  -------------------------------------------------------
+              <--- check dynamic_array.png --->
+  -------------------------------------------------------
+  we want to hold int pointers(int*) in a dynamic array
+
+    int** p_pint_arr = malloc(N * sizeof(int*));
+
+  -------------------------------------------------------
+
+  we want to hold int arrays in an array 
+    int[ROW_SIZE][COL_SIZE];
+  but ROW_SIZE and COL_SIZE will be determined at runtime
+
+  we can create 
+    - dynamic allocated int* array(with a size of ROW_SIZE)
+      which will hold the addresses of dynamically allocated
+      int arrays(with a size of COL_SIZE)   
+    
+    - first we need to allocate int* array
+      then we need to allocate int arrays 
+
+    - first we need to free int arrays
+      then we need to free int* array
+    
+    - int[10][20] multi-dimensional arrays elements are contiguous
+      dynamically allocated arrays elements are not contiguous
+
+  -------------------------------------------------------
+*/
+
+/*
+  ----------------- Implementation 1 -----------------
+
+  #include <stddef.h>   // size_t
+  #include <stdlib.h>   // malloc, free
+  #include "../nutility.h"
+
+  int main(void)
+  {
+    size_t ROW_SIZE = 10, COL_SIZE = 20;  
+
+    int** intptrarr_to_intarr = malloc(ROW_SIZE * sizeof(int*));
+    // pointer(int*) array is allocated
+
+    if (!intptrarr_to_intarr)
+      return EXIT_FAILURE;
+
+    for (size_t i = 0; i < ROW_SIZE; ++i) {
+      intptrarr_to_intarr[i] = malloc(COL_SIZE * sizeof(int));
+      // int arrays are allocated
+
+      if (!intptrarr_to_intarr[i])
+        return EXIT_FAILURE;
+    }
+
+    randomize();
+
+    // -------------------------------------------------------
+    // setting elements of matrix
+    for(size_t i = 0; i < ROW_SIZE; ++i)
+      for (size_t k = 0; k < COL_SIZE; ++k)
+        intptrarr_to_intarr[i][k] = rand() % 10;
+
+    // -------------------------------------------------------
+    // printing elements of matrix
+    
+    for(size_t i = 0; i < ROW_SIZE; ++i) {
+      for (size_t k = 0; k < COL_SIZE; ++k)
+        printf("%d ", intptrarr_to_intarr[i][k]);
+      putchar('\n');
+    } 
+    // output ->
+    //  0 4 0 0 5 0 6 1 7 2 4 2 5 7 6 3 3 4 4 7
+    //  8 4 8 0 9 7 7 7 7 3 8 3 2 9 7 8 7 8 8 2
+    //  7 8 6 1 8 3 8 9 8 6 3 8 5 2 5 6 1 4 0 3
+    //  5 6 0 9 9 6 7 6 4 3 6 8 3 1 2 1 5 5 8 4
+    //  0 6 0 4 8 6 3 9 3 4 3 1 8 8 0 8 8 4 0 3
+    //  2 2 5 6 7 7 7 8 5 9 7 3 4 6 9 2 4 0 0 4
+    //  6 8 4 6 7 4 6 0 3 7 0 0 4 9 6 8 6 4 3 5
+    //  2 4 9 7 0 3 4 4 4 0 2 6 8 0 7 3 3 8 5 2
+    //  0 7 1 9 1 9 5 0 5 2 7 4 5 6 4 2 9 0 5 1
+    //  5 4 8 6 5 3 9 7 0 1 4 1 8 4 8 7 2 6 4 1
+
+    // -------------------------------------------------------
+    // freeing dynamic allocated memory
+
+    for (size_t i = 0; i < ROW_SIZE; ++i)
+      free(intptrarr_to_intarr[i]); // freeing int arrays
+
+    free(intptrarr_to_intarr);  // freeing int* array
+
+    // -------------------------------------------------------
+  }
+*/
+
+/*
+  #include <stddef.h>   // size_t
+  #include <stdlib.h>   // malloc, free
+  #include "../nutility.h"
+
+  int main(void)
+  {
+    size_t ROW_SIZE = 10, COL_SIZE = 20;  
+
+    int** intptrarr_to_intarr = malloc(ROW_SIZE * sizeof(int*));
+    // pointer(int*) array is allocated
+
+    if (!intptrarr_to_intarr)
+      return EXIT_FAILURE;
+
+    for (size_t i = 0; i < ROW_SIZE; ++i) {
+      intptrarr_to_intarr[i] = malloc(COL_SIZE * sizeof(int));
+      // int arrays are allocated
+
+      if (!intptrarr_to_intarr[i])
+        return EXIT_FAILURE;
+    }
+
+    randomize();
+
+    // setting elements of matrix
+    for(size_t i = 0; i < ROW_SIZE; ++i)
+      for (size_t k = 0; k < COL_SIZE; ++k)
+        intptrarr_to_intarr[i][k] = rand() % 10;
+
+    // ----------------------------------------------------
+    // ----------------------------------------------------
+
+    int* ptr = intptrarr_to_intarr[0];  
+    // ptr is pointing to the first element of the first row
+
+    size_t N = ROW_SIZE * COL_SIZE;
+
+    while (N--)
+      printf("%d ", *ptr++);  // undefined behaviour(UB)
+
+    // dynamic allocated int* array is contigious  
+    // but dynamic allocated int arrays are NOT contiguous
+    // so, by increasing "ptr" more than COL_SIZE times
+    // will cause undefined behavior(UB)
+
+    // ----------------------------------------------------
+    // ----------------------------------------------------
+
+    for (size_t i = 0; i < ROW_SIZE; ++i)
+      free(intptrarr_to_intarr[i]); // freeing int arrays
+
+    free(intptrarr_to_intarr);  // freeing int* array
+
+    // -------------------------------------------------------
+  }
+*/
+
+/*
+  // ----------------- Implementation 2 -----------------
+
+  #include <stddef.h>   // size_t
+  #include <stdlib.h>   // malloc, free
+  #include "../nutility.h"
+
+  int main(void)
+  {
+    size_t ROW_SIZE = 3, COL_SIZE = 5;  
+    size_t TOTAL_SIZE = ROW_SIZE * COL_SIZE;
+
+    int* p_intarr = malloc(TOTAL_SIZE * sizeof(int));
+
+    if (!p_intarr)
+      return EXIT_FAILURE;  
+
+    randomize();
+
+    // ----------------------------------------------------
+    // setting elements of matrix
+
+    // ---------- WAY 1 ---------- (seems like a matrix)
+    for (size_t i = 0; i < ROW_SIZE; ++i)
+      for (size_t k = 0; k < COL_SIZE; ++k)
+        p_intarr[i * COL_SIZE + k] = rand() % 10;
+
+    // ---------- WAY 2 ----------
+    for (size_t i = 0; i < TOTAL_SIZE; ++i)
+      p_intarr[i] = rand() % 10;
+
+    // ----------------------------------------------------
+    // printing elements of matrix
+
+    // ---------- WAY 1 ----------
+    for (size_t i = 0; i < ROW_SIZE; ++i) {
+      for (size_t k = 0; k < COL_SIZE; ++k)
+        printf("%d ", p_intarr[i * COL_SIZE + k]);
+      putchar('\n');
+    }
+    // output ->
+    //  3 5 3 3 8
+    //  6 8 7 6 1
+    //  1 3 4 8 2
+
+    // ---------- WAY 2 ----------
+
+    int* ptr = p_intarr;
+    size_t N = TOTAL_SIZE;
+
+    while (N--)
+      printf("%d ", *ptr++);
+    // output -> 3 5 3 3 8 6 8 7 6 1 1 3 4 8 2
+    
+
+    // ----------------------------------------------------
+    // freeing dynamic allocated memory
+    free(p_intarr);
+
+    // ----------------------------------------------------
+  }
+*/
+
+/*
+  // ----------------- Implementation 3 -----------------
+
+  #include <stddef.h>   // size_t
+  #include <stdlib.h>   // malloc, free
+  #include "../nutility.h"
+
+  int main(void)
+  {
+    size_t ROW_SIZE = 3, COL_SIZE = 5;  
+    size_t TOTAL_SIZE = ROW_SIZE * COL_SIZE;
+
+    int* p_intarr = malloc(TOTAL_SIZE * sizeof(int));
+
+    if (!p_intarr)
+      return EXIT_FAILURE;  
+
+    // setting elements of matrix
+    for (size_t i = 0; i < ROW_SIZE; ++i)
+      for (size_t k = 0; k < COL_SIZE; ++k)
+        p_intarr[i * COL_SIZE + k] = rand() % 10;
+
+    // ----------------------------------------------------
+
+    // creating a dynamic pointer array that holds the addresses
+    // of the beginning of each row of contiguous int array
+    // to use matrix notation [ROW][COLUMN] with 2 subscript operator
+
+    int** intptrarr_to_rows = malloc(ROW_SIZE * sizeof(int*));
+
+    for (size_t i = 0; i < ROW_SIZE; ++i)
+      intptrarr_to_rows[i] = p_intarr + i * COL_SIZE;
+      // intptrarr_to_rows[i] = &p_intarr[i * COL_SIZE];
+
+    // ----------------------------------------------------
+
+    // using matrix notation [ROW][COLUMN] with 2 subscript operator
+    for (size_t i = 0; i < ROW_SIZE; ++i) {
+      for (size_t k = 0; k < COL_SIZE; ++k)
+        printf("%d ", intptrarr_to_rows[i][k]);
+      putchar('\n');
+    }
+    // output ->
+    //  1 7 4 0 9
+    //  4 8 8 2 4
+    //  5 5 1 7 1
+
+    // ----------------------------------------------------
+
+    // freeing dynamic allocated memory
+    free(p_intarr);
+    free(intptrarr_to_rows);
+
+    // ----------------------------------------------------
+  }
+*/
+
+/*
+  -------------------------------------------------------
+
+  Implementation 1 :
+    int pointer array that holds the addresses of 
+    dynamically allocated int arrays
+
+  -> Use more memory. 
+    dynamic pointer array memory(ROW_SIZE) + HEADER
+    dynamic int arrays memory(COL_SIZE * ROW_SIZE) +  ROW_SIZE * HEADER
+      
+  -> Can be used with matrix notation [ROW][COLUMN] with 
+    2 subscript operator
+
+  -> can NOT be used as a multi-dimensional array
+    because int arrays are not contiguous
+
+  -> less likely to cause fragmentation problem (malloc failed)
+
+  -------------------------------------------------------
+  
+  Implementation 2 :
+    dynamically allocated single int array that holds 
+    all elements of the matrix.
+
+  -> Use less memory
+    - dynamic int array memory(COL_SIZE * ROW_SIZE) + HEADER 
+
+  -> Can NOT be used with matrix notation [ROW][COLUMN] with 
+    2 subscript operator
+
+  -> can be used as a multi-dimensional array 
+    because all elements are contiguous.
+
+  -> more likely to cause fragmentation problem (malloc failed)
+
+  -------------------------------------------------------
+
+  Implementation 3 :
+    dynamically allocated single int array that holds
+    all elements of the matrix and dynamic pointer array
+    that holds the addresses of the beginning of each row.
+
+  -> Use more memory than Implementation 2 
+  -> Use less memory than Implementation 1
+    - dynamic pointer array memory(ROW_SIZE) + HEADER
+    - dynamic int array memory(COL_SIZE * ROW_SIZE) + HEADER
+
+  -> Can be used with matrix notation [ROW][COLUMN] with 
+    2 subscript operator
+
+  -> can be used as a multi-dimensional array
+    because int array is contiguous.
+  
+  -> more likely to cause fragmentation problem (malloc failed)
+
+  -------------------------------------------------------
+*/
+
+/*
+              <--- check fragmentation.png --->
+
+  fragmentasyon : inside heap some parts have been allocated 
+  and some parts have not been allocated and there are some
+  free blocks between allocated blocks.
+
+    total free bytes = 80.000 byte
+    wanted to allocate 50.000 byte(contiguous)
+
+    -> malloc can be failed because of fragmentation
+    it can not find available contiguous memory block
+
+  bellek tahsilatının ne şekilde ortaya çıkacağı belli ise 
+  ona uygun bir bellek tahsilatı yapılabilir.
+
+  Örneğin bellek tahsilatlar ufak ufak yapılacak(8 - 10 byte)
+  bu durumda sistemin sunduğu allocation algoritması 
+  bizim için uygun olmaz.
+*/

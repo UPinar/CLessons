@@ -175,3 +175,4 @@
   - `malloc`
   - `free`
   - `calloc`
+  - `strdup`

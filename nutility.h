@@ -13,6 +13,7 @@ void sgets(char* pStr);
 void swap(int* x, int* y);
 
 void set_array_random(int* p_array, size_t size);
+int* set_array_random_2(int* p_array, size_t size);
 void print_array(const int* p_array, size_t size);
 void sort_array(int* pArr, size_t size);
 void reverse_array(int* p_array, size_t size);

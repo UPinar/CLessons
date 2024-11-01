@@ -27,6 +27,15 @@ void set_array_random(int* p_array, size_t size){
     *p_array++ = rand() % 1000;
 }
 
+int* set_array_random_2(int* p_array, size_t size){
+  int* p_ret = p_array;
+
+  while(size--)
+    *p_array++ = rand() % 1000;
+  
+  return p_ret;
+}
+
 void print_array(const int* p_array, size_t size){
   for (size_t i = 0; i < size; ++i){
     if (i && i % 10 == 0)
