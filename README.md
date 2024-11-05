@@ -176,3 +176,5 @@
   - `free`
   - `calloc`
   - `strdup`
+  - `realloc`
+  - dynamic array data structure

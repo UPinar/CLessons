@@ -1307,3 +1307,342 @@
   bu durumda sistemin sunduğu allocation algoritması 
   bizim için uygun olmaz.
 */
+
+// ---------------------------------------------------------
+// -----------------------| realloc |-----------------------
+// ---------------------------------------------------------
+
+/*
+  #include <stdlib.h>   // realloc
+
+  // realloc function's prototype
+  void* realloc(void* vp, size_t new_size);
+*/
+
+/*
+  1. realloc başarılı olur ve ilk parametreye 
+    geçilen adresi geri döndürür. 
+    Bellek bloğu bulunduğu adreste new_size(geçilen ikinci parametre) 
+    boyutuna getirilir.
+    eski bellek bloğu (old_size - new_size) kadar büyütülür.
+
+  2. realloc fonksiyonu başka bir adreste new_size kadar yeni bir 
+    bellek bloğu edinir. 
+    Eski bellek bloğundaki byte'ları yeni bellek bloğuna kopyalar.
+    Eski bellek bloğu free edilir.
+    Yeni bellek bloğu adresi geri döndürülür.
+    Eski bellek bloğunu gösteren pointerlar dangiling pointer olur.
+
+  3. realloc fonksiyonu başarısız olur. NULL geri döner.
+    Eski bellek bloğu değişmez ve kullanılabilir halde kalır.
+*/
+
+/*
+  #include <stdlib.h>   // malloc, realloc, free
+  #include <stddef.h>   // size_t
+  #include "../nutility.h"
+
+  int main(void)
+  {
+    size_t N = 20;
+
+    // -------------------------------------------------
+
+    int* p = (int*)malloc(N * sizeof(int));
+    if (p == NULL)
+      return 1;
+
+    randomize();
+    set_array_random(p, N);
+    print_array(p, N);
+    // output ->
+    //  542 870 480 196 416 855 109 940 586 385
+    //  667 288 379 825 432 299 919  55 981 717
+
+    // -------------------------------------------------
+
+    size_t N_add = 20;
+
+    p = realloc(p, (N + N_add) * sizeof(int));
+    // if realloc fails, p will be NULL
+    // and old memory block address will be lost
+    // but because of we will terminate the program 
+    // after the failure of realloc, there win't be a memory leak.
+    if (p == NULL)
+      return 1;
+
+    set_array_random(p + N, N_add);
+    print_array(p, N + N_add);
+    // output ->
+    //  542 870 480 196 416 855 109 940 586 385
+    //  667 288 379 825 432 299 919  55 981 717
+    //  262 950  27 174  37  87 993 790 179 635
+    //  204 160 726 768 833 688 862  70 391 979
+
+    free(p);
+
+    // -------------------------------------------------
+  }
+*/
+
+/*
+  // increased memory block with using realloc function 
+  // will have garbage values inside.
+
+  #include <stdlib.h>   // malloc, realloc, free
+  #include <stddef.h>   // size_t
+  #include "../nutility.h"
+
+  int main(void)
+  {
+    size_t N = 20;
+    size_t N_increased_size = 40;
+
+    int* p = (int*)malloc(N * sizeof(int));
+    if (p == NULL)
+      return 1;
+
+    randomize();
+    set_array_random(p, N);
+
+    p = realloc(p, (N_increased_size) * sizeof(int));
+    if (p == NULL)
+      return 1;
+
+    print_array(p, N_increased_size);  // undefined behavior(UB)
+  }
+*/
+
+/*
+  #include <stdlib.h>   // malloc, realloc, free
+  #include <stddef.h>   // size_t
+
+  int main(void)
+  {
+    size_t N = 20;
+    size_t N_add = 10;
+
+    int* p = (int*)malloc(N * sizeof(int));
+    if (p == NULL)
+      return 1;
+
+    printf("address of p with malloc = %p\n", (void*)p);
+    // output -> address of p with malloc = 000001B5BEDF99C0
+
+    p = realloc(p, (N + N_add) * sizeof(int));
+    if (p == NULL)
+      return 1;
+
+    printf("address of p with realloc = %p\n", (void*)p);
+    // output -> address of p with realloc = 000001B5BEDF7420
+
+    // because of address of p is changed,
+    // realloc function allocated new memory block
+    // and copied the old memory block to the new memory block
+  }
+*/
+
+/*
+  - reallocation takes time ->
+    because of copying the old memory block to the new memory block
+    calling `realloc` function is expensive operation.
+  
+  - reallocation invalidates pointers -> 
+    if the memory block is reallocated, the old memory block is freed
+    and the pointers that is pointing to the old memory block becomes
+    dangling pointers.
+*/
+
+/*
+  realloc(NULL, size) is equivalent to malloc(size)
+
+  - döngüsel bir yapı içinde bir bellek bloğununun sürekli
+    büyütülmesi gerekiyor, bunun için önce malloc'a çağrı yapılması
+    gerekir. sonra realloc çağrısı yapılır.
+    Bu ilk malloc çağrısı yerine realloc(NULL, size) çağrısı yapılabilir.
+*/
+
+/*
+  #include <stdlib.h>   // rand, malloc, realloc, free, 
+  #include <conio.h>    // _getch
+  #include "../nutility.h"
+
+  int main(void)
+  {
+    int val;
+
+    int* p = NULL;
+    size_t N = 0;
+    size_t total_elem_size = 20;
+
+    randomize();
+
+    while (total_elem_size--) 
+    {
+      p = realloc(p, (N + 1) * sizeof(int));
+
+      if (!p){
+        printf("Memory allocation failed!\n");
+        return 1;
+      }
+
+      val = rand() % 1000;
+      printf("number : %d\n", val);
+
+      p[N++] = val;
+    }
+
+    printf("total number of elements : %zu\n", N);
+    print_array(p, N);
+
+    // output -> 
+    //  number : 185
+    //  number : 490
+    //  number : 899
+    //  number : 369
+    //  number : 882
+    //  number : 616
+    //  number : 136
+    //  number : 682
+    //  number : 528
+    //  number : 613
+    //  number : 652
+    //  number : 285
+    //  number : 319
+    //  number : 38
+    //  number : 887
+    //  number : 297
+    //  number : 197
+    //  number : 861
+    //  number : 375
+    //  number : 908
+    //  total number of elements : 20
+    //  185 490 899 369 882 616 136 682 528 613
+    //  652 285 319  38 887 297 197 861 375 908
+  }
+*/
+
+/*
+                --------------------------------
+                | dynamic array data structure |
+                --------------------------------
+*/
+
+/*
+  - dynamic array elements are contigious.
+
+  - reaching Nth element is O(1) with pointer arithmetic.
+
+  - inserting from back is O(1) [amortized constant time]
+    it is related with the capacity of the dynamic array.
+      - when the capacity is full(size == capacity), 
+        reallocation is needed and it is O(N) operation. 
+      - when the capacity is not full(size < capacity) 
+        inserting from back is O(1) operation.
+    because of reallocation is rarely done inserting from back
+    is O(1) [amortized constant time] operation.
+
+  - when reallocation is done, pointers that is pointing to the 
+    old memory block can become dangling pointers.
+
+  - when elements are deleted, size will decrease but capacity
+    will remain same so it might block new allocations in heap.
+
+  - because of elements are contigious, caching is more efficient.
+    cache hit rate is higher. (cache friendly)
+
+  - inserting from middle is O(N) operation because of 
+    shifting(copying) the elements.
+*/
+
+/*
+  // HOMEWORK : implement dynamic array data structure,
+    elements are string.
+
+    // isimlerin bir yerde tutulmasi gerekiyor 
+    // adreslerinin de bir yerde tutulmasi gerekiyor
+*/
+
+/*
+  #include "../nutility.h"  
+  #include <stdlib.h>   // rand, calloc
+  #include <string.h>   // strcmp, strdup
+
+  const char* get_random_string()
+  {
+    return p_names[rand() % PNAMES_SIZE];
+  }
+
+  int is_name_entered_before( char** p_str_arr, 
+                              size_t p_str_arr_size, 
+                              const char* str)
+  {
+    for (size_t i = 0; i < p_str_arr_size; ++i)
+      if (strcmp((p_str_arr)[i], str) == 0)
+        return 1;
+
+    return 0;
+  }
+
+  void do_reallocation(char*** p, size_t* p_str_arr_capacity)
+  {
+    printf("called with capacity : %zu\n", *p_str_arr_capacity);
+
+    size_t new_capacity = *p_str_arr_capacity * 2;
+    printf("new capacity : %zu\n", new_capacity);
+
+    *p = realloc(*p, new_capacity * sizeof(char*));
+
+    if (*p == NULL)
+      exit(EXIT_FAILURE);
+    
+    *p_str_arr_capacity = new_capacity;
+  }
+
+  int compare_str(const void* vp1, const void* vp2)
+  {
+    return strcmp(*(const char**)vp1, *(const char**)vp2);
+  }
+
+  int main(void)
+  {
+    size_t N = 200;
+
+    size_t p_str_arr_capacity = 20;
+    size_t p_str_arr_size = 0;
+
+    char** p_str_arr = calloc(p_str_arr_capacity, sizeof(char*));
+
+    randomize();
+
+    while (N--) 
+    {
+      const char* str = get_random_string();
+      printf("ismi girin : %s\n", str);
+
+      if (is_name_entered_before(p_str_arr, p_str_arr_size, str)){
+        printf("bu isim daha once girilmisti.\n");
+        continue;
+      }
+
+      // if capacity is full, do reallocation
+      if (p_str_arr_size == p_str_arr_capacity)
+        do_reallocation(&p_str_arr, &p_str_arr_capacity);
+
+      // insert a pointer to dynamic string to the dynamic array
+      p_str_arr[p_str_arr_size++] = strdup(str);
+    }
+
+    // shrink the capacity to the size
+    p_str_arr = realloc(p_str_arr, p_str_arr_size * sizeof(char*));
+
+    // sort the strings that dynamic array elements(pointers) points to
+    qsort(p_str_arr, p_str_arr_size, sizeof(char*), &compare_str);
+
+    printf("toplam isim sayisi : %zu\n", p_str_arr_size);
+
+    printf("girdiginiz isimler : \n");
+    for (size_t i = 0; i < p_str_arr_size; ++i)
+      printf("%s ", p_str_arr[i]);
+  }
+*/
