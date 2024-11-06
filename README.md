@@ -178,3 +178,20 @@
   - `strdup`
   - `realloc`
   - dynamic array data structure
+  
+### [Storage Class Specifiers](https://github.com/UPinar/CLessons/tree/master/storage_class_specifiers)
+  - `auto`
+  - `register`
+  - `static`
+    - `static` keyword in local namespace
+    - `static` keyword in global namespace
+      - Linkage
+        - external linkage
+        - internal linkage
+        - no linkage
+  - `extern`
+
+### [Type Qualifiers](https://github.com/UPinar/CLessons/tree/master/type_qualifiers)
+  - `const`
+  - `volatile`
+  - `restrict`

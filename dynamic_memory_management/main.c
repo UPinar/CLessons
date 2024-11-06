@@ -1644,5 +1644,11 @@
     printf("girdiginiz isimler : \n");
     for (size_t i = 0; i < p_str_arr_size; ++i)
       printf("%s ", p_str_arr[i]);
+
+    // free the memory blocks that dynamic array elements point to
+    for (size_t i = 0; i < p_str_arr_size; ++i)
+      free(p_str_arr[i]);
+
+    free(p_str_arr);
   }
 */
