@@ -3,10 +3,12 @@
 
 #include <stddef.h> // size_t
 
-#define asize(x) (sizeof(x) / sizeof(x[0]))
-
+extern const int g_primes[];
 extern const char* p_names[];
 #define PNAMES_SIZE 335
+
+#define   asize(x)          (sizeof(x) / sizeof(x[0]))
+#define   Nth_prime(idx)    (g_primes[idx])
 
 void randomize(void);
 void sgets(char* pStr);
@@ -27,5 +29,7 @@ void copy_array(int* p_dest, const int* p_source, size_t size);
 void swap_arrays(int* p_array1, int* p_array2, size_t size);
 
 void swap_T(void* vp1, void* vp2, size_t size);
+
+int is_prime(int val);
 
 #endif // NUTILITY_H

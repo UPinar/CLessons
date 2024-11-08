@@ -592,6 +592,12 @@
 */
 
 /*
+                    --------------------
+                    | `extern` keyword |  
+                    --------------------
+*/
+
+/*
   // --------------------------------------------------
 
   // file1.h (header file)
@@ -664,7 +670,6 @@
   // --------------------------------------------------
 */
 
-
 /*
   // --------------------------------------------------
 
@@ -697,4 +702,116 @@
   hepsi farklı varlıklara ilişkin isimlerdir(internal linkage).
 
   // --------------------------------------------------
+*/
+
+/*
+  // to getting close to Object Oriented Programming(OOP) principles
+
+  // file1.c
+  // ----------------
+  #define    PRIVATE    static
+  #define    PUBLIC
+
+  // ---------------------------------------------
+
+  PRIVATE int g_x = 10;   // internal linkage
+
+  PRIVATE int foo(int x)  // internal linkage
+  {
+    return x * x;
+  }
+
+  // ---------------------------------------------
+
+  PUBLIC int g_y = 20;   // external linkage
+  PUBLIC int bar(int x)  // external linkage
+  {
+    return foo(x) + g_x;
+  }
+
+  // ---------------------------------------------
+*/
+
+/*
+  // file1.c
+  // ----------------
+
+  void foo(void){}    // external linkage
+
+  // if "foo" function is not invoked in "file1.c" source file
+  // this is not a logic error because "foo" function 
+  // has an external linkage and it can be called from
+  // another source file.
+
+  static bar(void){}  // internal linkage
+
+  // if "bar" function is not invoked in "file1.c" source file
+  // this is a logic error because "bar" function
+  // has an internal linkage and it can only be called
+  // inside "file1.c" source file.
+*/
+
+/*
+  static void bar(void){}
+  // warning: 'bar' defined but not used
+
+  int main(void)
+  {
+    return 0;
+  }
+*/
+
+/*
+  // file1.h
+  // ----------------
+
+  int foo(int x)
+  {
+    return x * x;
+  }
+  // definition of "foo" function with an external linkage
+
+  // "foo" function has external linkage
+  // and when its definition is in a header file("file1.h")
+  // when other source file includes this header file
+  // it will also have a definition of "foo" function
+  // and external linkage identifiers CAN HAVE only one definition
+  // CAN NOT have multiple definitions
+  // Linker error will occur
+*/
+
+/*
+  // file1.h
+  // ----------------
+
+  static int foo(int x)
+  {
+    return x * x;
+  }
+  // definition of "foo" function with an internal linkage
+
+  // "foo" function has internal linkage
+  // and when its definition is in a header file("file1.h")
+  // when other source file includes this header file
+  // all of them will have their own internal linkage "foo" function
+  // address of "foo" function will be different in each source file
+  // There won't be any linker error
+
+  // this situation might be useful in some cases.
+*/
+
+/*
+  #include "../nutility.h"
+
+  int main(void)
+  {
+    for (int i = 5; i < 10; i++)
+      printf("%d'th prime number %d\n", i, Nth_prime(i));
+    // output ->
+    //  5'th prime number 11
+    //  6'th prime number 13
+    //  7'th prime number 17
+    //  8'th prime number 19
+    //  9'th prime number 23
+  }
 */
