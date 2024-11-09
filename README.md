@@ -198,6 +198,12 @@
   
 ### [User-Defined Types](https://github.com/UPinar/CLessons/tree/master/user_defined_types)
   - structures
-  - member selection operators
-    - `'.'` dot operator
-    - `'->'` arrow operator
+    - member selection operators
+      - `'.'` dot operator
+      - `'->'` arrow operator
+    - structure variable's initialization
+    - structures and `typedef` declarations
+    - structures and functions
+  
+### [Not Related](https://github.com/UPinar/CLessons/tree/master/not_related)
+  - strict aliasing rule

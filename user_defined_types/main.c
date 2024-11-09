@@ -336,6 +336,14 @@
 */
 
 /*
+  x->y
+    -> left operand should be an address to a structure variable.
+    -> right operand should be a structure member.
+
+  compiler will convert "x->y" expression to "(*x).y"
+*/
+
+/*
   struct Data {
     int m_x, m_y;
     double m_d;
@@ -354,6 +362,71 @@
     p_data->m_d = 3.14;
     (*p_data).m_d = 3.14;
     // Those 2 lines are equivalent.
+  }
+*/
+
+/*
+  struct Point {
+    int m_x, m_y, m_z;
+  };
+
+  int main(void)
+  {
+    struct Point point_arr[] = {
+      { 1, 1, 1 },
+      { 2, 2, 2 },
+      { 3, 3, 3 },
+    };
+
+    point_arr->m_y = 11;
+    (&point_arr[0])->m_y = 11;
+    // Those 2 lines are equivalent.
+    // "point_arr" will decay to a pointer (array to pointer conversion)
+
+
+    (point_arr + 2)->m_z = 22;
+    (&point_arr[2])->m_z = 22;
+    point_arr[2].m_z = 22;
+    // Those 3 lines are equivalent.
+  }
+*/
+
+/*
+  struct Point {
+    int m_x, m_y, m_z;
+  };
+
+  int main(void)
+  {
+    struct Point p1 = { 1, 1, 1 };
+
+    (&p1)->m_x++;
+
+    printf("p1 = [%d, %d, %d]\n", p1.m_x, p1.m_y, p1.m_z);
+    // output -> p1 = [2, 1, 1]
+  }
+*/
+
+/*
+  struct Point {
+    int m_x, m_y, m_z;
+  } g_p1; 
+  // "g_p1" is a global Point structure variable.
+
+  struct Point* foo(void)
+  {
+    return &g_p1;
+  }
+
+  int main(void)
+  {
+    printf("g_p1 = [%d, %d, %d]\n", g_p1.m_x, g_p1.m_y, g_p1.m_z);
+    // output -> g_p1 = [0, 0, 0]
+
+    foo()->m_y++;
+
+    printf("g_p1 = [%d, %d, %d]\n", g_p1.m_x, g_p1.m_y, g_p1.m_z);
+    // output -> g_p1 = [0, 1, 0]
   }
 */
 
@@ -466,7 +539,7 @@
   structure variables CAN ONLY be an operand of these operators
     - `sizeof`  : sizeof operator
     - '.'       : dot operator
-    - '->'      : arrow operator
+    - '&'       : address of operator
     - '='       : assignment operator
 */
 
@@ -487,5 +560,745 @@
 
     // "sizeof d1" is a constant expression
     // its data type is `size_t`
+  }
+*/
+
+/*
+  struct Data {
+    int m_x, m_y;
+    double m_d;
+  };
+
+  int main(void)
+  {
+    struct Data dx;
+
+    struct Data* p_data = &dx;
+    // "&dx" is an LValue expression, 
+    // its data type is `struct Data*`
+  }
+*/
+
+/*
+  struct Data {
+    int m_x, m_y;
+    double m_d;
+  };
+
+  int main(void)
+  {
+    struct Data dx;
+
+    printf("&dx     = %p\n", (void*)&dx);
+    printf("&dx + 1 = %p\n", (void*)(&dx + 1));
+    // output -> 
+    // &dx     = 0000004B8EDFF780
+    // &dx + 1 = 0000004B8EDFF790
+
+    // the difference between "&dx" and "&dx + 1" 
+    // is 16(0x10) bytes which is equal to sizeof(struct Data)
+  }
+*/
+
+/*
+  struct Data {
+    int m_x, m_y;
+    double m_d;
+  };
+
+  int main(void)
+  {
+    struct Data d1 = { 1, 5, 3.14 };
+
+    printf("d1 = [%d, %d, %f]\n", d1.m_x, d1.m_y, d1.m_d);
+    //  output -> d1 = [1, 5, 3.140000]
+
+    // -----------------------------------------------
+
+    struct Data d2;
+    d2 = d1;  // assignment
+
+    printf("d2 = [%d, %d, %f]\n", d2.m_x, d2.m_y, d2.m_d);
+    // output -> d2 = [1, 5, 3.140000]
+  
+    // -----------------------------------------------
+
+    struct Data d3 = d1;  // initialization
+
+    printf("d3 = [%d, %d, %f]\n", d3.m_x, d3.m_y, d3.m_d);
+    // output -> d3 = [1, 5, 3.140000]
+
+    // -----------------------------------------------
+  }
+*/
+
+/*
+  struct Data_1 {
+    int m_x, m_y;
+    double m_d;
+  };
+
+  struct Data_2 {
+    int m_x, m_y;
+    double m_d;
+  };
+
+  int main(void)
+  {
+    struct Data_1 dx = { 1, 5, 3.14 };
+    struct Data_2 dy;
+
+    dx = dy;  // syntax error
+    // error: incompatible types when assigning 
+    // to type 'struct Data_1' from type 'struct Data_2'
+
+    // assignment operator's left and right operands 
+    // should be of the same type.
+  }
+*/
+
+/*
+  #include <string.h> // memcpy
+
+  struct Data {
+    int m_x, m_y;
+    double m_d;
+  };
+
+  int main(void)
+  {
+    struct Data d1 = { 1, 5, 3.14 };
+    struct Data d2;
+
+    memcpy(&d2, &d1, sizeof(struct Data));
+
+    printf("d1 = [%d, %d, %f]\n", d1.m_x, d1.m_y, d1.m_d);
+    // output -> d1 = [1, 5, 3.140000]
+    printf("d2 = [%d, %d, %f]\n", d2.m_x, d2.m_y, d2.m_d);
+    // output -> d2 = [1, 5, 3.140000]
+  }
+*/
+
+/*  
+            ---------------------------------------
+            | structure variable's initialization |
+            ---------------------------------------
+*/
+
+/*
+  struct Data {
+    double m_d1, m_d2;
+    int m_i1, m_i2;
+  };
+
+  int main(void)
+  {
+    struct Data d2 = {}; // syntax error
+    // warning: ISO C forbids empty initializer braces before C23
+
+    struct Data d3 = { 1.1, 2.2, 3, 4, 5 }; // syntax error
+    // warning: excess elements in struct initializer
+  }
+*/
+
+/*
+  struct Data {
+    double m_d1, m_d2;
+    int m_i1, m_i2;
+  };
+
+  int main(void)
+  {
+    // -----------------------------------------------
+
+    struct Data d1 = { 1.11, 2.22, 33, 44 };
+
+    printf("d1 = [%f, %f, %d, %d]\n", 
+            d1.m_d1, d1.m_d2, d1.m_i1, d1.m_i2);
+    // output -> d1 = [1.110000, 2.220000, 33, 44]
+
+    // -----------------------------------------------
+
+    struct Data d2 = { 1.11, 2.22, 33 };
+
+    printf("d2 = [%f, %f, %d, %d]\n", 
+            d2.m_d1, d2.m_d2, d2.m_i1, d2.m_i2);
+    // output -> d2 = [1.110000, 2.220000, 33, 0]
+
+    // -----------------------------------------------
+
+    struct Data d3 = { 1.11, 2.22 };
+
+    printf("d3 = [%f, %f, %d, %d]\n", 
+            d3.m_d1, d3.m_d2, d3.m_i1, d3.m_i2);
+    // output -> d3 = [1.110000, 2.220000, 0, 0]
+
+    // -----------------------------------------------
+
+    struct Data d4 = { 1.11 };
+
+    printf("d4 = [%f, %f, %d, %d]\n", 
+            d4.m_d1, d4.m_d2, d4.m_i1, d4.m_i2);
+
+    // output -> d4 = [1.110000, 0.000000, 0, 0]
+
+    // -----------------------------------------------
+
+    struct Data d5 = { 0 };
+
+    printf("d5 = [%f, %f, %d, %d]\n", 
+            d5.m_d1, d5.m_d2, d5.m_i1, d5.m_i2);
+
+    // output -> d5 = [0.000000, 0.000000, 0, 0]
+
+    // -----------------------------------------------
+  }
+*/
+
+/*
+  struct Data {
+    int m_x;
+    int m_arr[3];
+    double m_d;
+  };
+
+  int main(void)
+  {
+    // -----------------------------------------------
+
+    struct Data d1 = { 10, { 1, 2, 3 }, 3.14 };
+
+    printf("d1 = [%d, { %d, %d, %d }, %f]\n", 
+            d1.m_x, d1.m_arr[0], d1.m_arr[1], d1.m_arr[2], d1.m_d);
+    // output -> d1 = [10, { 1, 2, 3 }, 3.140000]
+
+    // -----------------------------------------------
+
+    struct Data d2 = { 10, 1, 2, 3, 3.14 }; // VALID but warning
+    // warning: missing braces around initializer
+
+    printf("d2 = [%d, { %d, %d, %d }, %f]\n", 
+            d2.m_x, d2.m_arr[0], d2.m_arr[1], d2.m_arr[2], d2.m_d);
+    // output -> d2 = [10, { 1, 2, 3 }, 3.140000]
+
+    // -----------------------------------------------
+  }
+*/
+
+/*
+  struct Data {
+    int m_x;
+    int m_arr[3];
+    double m_d;
+  };
+
+  int main(void)
+  {
+    struct Data d1 = { 10, 1, 2, 3.14 };  // VALID but warning
+    // warning: conversion from 'double' to 'int' 
+    // changes value from '3.1400000000000001e+0' to '3' 
+    // warning: missing initializer for field 'm_d' of 'struct Data'
+
+    printf("d1 = [%d, %d, %d, %d, %f]\n", 
+            d1.m_x, d1.m_arr[0], d1.m_arr[1], d1.m_arr[2], d1.m_d);
+    // output -> d1 = [10, 1, 2, 3, 0.000000]
+  }
+*/
+
+/*
+  struct AStruct {
+    int m_x;
+    int m_arr[3];
+    double m_d;
+  };
+
+  struct BStruct {
+    int m_x, m_y;
+    struct AStruct m_AStruct;
+  };
+
+  int main(void)
+  {
+    printf("sizeof(struct AStruct) = %zu\n", sizeof(struct AStruct));
+    // output -> sizeof(struct AStruct) = 24
+    printf("sizeof(struct BStruct) = %zu\n", sizeof(struct BStruct));
+    // output -> sizeof(struct BStruct) = 32
+
+    struct BStruct b1 = { 11, 22, { 1, { 2, 3, 4 }, 3.14 } };
+
+    struct BStruct bstruct_arr[3] =
+      { { 11, 22, { 1, { 2, 3, 4 }, 3.14 } },
+        { 33, 44, { 2, { 3, 4, 5 }, 6.28 } },
+        { 55, 66, { 3, { 4, 5, 6 }, 9.42 } } };
+  }
+*/
+
+/*
+  #include <string.h> // strcpy
+
+  struct Employee {
+    int m_id;
+    char m_name[32];
+    char m_surname[32];
+    double m_salary;
+  };
+
+  int main(void)
+  {
+    struct Employee e1 = { 1, "hello", "world", 11.11 };
+
+    printf("e1 = [%d, %s, %s, %f]\n", 
+            e1.m_id, e1.m_name, e1.m_surname, e1.m_salary);
+    // output -> e1 = [1, hello, world, 11.110000]
+
+    strcpy(e1.m_surname, "galaxy");
+
+    printf("e1 = [%d, %s, %s, %f]\n", 
+            e1.m_id, e1.m_name, e1.m_surname, e1.m_salary);
+    // output -> e1 = [1, hello, galaxy, 11.110000]
+  }
+*/
+
+/*
+  struct Employee {
+    int m_id;
+    char m_name[32];
+    char m_surname[32];
+    double m_salary;
+  };
+
+  int main(void)
+  {
+    struct Employee e1 = {
+      .m_id = 1,
+      .m_name = "hello",
+      .m_surname = "world",
+      .m_salary = 11.11
+     };
+     // using designated initializer in struct variable initialization
+
+    printf("e1 = [%d, %s, %s, %f]\n", 
+            e1.m_id, e1.m_name, e1.m_surname, e1.m_salary);
+    // output -> e1 = [1, hello, world, 11.110000]
+  }
+*/
+
+// ---------------------------------------------------------
+// ---------------------------------------------------------
+// ---------------------------------------------------------
+// ---------------------------------------------------------
+// ---------------------------------------------------------
+
+/*
+  struct {
+    int m_x, m_y, m_z;
+  } s1, s2 = { 111, 222, 333}, s3 = { 1111, 2222, 3333 };
+
+  // s1, s2 and s3 are structure variables of an anonymous structure.
+
+  int main(void)
+  {
+    s1.m_x = 11, s1.m_y = 22, s1.m_z = 33;
+
+    printf("s1 = [%d, %d, %d]\n", s1.m_x, s1.m_y, s1.m_z);
+    // output -> s1 = [11, 22, 33]
+    printf("s2 = [%d, %d, %d]\n", s2.m_x, s2.m_y, s2.m_z);
+    // output -> s2 = [111, 222, 333]
+    printf("s3 = [%d, %d, %d]\n", s3.m_x, s3.m_y, s3.m_z);
+    // output -> s3 = [1111, 2222, 3333]
+
+
+    s3 = s1;
+    printf("s3 = [%d, %d, %d]\n", s3.m_x, s3.m_y, s3.m_z);
+    // output -> s3 = [11, 22, 33]
+  }
+*/
+
+/*
+  - anonymous structure, yapı değişken(structure variable) sayısının
+    önceden belli olduğu ve daha fazla bu türden değişken tanımlanması 
+    istenilmediği için kullanılır.
+    Yapı türünün ismi olmadığı için bu türden bir değişken sadece
+    yapı türünün tanımlandığı yerde yaratılabilir.
+
+    struct {
+      int m_x, m_y, m_z;
+    } s1;
+
+  - anonymous structure yapısının bir ismi olmadığı için 
+    bu türde s1'den başka değişken tanımlanamaz.
+*/
+
+/*
+  struct {
+    int m_x, m_y, m_z;
+  } s1, *p_s;
+
+  // s1 is a structure variable of an anonymous structure.
+  // p_s is a pointer to an anonymous structure.
+*/
+
+/*
+  struct {
+    int m_x, m_y, m_z;
+  } elem1;
+
+  struct {
+    int m_x, m_y, m_z;
+  } elem2;
+
+  int main(void)
+  {
+    elem1 = elem2; // syntax error
+    // error: incompatible types when assigning to type 
+    // 'struct <anonymous>' from type 'struct <anonymous>'
+
+    // different anonymous structures types are not same!
+  }
+*/
+
+/*
+  struct Data {
+    int m_arr[20][50];
+  };
+
+  int main(void)
+  {
+    printf("sizeof(struct Data) = %zu\n", sizeof(struct Data));
+    // output -> sizeof(struct Data) = 4000
+    printf("sizeof(struct Data*) = %zu\n", sizeof(struct Data*));
+    // output -> sizeof(struct Data*) = 8
+  }
+*/
+
+/*
+  struct Data {
+    int m_arr[100];
+  };
+
+  int main(void)
+  {
+    // -----------------------------------------------
+
+    int i_arr1[100] = { 0 };
+    int i_arr2[100] = { 0 };
+
+    i_arr1 = i_arr2; // syntax error
+    // error: assignment to expression with array type
+
+    // -----------------------------------------------
+
+    // trick to copy array elements (making copyable arrays)
+
+    struct Data d1 = { 0 };
+    struct Data d2 = { 0 };
+
+    d1 = d2; // VALID
+
+    // -----------------------------------------------
+  }
+*/
+
+/*
+              ---------------------------------------
+              | structures and typedef declarations |
+              ---------------------------------------
+*/
+
+/*
+  // type alias to struct Data as Data
+
+  struct Data {
+    int m_x, m_y, m_z;
+  };
+
+  typedef struct Data Data;
+
+  int main(void)
+  {
+    struct Data d1 = { 1, 2, 3 };
+    Data d2 = { 4, 5, 6 };
+
+    printf("d1 = [%d, %d, %d]\n", d1.m_x, d1.m_y, d1.m_z);
+    // output -> d1 = [1, 2, 3]
+    printf("d2 = [%d, %d, %d]\n", d2.m_x, d2.m_y, d2.m_z);
+    // output -> d2 = [4, 5, 6]
+
+    d1 = d2;
+    printf("d1 = [%d, %d, %d]\n", d1.m_x, d1.m_y, d1.m_z);
+    // output -> d1 = [4, 5, 6]
+  }
+*/
+
+/*
+  struct Data {
+    int m_x, m_y, m_z;
+  };
+
+  typedef struct Data Data;
+  // type alias to struct Data as Data
+
+  typedef struct Data* p_Data_t;  
+  // type alias to struct Data* as p_Data_t
+
+  typedef Data* p_Data_t2;
+  // Data is a type alias to struct Data
+  // Data* is a type alias to struct Data*
+
+  int main(void)
+  {
+    Data d1;
+    p_Data_t p_d1 = &d1;
+    p_Data_t2 p_d2 = &d1;
+  }
+*/
+
+/*
+  struct Data {
+    int m_x, m_y, m_z;
+  };
+
+  // ---------------------------------------------------------
+
+  typedef struct Data Data_t, *p_Data_t;
+  // type alias to struct Data as Data_t
+  // type alias to struct Data* as p_Data_t
+
+  // ---------------------------------------------------------
+
+  typedef struct Data Data_t2;
+  typedef Data_t2* p_Data_t2;
+  // type alias to struct Data as Data_t2
+  // type alias to struct Data* as p_Data_t2
+
+  // ---------------------------------------------------------
+
+  int main(void)
+  {
+    Data_t d1;
+    p_Data_t p_d1 = &d1;
+
+    Data_t2 d2;
+    p_Data_t2 p_d2 = &d2;
+  }
+*/
+
+/*
+  typedef struct Data {
+    int m_x, m_y, m_z;
+  } Data_t, *p_Data_t;
+
+  // type alias to struct Data as Data_t
+  // type alias to struct Data* as p_Data_t
+*/
+
+/*
+  typedef struct {
+    int m_x, m_y, m_z;
+  } Data_t;
+
+  int main(void)
+  {
+    // only way to create a variable of that anonymous structure type
+    // is using Data_t type alias.
+
+    Data_t d1 = { 1, 2, 3 };
+
+    struct Data_t d2 = { 4, 5, 6 }; // syntax error
+    // error: variable 'd2' has initializer but incomplete type
+    // error: storage size of 'd2' isn't known
+  }
+*/
+
+/*
+  #include <stdlib.h> // malloc, free
+
+  typedef struct {
+    int m_x, m_y, m_z;
+  } *p_Data_t;
+
+  int main(void)
+  {
+    p_Data_t p_d1 = NULL;
+
+    // there is no way to create a structure variable
+    // that "p_d1" pointer variable can point to.
+
+    // can not declare a static storage or automatic storage duration
+    // variable of that anonymous structure type
+    // only can declare a dynamic storage duration variable
+
+    p_d1 = malloc(sizeof(*p_d1));
+
+    // "*p_d1" expression is undefined behavior(UB)
+    // sizeof operator's operand will not be evaluated
+
+    free(p_d1);
+  }
+*/
+
+/*
+                  ----------------------------
+                  | structures and functions |
+                  ----------------------------
+*/
+
+/*
+  typedef struct Data {
+    int m_x, m_y, m_z;
+  } Data_t;
+
+  -----------------------------------------------------------
+
+  - function's parameter variable can be a structure type.
+    This is rarely used because of data should be copied 
+    when a function is called.
+
+    void func(Data_t data); -> rarely used(because of data copy)
+
+  -----------------------------------------------------------
+
+  - function's parameter variable can be a pointer to a structure type.
+
+    void func_1(const Data_t* p_data);  // IN param
+    void func_2(Data_t* p_data);        // OUT param / IN-OUT param
+
+  -----------------------------------------------------------
+
+  - function's return type can be a structure type.
+
+    Data_t func_1(void);    -> rarely used(because of data copy)
+
+  -----------------------------------------------------------
+
+  - function's return type can be a pointer to a structure type.
+    -> can return static storage duration object's address.
+    -> can return dynamic storage duration object's address.
+    -> can return the same address that this function is called with.
+
+    Data_t* func_2(void);
+    const Data_t* func_3(void);
+
+  -----------------------------------------------------------
+*/
+
+/*
+  typedef struct {
+    int m_id;
+    char m_name[32];
+    char m_surname[32];
+    double m_salary;
+  } Employee_t;
+
+  void print_employee_1(Employee_t e)
+  {
+    printf("Employee: [ %d, %s, %s, %f ]\n", 
+            e.m_id, e.m_name, e.m_surname, e.m_salary);
+  }
+
+  void print_employee_2(const Employee_t* p_e)
+  {
+    printf("Employee: [ %d, %s, %s, %f ]\n", 
+            p_e->m_id, p_e->m_name, p_e->m_surname, p_e->m_salary);
+  }
+
+  // This function can not change the original structure variable.
+  // it will copy the structure variable to the function's parameter.
+  // then it will change the copied structure variable.
+  void modify_employee_1(Employee_t e)
+  {
+    e.m_salary *= 2;
+  }
+
+  // This function can change the original structure variable.
+  void modify_employee_2(Employee_t* p_e)
+  {
+    p_e->m_salary *= 2;
+  }
+
+  int main(void)
+  {
+    Employee_t e1 = { 1, "hello", "world", 11.11 };
+
+    // ---------------------------------------------------------
+
+    printf("sizeof(Employee_t) = %zu\n", sizeof(Employee_t));
+    // output -> sizeof(Employee_t) = 80
+
+    print_employee_1(e1);   // call by value
+    // output -> Employee: [ 1, hello, world, 11.110000 ]
+
+    // 80 bytes of data will be copied to the "print_employee_1"
+    // function's parameter variable.
+
+    // ---------------------------------------------------------
+
+    printf("sizeof(Employee_t*) = %zu\n", sizeof(Employee_t*));
+    // output -> sizeof(Employee_t*) = 8
+
+    print_employee_2(&e1);  // call by reference
+    // output -> Employee: [ 1, hello, world, 11.110000 ]
+
+    // 8 bytes of data will be copied to the "print_employee_2"
+    // function's parameter variable.
+
+    // ---------------------------------------------------------
+
+    modify_employee_1(e1);    // call by value
+    print_employee_2(&e1);
+    // output -> Employee: [ 1, hello, world, 11.110000 ]
+
+    modify_employee_2(&e1);  // call by reference
+    print_employee_2(&e1);
+    // output -> Employee: [ 1, hello, world, 22.220000 ]
+
+    // ---------------------------------------------------------
+  }
+*/
+
+/*
+  typedef struct {
+    int m_id;
+    char m_name[32];
+    char m_surname[32];
+    double m_salary;
+  } Employee_t;
+
+  Employee_t create_random_employee_1(void);
+
+  Employee_t* create_random_employee_2(void);
+
+  int main(void)
+  {
+    Employee_t e1 = create_random_employee_1();
+    // minimum 80 bytes(1 block) of data 
+    // will be copied to the "e1" variable.
+
+    Employee_t* p_e2 = create_random_employee_2();
+    // 8 bytes of data will be copied to the "p_e2" variable.
+  }
+*/
+
+/*
+  typedef struct {
+    int m_id;
+    char m_name[32];
+    char m_surname[32];
+    double m_salary;
+  } Employee_t;
+
+  Employee_t* create_random_employee_2(void)
+  {
+    Employee_t e = { 1, "hello", "world", 11.11 };
+
+    return &e;  
+    // returning address of a local variable
+  }
+
+  int main(void)
+  {
+    Employee_t* p_e = create_random_employee_2();
+    // p_e is a dangling pointer
+    // "*p_e" expression will create undefined behavior(UB)
   }
 */
