@@ -204,6 +204,10 @@
     - structure variable's initialization
     - structures and `typedef` declarations
     - structures and functions
+    - complete and incomplete types
+  
+### [`<time.h>` module](https://github.com/UPinar/CLessons/tree/master/time_module)
   
 ### [Not Related](https://github.com/UPinar/CLessons/tree/master/not_related)
   - strict aliasing rule
+  - localization

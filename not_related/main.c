@@ -75,4 +75,96 @@
   }
 */
 
+/*
+                        ----------------
+                        | localization |
+                        ----------------
+*/
 
+/*
+  default locale -> "C" locale
+    - locale dependent functions (i.e printf, scanf)
+    - locale independent functions
+*/
+
+/*
+  #include <locale.h> // setlocale
+
+  int main(void)
+  {
+    char* p = setlocale(LC_ALL, "turkish");
+    // first argument is a macro starting with `LC_`
+    // LC_ALL, 
+    // LC_COLLATE, 
+    // LC_CTYPE, 
+    // LC_MAX, LC_MIN
+    // LC_MONETARY, 
+    // LC_NUMERIC, 
+    // LC_TIME
+
+    if (!p){
+      printf("locale set failed\n");
+      return 1;
+    }
+
+    printf("locale set to [%s]\n", p);
+    // output -> locale set to [Turkish_Türkiye.1254]
+  }
+*/
+
+/*
+  #include <locale.h>   // setlocale
+
+  int main(void)
+  {
+    double dval = 123.645874; 
+    printf("dval = %f\n", dval);  // output -> dval = 123.645874
+
+    setlocale(LC_ALL, "turkish");
+    printf("dval = %f\n", dval);  // output -> dval = 123,645874
+  }
+*/
+
+/*
+  int main(void)
+  {
+    double dval;
+
+    printf("Enter a double value: ");
+    scanf("%lf", &dval);
+    printf("dval = %f\n", dval);
+
+    // input  -> Enter a double value: 2374.1982
+    // output -> dval = 2374.198200
+
+    // input  -> Enter a double value: 2374,1982
+    // output -> dval = 2374.000000
+  }
+*/
+
+/*
+  #include <locale.h>   // setlocale
+
+  int main(void)
+  {
+    setlocale(LC_ALL, "turkish");
+
+    double dval;
+
+    printf("Enter a double value: ");
+    scanf("%lf", &dval);
+    printf("dval = %f\n", dval);
+
+    // input  -> Enter a double value: 2374.1982
+    // output -> dval = 2374,000000
+
+    // input  -> Enter a double value: 2374,1982
+    // output -> dval = 2374,1982
+  }
+*/
+
+// ---------------------------------------------------------
+// ---------------------------------------------------------
+// ---------------------------------------------------------
+// ---------------------------------------------------------
+// ---------------------------------------------------------

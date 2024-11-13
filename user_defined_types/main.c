@@ -1302,3 +1302,208 @@
     // "*p_e" expression will create undefined behavior(UB)
   }
 */
+
+/*
+                ---------------------------------
+                | complete and incomplete types |
+                ---------------------------------
+*/
+
+/*
+  ----------------------------------------------------------
+
+  - incomplete type :
+    derleyici türün varlığından haberdar ancak türle ilgili
+    tüm bilgilere sahip değil.
+
+    struct Employee;   
+    -> "struct Employee" is an incomplete type
+
+  -> typedef declarations
+  -> function declarations
+  -> extern variable declarations
+  -> pointer variable definitions.
+    -> pointer variable structure members 
+
+  ----------------------------------------------------------
+
+  - complete type :
+    derleyici türle ilgili tüm bilgilere sahip.
+
+    struct Data {
+      int m_x, m_y, m_z;
+    };  
+    -> "struct Data" is a complete type
+
+  -> variable declarations
+  -> can be a sizeof operator's operand
+  -> pointer dereferencing
+
+  ----------------------------------------------------------
+*/
+
+/*
+  // some.h
+  // ---------
+
+  struct Data;
+  // code
+  // code
+  
+  // ..    -> "struct Data" is an incomplete type for compiler
+
+  // code
+  // code
+
+  struct Data {
+    int m_x, m_y, m_z;
+  };  
+
+  // code
+
+  // ..    -> "struct Data" is a complete type for compiler
+
+  // code
+  // code
+*/
+
+/*
+  struct Data;  // "struct Data" is an incomplete type
+
+  typedef struct Data Data_t; 
+  typedef struct Data* p_Data_t;
+  typedef Data_t* p_Data_t2;
+*/
+
+/*
+  struct Data;    // "struct Data" is an incomplete type
+  struct Data_2;  // "struct Data_2" is an incomplete type
+
+  struct Data foo(struct Data);
+  // foo function's non defining declaration
+
+  struct Data* bar(struct Data*);
+  // bar function's non defining declaration
+
+  struct Data_2* baz(struct Data*);
+  // baz function's non defining declaration
+*/
+
+/*
+  struct Data;  // incomplete type
+
+  extern struct Data g_data;
+  // g_data struct Data türünden, fakat başka bir modülde 
+  // bildirimi yapılmış(yeri hafızada ayrılmış) bir değişkendir.
+
+  extern struct Data g_data_array[];
+  // g_data_array elemanları struct Data türünden 
+  // fakat başka bir modülde hafızadaki yeri ayrılan bir dizidir.
+*/
+
+/*
+  struct Data;  // incomplete type
+
+  struct Data* create_data(void);
+  void process_data(struct Data* p_data);
+
+  int main(void)
+  {
+    struct Data* p_data = NULL;
+    // derleyici zaten object pointer türünün kaç byte olduğunu biliyor,
+    // dolayısıyla struct Data* türünden bir değişken tanımlanabilir.
+
+    p_data = create_data();
+    process_data(p_data);
+    // no problem calling those functions in compile time phase
+    // if those functions are not defined it will be a linking error.
+  }
+*/
+
+/*
+  struct Data; // incomplete type
+
+  struct Employee {
+    int m_id;
+    struct Data* p_data;
+  };
+*/
+
+/*
+  struct Data;  // incomplete type
+
+  int main(void)
+  {
+    struct Data d1; // syntax error
+    // error: storage size of 'd1' isn't known
+  }
+*/
+
+/*
+  #include <stddef.h> // size_t
+
+  struct Data;  // incomplete type
+
+  int main(void)
+  {
+    size_t N = sizeof(struct Data); // syntax error
+    // error: invalid application of 'sizeof' 
+    // to incomplete type 'struct Data'
+  }
+*/
+
+/*
+  // dereferencing a pointer to an incomplete type is syntax error
+
+  struct Data;  // incomplete type
+
+  struct Data* foo(void);
+
+  int main(void)
+  {
+    struct Data* p_data = foo();
+
+    *p_data;
+    // "*p_data" expression is syntax error
+    // error: invalid use of undefined type 'struct Data'
+
+    p_data->m_x = 5;
+    // "p_data->" expression is syntax error
+    // error: invalid use of undefined type 'struct Data'
+
+  }
+*/
+
+/*
+  struct Data;  // incomplete type
+
+  struct Employee {
+    int m_id;
+    struct Data m_data; // syntax error
+    // error: field 'm_data' has incomplete type
+  };
+*/
+
+/*
+  struct Data_1 foo(struct Element_1);
+
+  // compiler will assume that 
+  // "struct Data_1" and "struct Element_1" are incomplete types.
+
+  struct Data_2* p_data;
+  struct Element_2* p_elem;
+
+  // compiler will assume that
+  // "struct Data_2" and "struct Element_2" are incomplete types.
+
+  typedef struct Data_3 Data_t;
+  typedef struct Element_3* p_Element_t;
+
+  // compiler will assume that
+  // "struct Data_3" and "struct Element_3" are incomplete types.
+*/
+
+/*
+  Question : Why incomplete types are used?
+    - 
+*/
