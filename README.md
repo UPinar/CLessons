@@ -205,6 +205,7 @@
     - structures and `typedef` declarations
     - structures and functions
     - complete and incomplete types
+    - `<date>` module tests 
   
 ### [`<time.h>` module](https://github.com/UPinar/CLessons/tree/master/time_module)
   

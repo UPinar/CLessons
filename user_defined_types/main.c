@@ -1505,5 +1505,307 @@
 
 /*
   Question : Why incomplete types are used?
-    - 
+    - when header files include each other, dependencies are 
+    increased and compilation time is increased. 
+    Incomplete types can be used in header files
+    to reduce dependencies.
+*/
+
+/*
+                    -----------------------
+                    | <date> module tests |
+                    -----------------------
+*/
+
+/*
+  #include "../date.h"
+
+  int main(void)
+  {
+    Date_t dt;
+
+    date_set(&dt, 1, 1, 2001);
+    date_print(&dt);  // output -> 01 Ocak 2001 Pazartesi
+
+    date_set(&dt, 2, 2, 2002);
+    date_print(&dt);  // output -> 02 Şubat 2002 Cumartesi
+  }
+*/
+
+/*
+  #include "../date.h"
+
+  int main(void)
+  {
+    Date_t dt;
+
+    date_set_by_string(&dt, "03-03-2003");
+    date_print(&dt);  // output -> 03 Mart 2003 Pazartesi
+
+    date_set_by_string(&dt, "04-04-2004");
+    date_print(&dt);  // output -> 04 Nisan 2004 Pazar
+
+    if (!date_set_by_string(&dt, "29-02-1993")){
+      printf("Date is invalid!\n");
+      return 1;
+    }
+    // output -> Date is invalid!
+  }
+*/
+
+/*
+  #include "../date.h"
+
+  int main(void)
+  {
+    Date_t dt;
+
+    date_set_today(&dt);
+    date_print(&dt);  // output -> 15 Kasim 2024 Cuma
+  }
+*/
+
+/*
+  #include "../date.h"
+  #include "../nutility.h"
+  #include <stddef.h> // size_t
+
+  #define   SIZE    10
+
+  void date_set_array(Date_t* p_date, size_t size)
+  {
+    while (size--)
+      date_set_random(p_date++);
+  }
+
+  void date_print_array(const Date_t* p_date, size_t size)
+  {
+    while (size--)
+      date_print(p_date++);
+  }
+
+  int main(void)
+  {
+    Date_t dt_arr[SIZE];
+
+    randomize();
+    date_set_array(dt_arr, SIZE);
+    date_print_array(dt_arr, SIZE);
+
+    // output ->
+    //  26 Haziran 1998 Cuma
+    //  18 Temmuz 1948 Pazar
+    //  03 Subat 1979 Cumartesi
+    //  25 Temmuz 1983 Pazartesi
+    //  01 Agustos 1952 Cuma
+    //  16 Ekim 1997 Persembe
+    //  19 Mart 2017 Pazar
+    //  16 Aralik 1993 Persembe
+    //  01 Nisan 2003 Sali
+    //  28 Nisan 1941 Pazartesi
+  }
+*/
+
+/*
+  #include "../date.h"
+
+  int main(void)
+  {
+    Date_t dt;
+
+    printf("Enter a date : ");
+
+    if (date_scan(&dt))
+      date_print(&dt);
+    else {
+      printf("Invalid date!\n");
+      return 1;
+    }
+
+    // input -> Enter a date : 14 11 2024
+    // output -> 14 Kasim 2024 Persembe
+
+    // input -> Enter a date : 29 02 2023
+    // output -> Invalid date!
+
+    // input -> Enter a date : 31 12 2100
+    // output -> 31 Aralik 2100 Cuma
+  }
+*/
+
+/*
+  #include "../date.h"
+
+  int main(void)
+  {
+    Date_t dt;
+
+    date_set(&dt, 1, 1, 2001);
+    date_print(&dt);
+    // output -> 01 Ocak 2001 Pazartesi
+
+    date_set_year(&dt, 2002);
+    date_print(&dt);
+    // output -> 01 Ocak 2002 Sali
+
+    date_set_month(&dt, 3);
+    date_print(&dt);
+    // output -> 01 Mart 2002 Cuma
+
+    date_set_day(&dt, 4);
+    date_print(&dt);
+    // output -> 04 Mart 2002 Pazartesi
+}
+*/
+
+/*
+  #include "../date.h"
+
+  int main(void)
+  {
+    Date_t dt;
+
+    date_set(&dt, 22, 11, 2032);
+
+    printf("%d year's, %d month's, %d day.\n", 
+            date_get_year(&dt), 
+            date_get_month(&dt), 
+            date_get_day_of_month(&dt));
+    // output -> 2032 year's, 11 month's, 22 day.
+  }
+*/
+
+/*
+  #include "../date.h"
+
+  int main(void)
+  {
+    Date_t dt1, dt2, dt3;
+
+    date_set(&dt1, 31, 12, 2024); // leap year
+    printf("%d\n", date_get_day_of_year(&dt1)); // output -> 366
+
+    date_set(&dt2, 31, 12, 2023); // not leap year
+    printf("%d\n", date_get_day_of_year(&dt2)); // output -> 365
+
+    date_set(&dt3, 30, 1, 2020);
+    printf("%d\n", date_get_day_of_year(&dt3)); // output -> 30
+  }
+*/
+
+/*
+  #include "../date.h"
+
+  int main(void)
+  {
+    Date_t dt1;
+
+    date_set_today(&dt1);
+    printf("%d\n", date_get_day_of_week(&dt1)); 
+    // output -> 5 (Friday)
+
+    Date_t dt2;
+    date_set(&dt2, 10, 11, 1938);
+    printf("%d\n", date_get_day_of_week(&dt2)); 
+    // output -> 4 (Thursday)
+  }
+*/
+
+/*
+  #include "../date.h"
+  #include <stdlib.h> // malloc, free
+  #include <time.h>   // clock
+
+  void date_set_array(Date_t* p_date, size_t size)
+  {
+    while (size--)
+      date_set_random(p_date++);
+  }
+
+  void date_print_array(const Date_t* p_date, size_t size)
+  {
+    while (size--)
+      date_print(p_date++);
+  }
+
+  int compare_date(const void* vp1, const void* vp2)
+  {
+    const Date_t* p1 = vp1;
+    const Date_t* p2 = vp2;
+
+    return date_compare(p1, p2);
+  }
+
+  int main(void)
+  {
+    size_t N = 100000;  // 100'000
+
+    Date_t* p_date = (Date_t*)malloc(N * sizeof(Date_t));
+    if (!p_date) {
+      printf("Memory allocation error!\n");
+      return 1;
+    }
+
+    date_set_array(p_date, N);
+
+    printf("[0] - Sorting dates started\n");
+    clock_t start = clock();
+    qsort(p_date, N, sizeof(Date_t), &compare_date);
+    clock_t end = clock();
+    printf("[1] - Sorting dates finished\n");
+    printf("Elapsed time: %f seconds\n", 
+            (double)(end - start) / CLOCKS_PER_SEC);
+
+    // output ->
+    //  [0] - Sorting dates started
+    //  [1] - Sorting dates finished
+    //  Elapsed time: 0.024000 seconds
+
+    date_print_array(p_date, N);
+
+    free(p_date);
+  }
+*/
+
+/*
+  #include "../date.h"
+
+  int main(void)
+  {
+    Date_t dt;
+    date_set(&dt, 3, 2, 1998);
+    date_print(&dt);    // output -> 03 Subat 1998 Sali
+
+    Date_t dt2;
+    date_set_today(&dt2);
+    date_print(&dt2);   // output -> 15 Kasim 2024 Cuma
+
+    int N = date_diff(&dt, &dt2);
+    printf("Difference between dates: %d days\n", N);
+    // output -> Difference between dates: 9782 days
+  } 
+*/
+
+/*
+  #include "../date.h"
+
+  int main(void)
+  {
+    Date_t dt;
+    date_set(&dt, 1, 1, 2001);
+    date_print(&dt);  
+    // output -> 01 Ocak 2001 Pazartesi
+
+    int N = 1000;
+    Date_t dt2;
+    Date_t dt3;
+
+    date_N_days_after(&dt2, &dt, N);
+    date_print(&dt2); 
+    // output -> 28 Eylul 2003 Pazar
+
+    date_N_days_before(&dt3, &dt, N);
+    date_print(&dt3); 
+    // output -> 07 Nisan 1998 Sali
+  } 
 */
