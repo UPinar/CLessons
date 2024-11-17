@@ -1809,3 +1809,638 @@
     // output -> 07 Nisan 1998 Sali
   } 
 */
+
+/*
+        ---------------------------------------------------------
+        | composition (yapının elemanının yapı türünden olması) |
+        ---------------------------------------------------------
+*/
+
+/*
+  struct AStruct {
+    int m_x, m_y, m_z;
+  };
+
+  struct BStruct {
+    double m_d1, m_d2;
+    struct AStruct m_AStruct;   // composition
+  };
+
+  int main(void)
+  {
+    printf("sizeof(struct AStruct) = %zu\n", sizeof(struct AStruct));
+    // output -> sizeof(struct AStruct) = 12
+
+    printf("sizeof(struct BStruct) = %zu\n", sizeof(struct BStruct));
+    // output -> sizeof(struct BStruct) = 32 (4 byte alignment)
+  }
+*/
+
+/*
+  // incomplete types can not an element of a structure
+
+  struct AStruct;
+
+  struct BStruct {
+    double m_d1, m_d2;
+    struct AStruct m_AStruct;   // syntax error
+    // error: field 'm_AStruct' has incomplete type
+  };
+*/
+
+/*
+  struct AStruct {
+    int m_x, m_y, m_z;
+  };
+
+  struct BStruct {
+    double m_d1, m_d2;
+    struct AStruct m_AStruct;   // composition
+  };
+
+  int main(void)
+  {
+    struct AStruct a1;
+    struct BStruct b1;
+
+    b1.m_AStruct = a1;
+    // "b1.m_AStruct" is an LValue expression 
+    // its data type is "struct AStruct"
+  }
+*/
+
+/*
+  struct AStruct {
+    int m_x, m_y, m_z;
+  };
+
+  struct BStruct {
+    double m_d1, m_d2;
+    struct AStruct m_AStruct;
+  };
+
+  int main(void)
+  {
+    struct BStruct b1 = { 1.11, 2.22, { 3, 4, 5 } };
+    struct BStruct b2 = { 6.66, 7.77, 8, 9, 10 };
+
+    struct BStruct b3 = { 
+        .m_d1 = 11.11, 
+        .m_d2 = 22.22, 
+        .m_AStruct = { 33, 44, 55 } 
+    };
+  }
+*/
+
+/*
+  struct AStruct {
+    int m_x, m_y, m_z;
+  };
+
+  struct BStruct {
+    double m_d1, m_d2;
+    struct AStruct m_AStruct;
+  };
+
+  int main(void)
+  {
+    struct BStruct b1;
+    struct BStruct* p_b1 = &b1;
+
+    p_b1->m_AStruct.m_x = 11;
+    // "->" and "." operators are in same precedence level
+    // they are left associative operators
+  }
+*/
+
+/*
+  struct AStruct {
+    int m_x, m_y, m_z;
+  };
+
+  struct BStruct {
+    double m_d1, m_d2;
+    struct AStruct* mp_AStruct;
+  };
+
+  int main(void)
+  {
+    struct BStruct b1;
+
+    b1.mp_AStruct->m_x = 11;
+    // "->" and "." operators are in same precedence level
+    // they are left associative operators
+
+    struct BStruct* p_b1 = &b1;
+    p_b1->mp_AStruct->m_y = 22;
+  }
+*/
+
+/*
+  struct Data {
+    int m_x, m_y;
+    struct Data m_data; // syntax error
+    // error: field 'm_data' has incomplete type
+  };
+
+  // because of struct Data's definition is not completed yet
+  // struct Data is an incomplete type.
+*/
+
+/*
+  // self-referential structures
+
+  struct Data {
+    int m_x, m_y;
+    struct Data* mp_Data;
+  };
+
+  // `struct Data` type has a `struct Data*` type member
+*/
+
+/*
+  struct Data {
+    int m_a, m_b;
+
+    struct Point {
+      int m_x, m_y;
+    } m_Point;
+  };
+  // there are 2 structure type definitions in this code block
+  // `struct Data` and `struct Point` definitions.
+
+  // `struct Data` is an enclosing structure
+  // `struct Point` is a nested structure
+*/
+
+/*
+  struct Data {
+    int m_a, m_b;
+
+    struct {
+      int m_x, m_y;
+    } m_NestedStruct;
+  };
+
+  // struct tag does not need to be used in this context.
+
+  // `struct Data` type has 
+  //  - 2 int type members(m_a, m_b)
+  //  - anonymous structure type member(m_NestedStruct)
+*/
+
+/*
+  struct Data {
+    int m_a, m_b;
+
+    struct Point {
+      int m_x, m_y;
+    } m_Point;
+  };
+
+  int main(void)
+  {
+    struct Data d1;
+
+    printf("sizeof(struct Point) = %zu\n", sizeof(struct Point));
+    // output -> sizeof(struct Point) = 8
+
+    printf("sizeof(struct Data) = %zu\n", sizeof(struct Data));
+    // output -> sizeof(struct Data) = 16
+  }
+*/
+
+/*
+  // nested type is visible, 
+  // in every scope that enclosing type is visible
+
+  struct Data {
+    int m_a, m_b;
+
+    struct Point {
+      int m_x, m_y;
+    } m_Point;
+  };
+
+  int main(void)
+  {
+    struct Point p1 = { 1, 2 };
+  }
+*/
+
+/*
+  struct Data {
+    int m_a, m_b;
+
+    struct {  
+      int m_x, m_y;
+    };  // anonymous structure type
+  };
+
+  struct Data_2 {
+    int m_a, m_b;
+    int m_x, m_y;
+  };
+
+  int main(void)
+  {
+    // ---------------------------------------------------------
+
+    printf("sizeof(struct Data) = %zu\n", sizeof(struct Data));
+    // output -> sizeof(struct Data) = 16
+
+    // seems like `struct Data` does not have
+    // named anonymous structure type member
+    // but the sizeof(struct Data) is 16 bytes
+
+    struct Data d1;
+    d1.m_x = 11;    
+    // reaching anonymous structure type member's data members  
+    d1.m_y = 22;
+    // reaching anonymous structure type member's data members
+
+    // ---------------------------------------------------------
+
+    printf("sizeof(struct Data_2) = %zu\n", sizeof(struct Data_2));
+    // output -> sizeof(struct Data_2) = 16
+
+    struct Data_2 d2;
+    d2.m_x = 33;
+    d2.m_y = 44;
+
+    // ---------------------------------------------------------
+  }
+*/
+
+/*
+  // ---------------------------------------------------------
+
+  #include "../date.h"
+
+  struct Employee {
+    int m_id;
+    char m_name[32];
+    char m_address[64];
+    Date_t m_birth_date;
+  };
+
+  // ---------------------------------------------------------
+
+  struct Point {
+    double m_x, m_y;
+  };
+
+  struct Triangle {
+    struct Point m_Point1, m_Point2, m_Point3;
+  };
+
+  struct Line {
+    struct Point m_Point_arr[6];
+  };
+
+  // ---------------------------------------------------------
+*/
+
+/*
+                    -------------------------
+                    | <person> module tests |
+                    -------------------------
+*/
+
+/*
+  #include "../person.h"
+  #include "../nutility.h"
+
+  int main(void)
+  {
+    randomize();
+    Person_t p;
+
+    for(int i = 0; i < 5; ++i) {
+      person_set_random(&p);
+      person_print(&p);
+    }
+    // output ->
+    //  22774 tuncer         telek          02 Kasim 1966 Carsamba
+    //  14990 sadiye         reis           01 Mayis 2002 Carsamba
+    //  2662  nasrullah      samanci        05 Ekim 1979 Cuma
+    //  16683 umit           maganda        28 Aralik 2009 Pazartesi
+    //  32173 ciler          supuren        14 Nisan 1988 Persembe
+  }
+*/
+
+/*
+  #include <stddef.h> // size_t
+  #include <stdlib.h> // malloc, free, qsort
+  #include <time.h>   // clock, CLOCKS_PER_SEC
+
+  #include "../person.h"
+  #include "../nutility.h"
+
+  void set_person_array(Person_t* p_person, size_t size)
+  {
+    while (size--)
+      person_set_random(p_person++);
+  }
+
+  void print_person_array(const Person_t* p_person, size_t size)
+  {
+    while (size--)
+      person_print(p_person++);
+  }
+
+  int person_compare_qsort(const void* vp1, const void* vp2)
+  {
+    const Person_t* p1 = vp1;
+    const Person_t* p2 = vp2;
+
+    return person_compare(p1, p2);
+  }
+
+  int main(void)
+  {
+    size_t N = 1000000;
+
+    Person_t* p_Person = malloc(N * sizeof(Person_t));
+
+    if (!p_Person) {
+      printf("Memory allocation error!\n");
+      return 1;
+    }
+
+    randomize();
+    set_person_array(p_Person, N);
+
+    clock_t start = clock();
+    qsort(p_Person, N, sizeof(*p_Person), &person_compare_qsort);
+    clock_t end = clock();
+
+    printf("Elapsed time: %f seconds\n", 
+            (double)(end - start) / CLOCKS_PER_SEC);
+
+    print_person_array(p_Person, N);
+    free(p_Person);
+
+    // output ->
+    // ....
+    //  31788 kamile         akgunes        10 Agustos 2016 Carsamba
+    //  28440 lamia          akgunes        30 Ekim 2023 Pazartesi
+    //  32417 yasemin        akgunes        06 Nisan 1994 Carsamba
+    //  8644  zahide         akgunes        04 Aralik 1996 Carsamba
+    //  1130  zahide         akgunes        07 Nisan 2015 Sali
+  }
+*/
+
+// ---------------------------------------------------------
+// ---------------------------------------------------------
+// ---------------------------------------------------------
+// ---------------------------------------------------------
+// ---------------------------------------------------------
+
+/*
+  #include <limits.h> // INT_MIN
+  #include <stdlib.h> // qsort
+
+  #include "../nutility.h"
+
+  int int_compare_qsort_UB(const void* vp1, const void* vp2)
+  {
+    int i1 = *(const int*)vp1;
+    int i2 = *(const int*)vp2;
+
+    return i1 - i2;  
+    // (345 - (INT_MIN)) cause overflow -> UB
+  }
+
+  int int_compare_qsort_NO_UB(const void* vp1, const void* vp2)
+  {
+    int i1 = *(const int*)vp1;
+    int i2 = *(const int*)vp2;
+
+    return (i1 > i2) - (i1 < i2);
+  }
+
+  int main(void)
+  {
+    int arr[] = { -5, -355, -98, 345, INT_MIN, 11, -4763 };
+
+    // qsort(arr, asize(arr), sizeof(*arr), &int_compare_qsort_UB);
+    qsort(arr, asize(arr), sizeof(*arr), &int_compare_qsort_NO_UB);
+
+    for (size_t i = 0; i < asize(arr); ++i)
+      printf("%d ", arr[i]);
+    // output -> -2147483648 -4763 -355 -98 -5 11 345
+  }
+*/
+
+/*
+  #include <stddef.h> // size_t
+  #include <stdlib.h> // malloc, free, qsort
+
+  #include "../person.h"
+  #include "../nutility.h"
+
+  int person_compare_qsort(const void* vp1, const void* vp2)
+  {
+    const Person_t* p1 = vp1;
+    const Person_t* p2 = vp2;
+
+    return person_compare(p1, p2);
+  }
+
+  typedef int(*fn_PersonCompare)(const Person_t*, const Person_t*);
+  typedef int(*fn_PersonCompare_qsort)(const void*, const void*);
+
+  int main(void)
+  {
+    size_t N = 1000000;
+    Person_t* p_Person = malloc(N * sizeof(Person_t));
+
+    if (!p_Person) {
+      printf("Memory allocation error!\n");
+      return 1;
+    }
+
+    // ---------------------------------------------------------
+
+    qsort(p_Person, 
+          N, 
+          sizeof(*p_Person), 
+          &person_compare_qsort);
+
+    // correct function pointer type
+    // int(*)(const void* vp1, const void* vp2)
+
+    // ---------------------------------------------------------
+
+    qsort(p_Person, 
+          N, 
+          sizeof(*p_Person), 
+          &person_compare); // syntax error
+    
+    // error: passing argument 4 of 'qsort' 
+    // from incompatible pointer type
+
+    // wrong function pointer type
+    // int(*)(const Person_t*, const Person_t*)
+
+    // ---------------------------------------------------------
+
+    qsort(p_Person, 
+          N, 
+          sizeof(*p_Person), 
+          (fn_PersonCompare_qsort)&person_compare); 
+    // undefined behaviour (UB)
+    
+    // conversion from `int(*)(const Person_t*, const Person_t*)` to 
+    //  `int(*)(const void*, const void*)` is undefined behavior(UB)
+
+    // conversion from `fn_PersonCompare` to `fn_PersonCompare_qsort`
+    // is undefined behavior(UB)
+
+    // --------------------------------------------------------------
+
+    free(p_Person);
+  }
+*/
+
+// ---------------------------------------------------------
+// ---------------------------------------------------------
+// ---------------------------------------------------------
+// ---------------------------------------------------------
+// ---------------------------------------------------------
+
+/*
+                        -----------------
+                        | HANDLE system |
+                        -----------------
+*/
+
+/*
+              <--- check singly_linked_list.png --->
+*/
+
+/*
+  // ---------------------------------------------------------
+
+  reaching with a known index 
+    -> dynamic array      -> 0(1)
+    -> singly linked list -> O(n)
+
+  searching an element
+    -> dynamic array      -> O(n)
+    -> singly linked list -> O(n)
+
+  inserting an element to a known address
+    -> dynamic array      -> O(n)
+    -> singly linked list -> O(1)
+
+  deleting an element from a known address
+    -> dynamic array      -> O(n)
+    -> singly linked list -> O(1)
+
+  // ---------------------------------------------------------
+
+  (-)singly linked-list
+    every time a new element will be added `malloc` will be called.
+    and `malloc` will allocate memory for HEADER part.
+  (+)dynamic array
+    reallocation can be done in amortized O(1) time complexity.
+
+  (-)in `int` linked list, int + int* will be allocated in a Node
+  (+)in `int` dynamic array, only `int` will be allocated in element.
+
+  (-)singly linked list is not cache friendly.
+  (+)dynamic array is cache friendly.
+
+  (+)SIMD operations can be used with dynamic arrays.
+  (-)SIMD operations can not be used with singly linked lists.
+
+  (-)fragmentation is a problem for dynamic array
+  (+)fragmentation is not a problem for singly linked list
+
+  (+) swapping algorithms is NOT expensive singly linked list
+    -> swapping only pointers(copying pointers)
+  (-) swapping algorithms is expensive in dynamic array
+    -> swapping elements(copying structures(elements))
+
+  // ---------------------------------------------------------
+*/
+
+/*
+  yeni bir modul olusturulacak (person_list)
+    - listeye bastan ekleme yapilabilsin.
+    - listedeki ilk ogeye erisebilsin.
+    - listedeki oge sayisina O(1)'de erisebilsin.
+    - listedeki ogeleri listedeki sirasiyla dolasabilsin. (traverse)
+*/
+
+/*
+  #include "../person_list.h"
+  #include "../person.h"
+  #include "../nutility.h"
+
+  int main(void)
+  {
+
+    randomize();
+
+    Person_t p;
+    for (int i = 0; i < 10; ++i) {
+      person_set_random(&p);
+      list_push_front(&p);
+    }
+
+    printf("List size: %zu\n", list_get_size());
+
+    list_print();
+    list_make_empty();
+  }
+*/
+
+/*
+  #include "../person_list.h"
+  #include "../person.h"
+  #include "../nutility.h"
+
+  int main(void)
+  {
+
+    randomize();
+
+    Person_t p;
+    for (int i = 0; i < 100000; ++i) {
+      person_set_random(&p);
+      list_push_front(&p);
+    }
+
+    printf("List size: %zu\n", list_get_size());
+
+    list_print();
+    list_make_empty();
+  }
+*/
+
+/*
+  #include "../person_list.h"
+  #include "../person.h"
+  #include "../nutility.h"
+
+  int main(void)
+  {
+
+    randomize();
+
+    Person_t p;
+    for (int i = 0; i < 100000; ++i) {
+      person_set_random(&p);
+      list_push_front(&p);
+    }
+
+    while (!list_is_empty()){
+      printf("List size: %zu\n", list_get_size());
+      list_print();
+      list_pop_front();
+    }
+  }
+*/

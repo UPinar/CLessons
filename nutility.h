@@ -9,6 +9,7 @@ extern const char* p_names[];
 
 #define   asize(x)          (sizeof(x) / sizeof(x[0]))
 #define   Nth_prime(idx)    (g_primes[idx])
+#define   RAND_ELEM(arr)    (arr[(size_t)rand() % asize(arr)])
 
 void randomize(void);
 void sgets(char* pStr);
@@ -31,5 +32,8 @@ void swap_arrays(int* p_array1, int* p_array2, size_t size);
 void swap_T(void* vp1, void* vp2, size_t size);
 
 int is_prime(int val);
+
+const char* get_random_name(void);
+const char* get_random_surname(void);
 
 #endif // NUTILITY_H

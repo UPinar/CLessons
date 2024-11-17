@@ -206,6 +206,9 @@
     - structures and functions
     - complete and incomplete types
     - `<date>` module tests 
+    - composition
+    - `<person>` module tests
+    - HANDLE system
   
 ### [`<time.h>` module](https://github.com/UPinar/CLessons/tree/master/time_module)
   
