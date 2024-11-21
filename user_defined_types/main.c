@@ -2304,12 +2304,6 @@
   }
 */
 
-// ---------------------------------------------------------
-// ---------------------------------------------------------
-// ---------------------------------------------------------
-// ---------------------------------------------------------
-// ---------------------------------------------------------
-
 /*
                         -----------------
                         | HANDLE system |
@@ -2368,11 +2362,34 @@
 */
 
 /*
-  yeni bir modul olusturulacak (person_list)
-    - listeye bastan ekleme yapilabilsin.
-    - listedeki ilk ogeye erisebilsin.
-    - listedeki oge sayisina O(1)'de erisebilsin.
-    - listedeki ogeleri listedeki sirasiyla dolasabilsin. (traverse)
+  #include "../person_list.h"
+  #include "../person.h"
+  #include "../nutility.h"
+
+  int main(void)
+  {
+
+    randomize();
+
+    Person_t p;
+    for (int i = 0; i < 5; ++i) {
+      person_set_random(&p);
+      list_push_front(&p);
+    }
+
+    printf("List size: %zu\n", list_get_size());
+    // output -> List size: 5
+
+    list_print();
+    // output ->
+    //  3236  ege            acgoze         13 Kasim 1963 Carsamba
+    //  9082  temel          orhancan       21 Ocak 1997 Sali
+    //  23813 zahide         kalpsiz        20 Haziran 2000 Sali
+    //  13740 ceyhun         gurkas         07 Subat 2009 Cumartesi
+    //  32315 nedim          lombak         26 Agustos 1998 Carsamba
+
+    list_make_empty();
+  }
 */
 
 /*
@@ -2386,7 +2403,7 @@
     randomize();
 
     Person_t p;
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 3000000; ++i) { // 3'000'000
       person_set_random(&p);
       list_push_front(&p);
     }
@@ -2409,30 +2426,7 @@
     randomize();
 
     Person_t p;
-    for (int i = 0; i < 100000; ++i) {
-      person_set_random(&p);
-      list_push_front(&p);
-    }
-
-    printf("List size: %zu\n", list_get_size());
-
-    list_print();
-    list_make_empty();
-  }
-*/
-
-/*
-  #include "../person_list.h"
-  #include "../person.h"
-  #include "../nutility.h"
-
-  int main(void)
-  {
-
-    randomize();
-
-    Person_t p;
-    for (int i = 0; i < 100000; ++i) {
+    for (int i = 0; i < 5; ++i) {
       person_set_random(&p);
       list_push_front(&p);
     }
@@ -2442,5 +2436,998 @@
       list_print();
       list_pop_front();
     }
+    // output ->
+    //  List size: 5
+    //  11352 eda            komurcu        24 Aralik 1940 Sali
+    //  8584  cebrail        dosteli        12 Haziran 2023 Pazartesi
+    //  1754  gizem          kurban         15 Eylul 2013 Pazar
+    //  9726  helin          kosnuk         21 Nisan 1970 Sali
+    //  1124  kaan           yangin         29 Aralik 1968 Pazar
+    //  ---------------------------------------------------
+    //  List size: 4
+    //  8584  cebrail        dosteli        12 Haziran 2023 Pazartesi
+    //  1754  gizem          kurban         15 Eylul 2013 Pazar
+    //  9726  helin          kosnuk         21 Nisan 1970 Sali
+    //  1124  kaan           yangin         29 Aralik 1968 Pazar
+    //  ---------------------------------------------------
+    //  List size: 3
+    //  1754  gizem          kurban         15 Eylul 2013 Pazar
+    //  9726  helin          kosnuk         21 Nisan 1970 Sali
+    //  1124  kaan           yangin         29 Aralik 1968 Pazar
+    //  ---------------------------------------------------
+    //  List size: 2
+    //  9726  helin          kosnuk         21 Nisan 1970 Sali
+    //  1124  kaan           yangin         29 Aralik 1968 Pazar
+    //  ---------------------------------------------------
+    //  List size: 1
+    //  1124  kaan           yangin         29 Aralik 1968 Pazar
+    //  ---------------------------------------------------
+  }
+*/
+
+/*
+  Problem in this approach is that, we can not create 
+  more than one list. Handle system will solve this problem.
+*/
+
+/*
+  #include "../handle_person_list.h"
+  #include "../nutility.h"
+  #include "../person.h"
+
+  int main(void)
+  {
+
+    randomize();
+    Person_t p;
+
+    List_Handle h1_list = list_create();
+    for(int i = 0; i < 3; ++i) {
+      person_set_random(&p);
+      list_push_front(h1_list, &p);
+    }
+
+    List_Handle h2_list = list_create();
+    for(int i = 0; i < 5; ++i) {
+      person_set_random(&p);
+      list_push_front(h2_list, &p);
+    }
+
+    List_Handle h3_list = list_create();
+    for(int i = 0; i < 8; ++i) {
+      person_set_random(&p);
+      list_push_front(h3_list, &p);
+    }
+
+    printf("List size: %zu\n", list_get_size(h1_list));
+    list_print(h1_list);
+    printf("List size: %zu\n", list_get_size(h2_list));
+    list_print(h2_list);
+    printf("List size: %zu\n", list_get_size(h3_list));
+    list_print(h3_list);
+
+    // output ->
+    //  List size: 3
+    //  10466 mehmet         kirboga        19 Haziran 1951 Sali
+    //  4069  binnaz         efelik         04 Mayis 1951 Cuma
+    //  10091 sevim          engerek        25 Eylul 1945 Sali
+    //  ---------------------------------------------------
+    //  List size: 5
+    //  17757 burhan         kalpten        16 Haziran 2017 Cuma
+    //  10485 orkun          fitrat         26 Subat 1988 Cuma
+    //  14492 sadegul        yaygara        22 Agustos 1948 Pazar
+    //  3087  petek          emirkulu       07 Kasim 2016 Pazartesi
+    //  22235 mert           ordulu         26 Ocak 1958 Pazar
+    //  ---------------------------------------------------
+    //  List size: 8
+    //  4988  devrim         karasaban      21 Mayis 1947 Carsamba
+    //  25567 cebrail        yilmaz         20 Haziran 1947 Cuma
+    //  29762 murat          gumus          10 Nisan 2012 Sali
+    //  12821 emrecan        osmaneli       08 Temmuz 2016 Cuma
+    //  25689 gulden         yorgun         09 Agustos 1946 Cuma
+    //  7353  atif           haselici       29 Aralik 1988 Persembe
+    //  16237 akin           konca          23 Mayis 2020 Cumartesi
+    //  17726 julide         elebasi        23 Nisan 1996 Sali
+    //  ---------------------------------------------------
+
+    list_destroy(h1_list);
+    list_destroy(h2_list);
+    list_destroy(h3_list);
+  }
+*/
+
+/*
+  #include "../handle_person_list.h"
+  #include "../nutility.h"
+  #include "../person.h"
+  #include <stdlib.h> // rand
+
+  #define   LIST_COUNT  1000
+
+  int main(void)
+  {
+    randomize();
+
+    List_Handle list_arr[LIST_COUNT];
+
+    Person_t person;
+    for (int i = 0; i < LIST_COUNT; ++i){
+      list_arr[i] = list_create();
+
+      int N = rand() % 10 + 5;
+      while (N--){
+        person_set_random(&person);
+        list_push_front(list_arr[i], &person);
+      }
+    }
+
+    int idx = 10;
+    printf("List size: %zu\n", list_get_size(list_arr[idx]));
+    list_print(list_arr[idx]);
+    // output ->
+    //  List size: 6
+    //  20647 derya          osmaneli       13 Ekim 2009 Sali
+    //  19015 hasan          boztas         23 Aralik 2008 Sali
+    //  5368  nurdan         yangin         05 Subat 1982 Cuma
+    //  21773 ercument       miskinoglu     09 Subat 1944 Carsamba
+    //  18929 burak          onaran         02 Subat 2020 Pazar
+    //  2645  ege            aylak          20 Mart 1997 Persembe
+    //  ---------------------------------------------------
+
+    idx = 12;
+    printf("List size: %zu\n", list_get_size(list_arr[idx]));
+    list_print(list_arr[idx]);
+    // output ->
+    //  List size: 11
+    //  15375 muslum         esteberli      10 Ekim 1972 Sali
+    //  32570 akin           sefiloglu      02 Ekim 2020 Cuma
+    //  30381 sabriye        celik          10 Haziran 1940 Pazartesi
+    //  24726 sami           karaelmas      05 Aralik 1989 Sali
+    //  17145 baran          esnedur        09 Mayis 1974 Persembe
+    //  23690 agah           uluocak        22 Temmuz 2010 Persembe
+    //  8211  aslihan        lalezar        25 Temmuz 1961 Sali
+    //  3603  necmi          sonuzun        16 Ekim 2012 Sali
+    //  12723 demir          safkan         14 Nisan 2001 Cumartesi
+    //  14666 kerim          sallabas       11 Eylul 2000 Pazartesi
+    //  26624 tayyar         arcan          26 Ekim 1944 Persembe
+    //  ---------------------------------------------------
+
+    idx = 455;
+    printf("List size: %zu\n", list_get_size(list_arr[idx]));
+    list_print(list_arr[idx]);
+    // output ->
+    //  List size: 13
+    //  31400 emine          aylak          09 Mayis 1959 Cumartesi
+    //  12011 nefes          karaduman      27 Ekim 1984 Cumartesi
+    //  27216 sefa           tantana        10 Temmuz 1968 Carsamba
+    //  30974 su             candamar       22 Nisan 1962 Pazar
+    //  183   yeliz          cuhadar        28 Mart 1995 Sali
+    //  13016 yelda          karasaban      20 Ekim 1946 Pazar
+    //  20500 temel          degirmenci     06 Kasim 2023 Pazartesi
+    //  6490  zahide         firatonu       12 Ekim 2013 Cumartesi
+    //  29585 korhan         sessiz         03 Haziran 1945 Pazar
+    //  6146  aslican        kirboga        31 Ocak 2016 Pazar
+    //  14767 cesim          otaci          01 Subat 1946 Cuma
+    //  8171  ugur           uraz           03 Kasim 1992 Sali
+    //  26856 lamia          elmali         06 Haziran 1990 Carsamba
+    //  ---------------------------------------------------
+
+    idx = 999;
+    printf("List size: %zu\n", list_get_size(list_arr[idx]));
+    list_print(list_arr[idx]);
+    // output ->
+    //  List size: 6
+    //  21433 sarp           ademoglu       02 Mart 2007 Cuma
+    //  11150 muruvvet       saferikli      27 Ocak 2011 Persembe
+    //  31083 hande          cansiz         15 Mart 1999 Pazartesi
+    //  23757 candan         karaorman      01 Subat 1948 Pazar
+    //  23326 teoman         kapan          04 Haziran 2013 Sali
+    //  5604  tugra          erdogan        11 Kasim 1944 Cumartesi
+    //  ---------------------------------------------------
+  }
+*/
+
+/*
+                    ------------------------
+                    | alignment (hizalama) |
+                    ------------------------
+*/
+
+/*
+  - işlemcilerin bellekte tutulan değişkenlere düşük maliyette
+    erişebilmeleri için, değişkenler bellekte 
+    belirli tam sayıların katları olan adreslerde tutuluyorlar.
+*/
+
+/*
+  // alignment requirement for int type is 4 bytes
+  // alignment requirement for double type is 8 bytes
+  // alignment requirement for short type is 2 bytes
+
+  #include <stdint.h> // uintptr_t
+
+  int main(void)
+  {
+    int i1 = 5, i2 = 10, i3 = 15;
+    double d1 = 3.33, d2 = 4.44;
+    short s1, s2, s3, s4;
+
+    printf("%d\n", (uintptr_t)&i1 % 4 == 0);  // output -> 1
+    printf("%d\n", (uintptr_t)&i2 % 4 == 0);  // output -> 1
+    printf("%d\n", (uintptr_t)&i3 % 4 == 0);  // output -> 1
+
+    printf("%d\n", (uintptr_t)&d1 % 8 == 0);  // output -> 1
+    printf("%d\n", (uintptr_t)&d2 % 8 == 0);  // output -> 1
+
+    printf("%d\n", (uintptr_t)&s1 % 2 == 0);  // output -> 1
+    printf("%d\n", (uintptr_t)&s2 % 2 == 0);  // output -> 1
+    printf("%d\n", (uintptr_t)&s3 % 2 == 0);  // output -> 1
+    printf("%d\n", (uintptr_t)&s4 % 2 == 0);  // output -> 1
+  }
+*/
+
+/*
+  // "_Alignof" operator used for determining 
+  // alignment requirement of a type in compile time.
+
+  int main(void)
+  {
+    printf("%zu\n", _Alignof(short));  // output -> 2
+    printf("%zu\n", _Alignof(int));    // output -> 4
+    printf("%zu\n", _Alignof(double)); // output -> 8
+  }
+*/
+
+/*
+  // alignment requirement and sizeof are different things.
+
+  int main(void)
+  {
+    printf("_Alignof(int[100]) = %zu\n", _Alignof(int[100]));  
+    // output -> _Alignof(int[100]) = 4
+
+    printf("sizeof(int[100]) = %zu\n", sizeof(int[100]));
+    // output -> sizeof(int[100]) = 400
+  }
+*/
+
+/*
+  // for structure types, alignment requirement is
+  // the maximum alignment requirement of its members.
+
+  typedef struct {
+    int m_x, m_y, m_z;
+    double m_d1, m_d2;
+    char m_c1, m_c2;
+  } Data_t;
+
+  int main(void)
+  {
+    printf("_Alignof(Data_t) = %zu\n", _Alignof(Data_t));
+    // output -> _Alignof(Data_t) = 8
+
+    printf("sizeof(Data_t) = %zu\n", sizeof(Data_t));
+    // output -> sizeof(Data_t) = 32
+
+    // because of double type's alignment requirement is 8 bytes
+    // alignment requirement of Data_t is 8 bytes.
+  }
+*/
+
+/*
+  #include <stdalign.h>   // "alignof" is a macro
+
+  // _Alignof keyword deprecated in C23 standart
+  // C23 standart -> alignof is a keyword
+  // https://en.cppreference.com/w/c/language/_Alignof
+
+  typedef struct {
+    int m_x, m_y, m_z;
+    double m_d1, m_d2;
+    char m_c1, m_c2;
+  } Data_t;
+
+  int main(void)
+  {
+    printf("alignof(Data_t) = %zu\n", alignof(Data_t));
+    // output -> alignof(Data_t) = 8
+
+    printf("sizeof(Data_t) = %zu\n", sizeof(Data_t));
+    // output -> sizeof(Data_t) = 32
+  }
+*/
+
+/*
+  SIMD operasyonlarının verimli olabilmesi için  
+  bazen türlerin belli sayıların katı olan adreslerde
+  tutulması gerekebilir.
+  bunun için "_Alignas" keyword kullanılır.
+*/
+
+/*
+  // _Alignas keyword(since C11)
+  // alignas keyword(since C23)
+  // alignas macro in <stdalign.h> header
+
+  #include <stdint.h> // uintptr_t
+
+  int main(void)
+  {
+    // ----------------------------------------------
+    _Alignas(64) int x = 10;
+    printf("%d\n", (uintptr_t)&x % 64 == 0);  // output -> 1
+    // x will be stored in an address that is multiple of 64
+
+    alignas(128) char buffer[1024];
+    printf("%d\n", (uintptr_t)buffer % 128 == 0);
+    // buffer will be stored in an address that is multiple of 128
+  }
+*/
+
+/*
+  typedef struct {
+    char c1;
+    int i1;
+    char c2;
+    long long l1;
+    char c3;
+  } Data;
+
+  // 1000 - c1
+  // 1001 - padding
+  // 1002 - padding
+  // 1003 - padding
+  // 1004 - i1
+  // 1005 - i1
+  // 1006 - i1
+  // 1007 - i1
+  // 1008 - c2
+  // 1009 - padding
+  // 100A - padding
+  // 100B - padding
+  // 100C - padding --> 100C % 8 != 0 
+  // 100D - padding
+  // 100E - padding
+  // 100F - padding
+  // 1010 - l1      --> alignment requirement of long long is 8 bytes
+  // 1011 - l1
+  // 1012 - l1
+  // 1013 - l1
+  // 1014 - l1
+  // 1015 - l1
+  // 1016 - l1
+  // 1017 - l1
+  // 1018 - c3
+  // 1019 - padding
+  // 101A - padding
+  // 101B - padding
+  // 101C - padding
+  // 101D - padding
+  // 101E - padding
+  // 101F - padding
+
+  int main(void)
+  {
+    printf("sizeof(Data) = %zu\n", sizeof(Data));
+    // output -> sizeof(Data) = 32
+
+    // char(1) + int(4) + char(1) + long long(8) + char(1) = 15
+    // because of the alignment requirements of data members 
+    // 17 padding bytes will be added to the structure.
+  }
+*/
+
+/*
+  #pragma pack(1) 
+  // alignment requirement for each type will be 1(byte alignment)
+  // this is bad for efficiency
+  // but it is good for memory
+
+  typedef struct {
+    char c1;
+    int i1;
+    char c2;
+    long long l1;
+    char c3;
+  } Data;
+
+
+  int main(void)
+  {
+    printf("sizeof(Data) = %zu\n", sizeof(Data));
+    // output -> sizeof(Data) = 15
+  }
+*/
+
+/*
+  // better using an order from the highest alignment requirement 
+  // to lowest when declaring data members of the struct.
+
+  typedef struct {
+    long long l1;
+    int i1;
+    char c1;
+    char c2;
+    char c3;
+  } Data;
+
+
+  int main(void)
+  {
+    printf("sizeof(Data) = %zu\n", sizeof(Data));
+    // output -> sizeof(Data) = 16
+  }
+*/
+
+/*
+                      ------------------
+                      | offsetof macro |
+                      ------------------
+*/
+
+/*
+  typedef struct {
+    char m_c1;
+    int m_i1;
+    char m_c2;
+  } Data_t;
+
+  // 1000 : m_c1
+  // 1001 : padding
+  // 1002 : padding
+  // 1003 : padding
+  // 1004 : m_i1
+  // 1005 : m_i1
+  // 1006 : m_i1
+  // 1007 : m_i1
+  // 1008 : m_c2
+  // 1009 : padding
+  // 100A : padding
+  // 100B : padding
+
+  int main(void)
+  {
+    printf("sizeof(Data_t) = %zu\n", sizeof(Data_t));
+    // sizeof(Data_t) = 12
+
+    Data_t d1 = { .m_c1 = 65, .m_i1 = 817283, .m_c2 = 78 };
+
+    char* cp = &d1.m_c1;
+    printf("c1 = %d\n", *cp);  // output -> c1 = 65
+
+    ++cp;
+    int* ip = (int*)cp; 
+    printf("i1 = %d\n", *ip);  // undefined behaviour (UB)
+
+    // "++cp" expression the address of padding bytes
+    // so dereferencing indeterminate value
+    // is an undefined behaviour(UB)
+  }
+*/
+
+/*
+  #include <stddef.h> // offsetof
+
+  typedef struct {
+    char m_c1;    // 0
+    int m_i1;     // 4
+    char m_c2;    // 8
+  } Data_t;
+
+  // 1000 : m_c1      -> 0
+  // 1001 : padding
+  // 1002 : padding
+  // 1003 : padding
+  // 1004 : m_i1      -> 4
+  // 1005 : m_i1
+  // 1006 : m_i1
+  // 1007 : m_i1
+  // 1008 : m_c2      -> 8
+  // 1009 : padding
+  // 100A : padding
+  // 100B : padding
+
+  int main(void)
+  {
+    printf("offsetof(Data_t, m_c1) = %zu\n", 
+            offsetof(Data_t, m_c1));
+    // output -> offsetof(Data_t, m_c1) = 0
+
+    printf("offsetof(Data_t, m_i1) = %zu\n", 
+            offsetof(Data_t, m_i1));
+    // output -> offsetof(Data_t, m_i1) = 4
+
+    printf("offsetof(Data_t, m_c2) = %zu\n", 
+            offsetof(Data_t, m_c2));
+    // output -> offsetof(Data_t, m_c2) = 8
+  }
+*/
+
+/*
+  #include <stddef.h> // offsetof
+
+  #pragma pack(1) // byte alignment
+
+  typedef struct {
+    char m_c1;    // 0
+    int m_i1;     // 1
+    char m_c2;    // 5
+  } Data_t;
+
+  // 1000 : m_c1      -> 0
+  // 1004 : m_i1      -> 1
+  // 1005 : m_i1
+  // 1006 : m_i1
+  // 1007 : m_i1
+  // 1008 : m_c2      -> 5
+
+  int main(void)
+  {
+    printf("offsetof(Data_t, m_c1) = %zu\n", 
+            offsetof(Data_t, m_c1));
+    // output -> offsetof(Data_t, m_c1) = 0
+
+    printf("offsetof(Data_t, m_i1) = %zu\n", 
+            offsetof(Data_t, m_i1));
+    // output -> offsetof(Data_t, m_i1) = 1
+
+    printf("offsetof(Data_t, m_c2) = %zu\n", 
+            offsetof(Data_t, m_c2));
+    // output -> offsetof(Data_t, m_c2) = 5
+  }
+*/
+
+/*
+  #define OFFSETOF(s, m)    ((size_t)&(((s*)0)->m))
+  // s : structure
+  // m : data member
+*/
+
+/*
+  #include <stddef.h> // offsetof
+
+  typedef struct {
+    char m_c1;
+    int m_i1;
+    char m_c2;
+  } Data_t;
+
+  // 1000 : m_c1
+  // 1001 : padding
+  // 1002 : padding
+  // 1003 : padding
+  // 1004 : m_i1
+  // 1005 : m_i1
+  // 1006 : m_i1
+  // 1007 : m_i1
+  // 1008 : m_c2
+  // 1009 : padding
+  // 100A : padding
+  // 100B : padding
+
+  int main(void)
+  {
+    Data_t d1 = { .m_c1 = 65, .m_i1 = 817283, .m_c2 = 78 };
+
+    char* cp = &d1.m_c1;
+    printf("d1.m_c1 = %d\n", *cp);  
+    // output -> d1.m_c1 = 65
+
+    int* ip = (int*)(cp + offsetof(Data_t, m_i1)); 
+    printf("d1.m_i1 = %d\n", *ip);
+    // output -> d1.m_i1 = 817283
+  }
+*/
+
+/*
+              ---------------------------------
+              | comparison of structure types |
+              ---------------------------------
+*/
+
+/*
+  #include <string.h> // memcmp
+
+  typedef struct {
+    char m_c1;
+    int m_i1;
+    char m_c2;
+  } Data_t;
+
+  int main(void)
+  {
+    printf("sizeof(Data_t) = %zu\n", sizeof(Data_t));
+
+    Data_t d1 = { .m_c1 = 65, .m_i1 = 817283, .m_c2 = 78 };
+    Data_t d2 = { .m_c1 = 65, .m_i1 = 817283, .m_c2 = 78 };
+
+    // ----------------------------------------------
+
+    if (d1.m_c1 == d2.m_c1 && 
+        d1.m_i1 == d2.m_i1 && 
+        d1.m_c2 == d2.m_c2)
+      printf("d1 and d2 are equal\n");
+    else
+      printf("d1 and d2 are not equal\n");
+
+    // output -> d1 and d2 are equal
+
+    // ----------------------------------------------
+
+    if (!memcmp(&d1, &d2, sizeof(Data_t)))
+      printf("d1 and d2 are equal\n");
+    else
+      printf("d1 and d2 are not equal\n");
+
+    // output -> d1 and d2 are not equal
+    // also checking for the padding bytes which are
+    // not initialized in the structure(have garbage values).
+
+    // ----------------------------------------------
+  }
+*/
+
+/*
+  // before doing comparison in structure types 
+  // we need to clear the memory with memset
+
+  #include <string.h> // memset, memcmp
+
+  typedef struct {
+    char m_c1;
+    int m_i1;
+    char m_c2;
+  } Data_t;
+
+  int main(void)
+  {
+    Data_t d1, d2;
+    memset(&d1, 0, sizeof(d1));
+    memset(&d2, 0, sizeof(d2));
+
+    // compound literal
+    d1 = (Data_t){ .m_c1 = 65, .m_i1 = 817283, .m_c2 = 78 };
+    d2 = (Data_t){ .m_c1 = 65, .m_i1 = 817283, .m_c2 = 78 };
+
+    // ----------------------------------------------
+
+    if (d1.m_c1 == d2.m_c1 && 
+        d1.m_i1 == d2.m_i1 && 
+        d1.m_c2 == d2.m_c2)
+      printf("d1 and d2 are equal\n");
+    else
+      printf("d1 and d2 are not equal\n");
+
+    // output -> d1 and d2 are equal
+
+    // ----------------------------------------------
+
+    if (!memcmp(&d1, &d2, sizeof(Data_t)))
+      printf("d1 and d2 are equal\n");
+    else
+      printf("d1 and d2 are not equal\n");
+
+    // output -> d1 and d2 are equal
+
+    // ----------------------------------------------
+  }
+*/
+
+/*
+  // macro for clearing structure types
+
+  #include <string.h> // memset, memcmp
+
+  #define clear_struct(x)     (memset(&(x), 0, sizeof(x)))
+
+  typedef struct {
+    char m_c1;
+    int m_i1;
+    char m_c2;
+  } Data_t;
+
+  int main(void)
+  {
+    Data_t d1, d2;
+    clear_struct(d1);
+    clear_struct(d2);
+
+    // compound literal
+    d1 = (Data_t){ .m_c1 = 65, .m_i1 = 817283, .m_c2 = 78 };
+    d2 = (Data_t){ .m_c1 = 65, .m_i1 = 817283, .m_c2 = 78 };
+
+    if (!memcmp(&d1, &d2, sizeof(Data_t)))
+      printf("d1 and d2 are equal\n");
+    else
+      printf("d1 and d2 are not equal\n");
+    // output -> d1 and d2 are equal
+  }
+*/
+
+/*
+                          ----------
+                          | unions |
+                          ----------
+*/
+
+/*
+  typedef union Data {
+    int m_x, m_y;
+    double m_d;
+    char m_carr[8];
+  } Data_t;
+
+  int main(void)
+  {
+    Data_t d1;
+    Data_t* dp = &d1;
+
+    d1.m_x = 11;
+    dp->m_x = 22;
+  }
+*/
+
+/*
+  // size of a union is the size of its largest data member
+
+  typedef struct {
+    int m_x;
+  } struct_Data_t;
+
+  typedef union {
+    int m_x;
+  } union_Data_t;
+
+  typedef struct {
+    int m_x, m_y;
+  } struct_Data2_t;
+
+  typedef union {
+    int m_x, m_y;
+  } union_Data2_t;
+
+  typedef struct {
+    int m_x, m_y, m_z;
+  } struct_Data3_t;
+
+  typedef union {
+    int m_x, m_y, m_z;
+  } union_Data3_t;
+
+  typedef struct {
+    double m_d;
+    int m_x, m_y, m_z;
+  } struct_Data4_t;
+
+  typedef union {
+    double m_d;
+    int m_x, m_y, m_z;
+  } union_Data4_t;
+
+  typedef struct {
+    double m_d1, m_d2;
+    int m_x, m_y, m_z;
+  } struct_Data5_t;
+
+  typedef union {
+    double m_d1, m_d2;
+    int m_x, m_y, m_z;
+  } union_Data5_t;
+
+  typedef struct {
+    char m_carr[16];
+    double m_d1, m_d2;
+    int m_x, m_y, m_z;
+  } struct_Data6_t;
+
+  typedef union {
+    char m_carr[16];
+    double m_d1, m_d2;
+    int m_x, m_y, m_z;
+  } union_Data6_t;
+
+  int main(void)
+  {
+    // ----------------------------------------------
+
+    printf("sizeof(struct_Data_t) = %zu\n", 
+            sizeof(struct_Data_t));
+    // output -> sizeof(struct_Data_t) = 4
+
+    printf("sizeof(union_Data_t) = %zu\n", 
+            sizeof(union_Data_t));
+    // output -> sizeof(union_Data_t) = 4
+
+    // ----------------------------------------------
+
+    printf("sizeof(struct_Data2_t) = %zu\n", 
+            sizeof(struct_Data2_t));
+    // output -> sizeof(struct_Data2_t) = 8
+
+    printf("sizeof(union_Data2_t) = %zu\n", 
+            sizeof(union_Data2_t));
+    // output -> sizeof(union_Data2_t) = 4
+
+    // ----------------------------------------------
+
+    printf("sizeof(struct_Data3_t) = %zu\n", 
+            sizeof(struct_Data3_t));
+    // output -> sizeof(struct_Data3_t) = 12
+
+    printf("sizeof(union_Data3_t) = %zu\n", 
+            sizeof(union_Data3_t));
+    // output -> sizeof(union_Data3_t) = 4
+
+    // ----------------------------------------------
+
+    printf("sizeof(struct_Data4_t) = %zu\n", 
+            sizeof(struct_Data4_t));
+    // output -> sizeof(struct_Data4_t) = 24
+  
+    printf("sizeof(union_Data4_t) = %zu\n", 
+            sizeof(union_Data4_t));
+    // output -> sizeof(union_Data4_t) = 8
+
+    // ----------------------------------------------
+
+    printf("sizeof(struct_Data5_t) = %zu\n", 
+            sizeof(struct_Data5_t));
+    // output -> sizeof(struct_Data5_t) = 32
+
+    printf("sizeof(union_Data5_t) = %zu\n", 
+            sizeof(union_Data5_t));
+    // output -> sizeof(union_Data5_t) = 8
+
+    // ----------------------------------------------
+
+    printf("sizeof(struct_Data6_t) = %zu\n", 
+            sizeof(struct_Data6_t));
+    // output -> sizeof(struct_Data6_t) = 48
+
+    printf("sizeof(union_Data6_t) = %zu\n", 
+            sizeof(union_Data6_t));
+    // output -> sizeof(union_Data6_t) = 16
+
+    // ----------------------------------------------
+  }
+*/
+
+/*
+  // union's data member's addresses are same.
+  // when a data member change all data members changes.
+
+  typedef union {
+    char m_str[16];
+    double m_d1;
+    int m_x;
+    char m_c;
+  } Data_t;
+
+  int main(void)
+  {
+    Data_t d1;
+
+    printf("&d1        = %p\n", (void*)&d1);  
+    printf("&d1.m_str  = %p\n", (void*)&d1.m_str);
+    printf("&d1.m_d1   = %p\n", (void*)&d1.m_d1);
+    printf("&d1.m_x    = %p\n", (void*)&d1.m_x);
+    printf("&d1.m_c    = %p\n", (void*)&d1.m_c);
+    // output ->
+    //  &d1        = 000000A2F2BFFC70
+    //  &d1.m_str  = 000000A2F2BFFC70
+    //  &d1.m_d1   = 000000A2F2BFFC70
+    //  &d1.m_x    = 000000A2F2BFFC70
+    //  &d1.m_c    = 000000A2F2BFFC70
+  }
+*/
+
+/*
+  typedef struct {
+    char m_str[16];
+    double m_d1;
+    int m_x;
+    char m_c;
+  } sData_t;
+
+  typedef union {
+    char m_str[16];
+    double m_d1;
+    int m_x;
+    char m_c;
+  } uData_t;
+
+  int main(void)
+  {
+    sData_t sd1 = { "hello", 3.14, 123, 'A' };
+
+
+    uData_t ud1 = { "hello" };  
+    // initializing union's first element
+
+    uData_t ud2 = {.m_c = 'B'};
+    // initializing union's elements by using designated initializer
+  }
+*/
+
+/*
+  // unions are used for representing an object 
+  // in different ways.
+
+  // öyle bir tamsayı türüne ihtiyaç var ki 
+  // 4 bytelık 1 tamsayı 
+  // 2 bytelık 2 tamsayı 
+  // 1 bytelık 4 tamsayı  olarak kullanılabilecek.
+
+  #include <stdint.h> // uint32_t, uint16_t, uint8_t
+
+  typedef struct {
+    uint16_t m_high;
+    uint16_t m_low;
+  } Word_t;
+
+  typedef union {
+    uint32_t m_extended;
+    Word_t m_word;
+    uint8_t m_byte_arr[4];
+  } u_MyInt_t;
+
+  int main(void)
+  {
+    // ----------------------------------------------
+
+    printf("sizeof(Word_t) = %zu\n", sizeof(Word_t));
+    // output -> sizeof(Word_t) = 4
+
+    printf("sizeof(u_MyInt_t) = %zu\n", sizeof(u_MyInt_t));
+    // output -> sizeof(u_MyInt_t) = 4
+
+    // ----------------------------------------------
+
+    u_MyInt_t i1 = { .m_extended = 287497727 };
+    // 287497727 = 0X1122DDFF
+
+    // - Little indian system -
+
+    printf("%X\n", i1.m_extended);      // output -> 1122DDFF
+    printf("%X\n", i1.m_word.m_high);   // output -> DDFF
+    printf("%X\n", i1.m_word.m_low);    // output -> 1122
+    printf("%X\n", i1.m_byte_arr[0]);   // output -> FF
+    printf("%X\n", i1.m_byte_arr[1]);   // output -> DD
+    printf("%X\n", i1.m_byte_arr[2]);   // output -> 22
+    printf("%X\n", i1.m_byte_arr[3]);   // output -> 11
+
+    i1.m_byte_arr[0] = 0x33;
+    i1.m_byte_arr[1] = 0x44;
+
+    printf("%X\n", i1.m_extended);      // output -> 11224433
+    printf("%X\n", i1.m_word.m_high);   // output -> 4433
+    printf("%X\n", i1.m_word.m_low);    // output -> 1122
+
+    // ----------------------------------------------
+  }
+*/
+
+/*
+// using anonymous structure inside union
+
+  #include <stdint.h> // uint32_t, uint16_t, uint8_t
+
+  typedef union {
+    uint32_t m_extended;
+    struct {
+      uint16_t m_high;
+      uint16_t m_low;
+    };
+    uint8_t m_byte_arr[4];
+  } u_MyInt_t;
+
+  int main(void)
+  {
+    u_MyInt_t i1;
+
+    i1.m_high = 0xAABB;
+    i1.m_low  = 0xCCDD;
+
+    printf("%X\n", i1.m_extended);      // output -> CCDDAABB
   }
 */

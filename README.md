@@ -209,6 +209,10 @@
     - composition
     - `<person>` module tests
     - HANDLE system
+    - alignment
+    - `offsetof` macro
+    - comparison of structure types
+  - unions
   
 ### [`<time.h>` module](https://github.com/UPinar/CLessons/tree/master/time_module)
   
