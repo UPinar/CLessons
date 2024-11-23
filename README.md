@@ -213,8 +213,14 @@
     - `offsetof` macro
     - comparison of structure types
   - unions
+    - tagged union - discriminated union
+  - enumarations
   
 ### [`<time.h>` module](https://github.com/UPinar/CLessons/tree/master/time_module)
+
+### [Bitwise Operations](https://github.com/UPinar/CLessons/tree/master/bitwise_operations)
+  - bitwise operators (bitsel operatörler)
+
   
 ### [Not Related](https://github.com/UPinar/CLessons/tree/master/not_related)
   - strict aliasing rule

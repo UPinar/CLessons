@@ -270,3 +270,19 @@ const char* get_random_surname(void)
 
   return RAND_ELEM(p_surnames);
 }
+
+double get_random_double(void)
+{
+  return rand() % 100 + (double)(rand() / RAND_MAX);
+}
+
+void print_bits(unsigned int val)
+{
+  unsigned int mask = ~(~0u >> 1);
+
+  while (mask) {
+    putchar(mask & val ? '1' : '0');
+    mask >>= 1;
+  }
+  putchar('\n');
+}

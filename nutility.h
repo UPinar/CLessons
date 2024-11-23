@@ -35,5 +35,8 @@ int is_prime(int val);
 
 const char* get_random_name(void);
 const char* get_random_surname(void);
+double get_random_double(void);
+
+void print_bits(unsigned int val);
 
 #endif // NUTILITY_H

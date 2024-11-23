@@ -3408,7 +3408,7 @@
 */
 
 /*
-// using anonymous structure inside union
+  // using anonymous structure inside union
 
   #include <stdint.h> // uint32_t, uint16_t, uint8_t
 
@@ -3429,5 +3429,767 @@
     i1.m_low  = 0xCCDD;
 
     printf("%X\n", i1.m_extended);      // output -> CCDDAABB
+  }
+*/
+
+/*
+  #include <stdint.h>   // uint16_t, uint32_t, uint64_t
+  #include <inttypes.h> // PRIu64
+
+  typedef union {
+    struct {
+      uint16_t m_d;
+      uint16_t m_m;
+      uint32_t m_y;
+    };
+    uint64_t m_value;
+  } Date_t;
+
+  int main(void)
+  {
+    printf("sizeof(Date_t) = %zu\n", sizeof(Date_t));
+    // output -> sizeof(Date_t) = 8
+
+    Date_t d1 = { .m_d = 01, .m_m = 01, .m_y = 2001 };
+    
+    printf("%" PRIu64 "\n", d1.m_value);
+    // output -> 8594229624833
+
+    // Date is mapped to a distinct integer value
+    // which in this case is 8594229624833
+
+    d1.m_m = 12, d1.m_d = 12, d1.m_y = 2012;
+
+    printf("%" PRIu64 "\n", d1.m_value);
+    // output -> 8641474985996
+
+    // mapped integer value is changed to 8641474985996
+  }
+*/
+
+/*
+  // öyle veriler var ki birinden birinin tutulması mantıklı.
+  // bu durum için union kullanılır.
+
+  // erkekler için askerlik bilgileri
+  // kadınlar için kızlık soyadı tutulacak.
+
+  // -- union kullanılmazsa. 
+  // örneğin kadınlar için kızlık soyadı tutulacak,
+  // askerlik bilgileri boş bırakılacak.
+  // erkekler için askerlik bilgileri tutulacak,
+  // kızlık soyadı boş bırakılacak.
+
+  struct Person_1 {
+    int m_id;
+    int m_gender;
+    char m_name[32];
+    struct {
+      int m_status;
+      char m_location[32];
+    };
+    char m_maiden_name[32];
+  };
+
+  struct Person_2 {
+    int m_id;
+    int m_gender;
+    char m_name[32];
+    union {
+      struct {
+        int m_status;
+        char m_location[32];
+      };
+      char m_maiden_name[32];
+    };
+  };
+
+  int main(void)
+  {
+    printf("sizeof(struct Person_1) = %zu\n", 
+            sizeof(struct Person_1));
+    // output -> sizeof(struct Person_1) = 108
+
+    printf("sizeof(struct Person_2) = %zu\n", 
+            sizeof(struct Person_2));
+    // output -> sizeof(struct Person_2) = 76
+  }
+*/
+
+/*
+            --------------------------------------
+            | tagged union - discriminated union |
+            --------------------------------------
+*/
+
+/*
+  a variable that can be used as a
+  - name
+  - date
+  - floating point
+  - an integer
+*/
+
+/*
+  #include "../date.h"
+
+  typedef union {
+    char m_name[32];
+    Date_t m_date;
+    double m_dval;
+    int m_ival;
+  } Data_t;
+
+  int main(void)
+  {
+    Data_t d1 = { .m_name = "hello world" };
+    date_set(&d1.m_date, 1, 1, 2001);
+    d1.m_dval = 3.14;
+    d1.m_ival = 11111111;
+
+    // we can not know if d1 is used as a name, as a  date, 
+    // as a floating point, or as an integer? 
+  }
+*/
+
+
+/*
+  #include "../date.h"
+  #include "../nutility.h"
+
+  #include <stdlib.h> // rand
+  #include <string.h> 
+
+  #define   NAME    0
+  #define   DATE    1
+  #define   DOUBLE  2
+  #define   INT     3
+  #define   SIZE    10
+
+  typedef struct {
+    union {
+      char m_name[32];
+      Date_t m_date;
+      double m_dval;
+      int m_ival;
+    };
+    int m_type;
+  } Tagged_t;
+
+
+  void set_tagged(Tagged_t* p)
+  {
+    switch (rand() % 4) {
+    case NAME: {
+      strcpy(p->m_name, get_random_name()); 
+      p->m_type = NAME;
+      break;
+    }
+    case DATE: {
+      date_set_random(&p->m_date); 
+      p->m_type = DATE;
+      break;
+    }
+    case DOUBLE: {
+      p->m_dval = get_random_double(); 
+      p->m_type = DOUBLE;
+      break;
+    }
+    case INT: {
+      p->m_ival = rand(); 
+      p->m_type = INT;
+      break;
+    }
+    }
+  }
+
+  void print_tagged(const Tagged_t* p)
+  {
+    switch (p->m_type) {
+    case NAME: {
+      printf("Type is m_name: ");
+      printf("%s\n", p->m_name); 
+      break;
+    }
+    case DATE: {
+      printf("Type is m_date: ");
+      date_print(&p->m_date); 
+      break;
+    }
+    case DOUBLE: {
+      printf("Type is m_dval: ");
+      printf("%f\n", p->m_dval); 
+      break;
+    }
+    case INT: {
+      printf("Type is m_ival: ");
+      printf("%d\n", p->m_ival); 
+      break;
+    }
+    }
+  }
+
+  int main(void)
+  {
+    randomize();
+
+    Tagged_t t1;
+
+    for(int i = 0; i < 10; ++i){
+      set_tagged(&t1);
+      print_tagged(&t1);
+    }
+
+    // output ->
+    //  Type is m_dval: 30.000000
+    //  Type is m_ival: 18191
+    //  Type is m_date: 26 Eylul 1974 Persembe
+    //  Type is m_name: hikmet
+    //  Type is m_dval: 16.000000
+    //  Type is m_name: korhan
+    //  Type is m_date: 23 Haziran 1968 Pazar
+    //  Type is m_name: ismail
+    //  Type is m_dval: 70.000000
+    //  Type is m_name: soner
+
+    // ----------------------------------------------
+
+    Tagged_t t_arr[SIZE]; // mixed array 
+
+    for (size_t i = 0; i < SIZE; ++i){
+      set_tagged(&t_arr[i]);
+      print_tagged(&t_arr[i]);
+    }  
+    // output ->
+    //  Type is m_dval: 64.000000
+    //  Type is m_name: gizem
+    //  Type is m_date: 30 Nisan 2016 Cumartesi
+    //  Type is m_ival: 16384
+    //  Type is m_date: 27 Eylul 1962 Persembe
+    //  Type is m_ival: 23157
+    //  Type is m_ival: 22710
+    //  Type is m_date: 01 Mayis 2008 Persembe
+    //  Type is m_date: 17 Nisan 1967 Pazartesi
+    //  Type is m_date: 21 Agustos 2005 Pazar
+
+    // ----------------------------------------------
+  }
+*/
+
+/*
+                        ----------------
+                        | enumarations |
+                        ----------------
+*/
+
+/*
+  problem domain'inde öyle varlıklar var ki, bu varlıklar
+  önceden seçilmiş bir veri kümesindeki değerlerden birine 
+  sahip olmak zorunda.
+
+  örneğin 
+    - haftanın günü 
+    - iskambil kağıdının rengi
+    - iskambil kağıdının değeri
+    - kontrol cihazının durumu (ON - OFF - STANDBY)
+
+  bu tür veriler için enumaration araç seti kullanılır.
+
+  - enum türleri static veri sisteminde tam sayı türlerinin 
+    bir alt kümesidir, aynı zamanda bir user-defined türdür.
+
+  syntax : enum <enum_Tag(optional)> { <enumerator_list> };
+
+  - enumaration constant (enumarator)
+*/
+
+/*
+  enum Color { Red, Green, Blue };
+  // `enum Color` is an integer type, its type is `enum Color`
+
+  typedef enum Color Color_t;
+*/
+
+/*
+  typedef enum { Red, Green, Blue } Color_t;
+  // Red, Green, Blue are constants and their type is `int`
+  // if not specified, Red = 0, Green = 1, Blue = 2
+*/
+
+/*
+  typedef enum { Red, Green, Blue } Color_t;
+
+  void func(Color_t);
+  Color_t func2(void);
+
+  struct Data_t {
+    Color_t m_color;
+  };  
+
+  int main(void)
+  {
+    Color_t c1 = Blue;
+    printf("%d\n", c1);       // output -> 2
+
+    printf("%d\n", Red);      // output -> 0
+    printf("%d\n", Green);    // output -> 1
+    printf("%d\n", Blue);     // output -> 2
+  }
+*/
+
+/*
+  typedef enum { Red, Green, Blue } Color_t;
+
+  const char* get_color_str(Color_t c)
+  {
+    static const char* const str_arr[] = { "Red", "Green", "Blue" };
+    return str_arr[c];
+  } 
+
+  int main(void)
+  {
+    Color_t c1 = Blue;
+    printf("%s\n", get_color_str(c1));  // output -> Blue
+
+    c1 = Red;
+    printf("%s\n", get_color_str(c1));  // output -> Red
+  }
+*/
+
+/*
+  typedef enum {
+    Monday      = 1, 
+    Tuesday     = 3, 
+    Wednesday   = 5, 
+    Thursday    = 7,  
+    Friday      = 9, 
+    Saturday    = 11, 
+    Sunday      = 13
+  } Weekday_t;
+
+  int main(void)
+  {
+    printf("%d\n", Monday);     // output -> 1
+    printf("%d\n", Tuesday);    // output -> 3
+    printf("%d\n", Wednesday);  // output -> 5
+    printf("%d\n", Thursday);   // output -> 7
+    printf("%d\n", Friday);     // output -> 9
+    printf("%d\n", Saturday);   // output -> 11
+    printf("%d\n", Sunday);     // output -> 13
+  }
+*/
+
+/*
+  typedef enum {
+    Monday = 5,
+    Tuesday,     
+    Wednesday,   
+    Thursday,     
+    Friday,      
+    Saturday,     
+    Sunday     
+  } Weekday_t;
+
+  int main(void)
+  {
+    printf("%d\n", Monday);     // output -> 5
+    printf("%d\n", Tuesday);    // output -> 6
+    printf("%d\n", Wednesday);  // output -> 7
+    printf("%d\n", Thursday);   // output -> 8
+    printf("%d\n", Friday);     // output -> 9
+    printf("%d\n", Saturday);   // output -> 10
+    printf("%d\n", Sunday);     // output -> 11
+  }
+*/
+
+/*
+  typedef enum {
+    Monday      = 5,
+    Tuesday,     
+    Wednesday   = 52,   
+    Thursday,     
+    Friday      = 77,      
+    Saturday,     
+    Sunday     
+  } Weekday_t;
+
+  int main(void)
+  {
+    printf("%d\n", Monday);     // output -> 5
+    printf("%d\n", Tuesday);    // output -> 6
+    printf("%d\n", Wednesday);  // output -> 52
+    printf("%d\n", Thursday);   // output -> 53
+    printf("%d\n", Friday);     // output -> 77
+    printf("%d\n", Saturday);   // output -> 78
+    printf("%d\n", Sunday);     // output -> 79
+  }
+*/
+
+/*
+  typedef enum {
+    Monday      = 99,
+    Tuesday,     
+    Wednesday   = 55,   
+    Thursday,     
+    Friday      = 11,      
+    Saturday,     
+    Sunday     
+  } Weekday_t;
+
+  int main(void)
+  {
+    printf("%d\n", Monday);     // output -> 99
+    printf("%d\n", Tuesday);    // output -> 100
+    printf("%d\n", Wednesday);  // output -> 55
+    printf("%d\n", Thursday);   // output -> 56
+    printf("%d\n", Friday);     // output -> 11
+    printf("%d\n", Saturday);   // output -> 12
+    printf("%d\n", Sunday);     // output -> 13
+  }
+*/
+
+/*
+  typedef enum {
+    Monday      = 99,
+    Tuesday,     
+    Wednesday   = -55,   
+    Thursday,     
+    Friday      = -11,      
+    Saturday,     
+    Sunday     
+  } Weekday_t;
+
+  int main(void)
+  {
+    printf("%d\n", Monday);     // output -> 99
+    printf("%d\n", Tuesday);    // output -> 100
+    printf("%d\n", Wednesday);  // output -> -55
+    printf("%d\n", Thursday);   // output -> -54
+    printf("%d\n", Friday);     // output -> -11
+    printf("%d\n", Saturday);   // output -> -10
+    printf("%d\n", Sunday);     // output -> -9
+  }
+*/
+
+/*
+  // more than one enumerator can have the same value
+
+  typedef enum {
+    Monday      = 1,
+    Tuesday,     
+    Wednesday,      
+    Thursday,     
+    Friday      = 1,      
+    Saturday,     
+    Sunday     
+  } Weekday_t;
+
+  int main(void)
+  {
+    printf("%d\n", Monday);     // output -> 1
+    printf("%d\n", Tuesday);    // output -> 2
+    printf("%d\n", Wednesday);  // output -> 3
+    printf("%d\n", Thursday);   // output -> 4
+    printf("%d\n", Friday);     // output -> 1
+    printf("%d\n", Saturday);   // output -> 2
+    printf("%d\n", Sunday);     // output -> 3
+  }
+*/
+
+/*
+  typedef enum {
+    Small   = 10,
+    Medium  = 20,
+    Large   = 30,
+    XLarge  = 40
+  } Count_t;
+
+  int main(void)
+  {
+    int count_arr[Medium] = { 0 };
+  }
+*/
+
+/*
+  typedef enum Color {
+    Red, Green, Blue
+  } Color_t;
+
+  void pick_red(void);
+  void pick_green(void);
+  void pick_blue(void);
+
+  void color_picker(Color_t c)
+  {
+    switch (c) {
+    case Red:
+      pick_red(); break;
+    case Green:
+      pick_green(); break;
+    case Blue:
+      pick_blue(); break;
+    }
+  }
+*/
+
+/*
+  // https://i-p-c-s.org/faq/suit-ranking.php
+
+  // for ninety-nine card game
+  // order of suits -> (Club > Heart > Spade > Diamond)
+  // for bridge card game
+  // order of suits -> (Spade > Heart > Diamond > Club)
+
+  #define BRIDGE
+  // #define NINETY_NINE
+
+  #ifdef NINETY_NINE
+    typedef enum {
+      Club, 
+      Heart, 
+      Spade, 
+      Diamond
+    } Suit_t;
+  #elif defined(BRIDGE)
+    typedef enum {
+      Spade, 
+      Heart, 
+      Diamond, 
+      Club
+    } Suit_t;
+  #endif
+*/
+
+/*
+  #ifdef BLACKJACK
+  typedef enum {
+    Two     = 2,
+    Three   = 3,
+    Four    = 4,
+    Five    = 5,
+    Six     = 6,  
+    Seven   = 7,
+    Eight   = 8,
+    Nine    = 9,
+    Ten     = 10,
+    Jack    = 10,
+    Queen   = 10,
+    King    = 10,
+    Ace     = 11
+  } Face_t;
+  #endif  
+*/
+
+/*
+  typedef enum {
+    Two   ,
+    Three ,
+    Four  ,
+    Five  ,
+    Six   ,  
+    Seven ,
+    Eight ,
+    Nine  ,
+    Ten   , 
+    Jack  , 
+    Queen , 
+    King  , 
+    Ace   
+  } Face_t;
+
+  typedef enum {
+    Club, 
+    Heart, 
+    Spade, 
+    Diamond
+  } Suit_t;
+
+  typedef struct {
+    Face_t m_face;
+    Suit_t m_suit;
+  } Card_t;
+*/
+
+/*
+  typedef enum {
+    MONDAY,
+    TUESDAY,
+    WEDNESDAY,
+    THURSDAY,
+    FRIDAY,
+    SATURDAY,
+    SUNDAY
+  } Weekday_t;
+
+  struct Date {
+    int m_year;
+    int m_month;
+    int m_day;
+    Weekday_t m_wday;
+  };
+*/
+
+/*
+  typedef enum {
+    MONDAY,
+    TUESDAY,
+    WEDNESDAY,
+    THURSDAY,
+    FRIDAY,
+    SATURDAY,
+    SUNDAY
+  } Weekday_t;
+
+  typedef enum {
+    CLUB,
+    HEART,
+    SPADE,
+    DIAMOND
+  } Suit_t;
+
+  int main(void)
+  {
+    Weekday_t wd = 3; // VALID
+    // control is applied for `int` type
+
+    int ival = 23;
+    wd = ival; // VALID
+    // conversion from `int` to `Weekday_t` is valid.
+
+    wd = DIAMOND; // VALID (logic error)
+  }
+*/
+
+/*
+  // identifier's(which are enumaration constants) scope
+  // is same with the enumaration type itself.
+  // in "screen.h" file 
+  //  screen_color enumaration type is in file scope
+  // in "traffic_light.h" file 
+  //  traffic_light enumaration type is in file scope
+
+  // screen.h
+  // ----------------
+  enum screen_color {
+    WHITE,
+    GREY,
+    BLACK,
+    RED,
+    GREEN,
+    BLUE,
+  };
+
+  // traffic_light.h
+  // ----------------
+  enum traffic_light {
+    RED,
+    YELLOW,
+    GREEN,
+  };
+
+  // main.c
+  // ----------------
+
+  //  #include "screen.h"
+  //  #include "traffic_light.h"
+
+  // syntax error
+  //  error: redeclaration of enumerator 'RED'
+  //  note: previous definition of 'RED' 
+  //  with type 'enum screen_color'
+  //  error: redeclaration of enumerator 'GREEN'
+  //  note: previous definition of 'GREEN' 
+  //  with type 'enum screen_color'
+*/
+
+/*
+  // to solve the problem of name collision
+
+  // screen.h
+  // ----------------
+  enum screen_color {
+    screen_color_WHITE,
+    screen_color_GREY,
+    screen_color_BLACK,
+    screen_color_RED,
+    screen_color_GREEN,
+    screen_color_BLUE,
+  };
+
+  // traffic_light.h
+  // ----------------
+  enum traffic_light {
+    traffic_light_RED,
+    traffic_light_YELLOW,
+    traffic_light_GREEN,
+  };
+
+  // main.c
+  // ----------------
+
+  //  #include "screen.h"
+  //  #include "traffic_light.h"
+*/
+
+/*
+  void foo(void)
+  {
+    enum Color { RED, GREEN, BLUE };
+    // `enum Color` type is in foo function scope 
+  }
+
+  int main(void)
+  {
+    enum Color c1;  // syntax error
+    // error: storage size of 'c1' isn't known
+
+    c1 = RED;       // syntax error
+    // error: 'RED' undeclared (first use in this function)
+  }
+*/
+
+/*
+  #define   ARRAY_SIZE    100
+  // macros don't have scope
+
+  enum { ARRAY_SIZE_2 = 100 };  
+  // ARRAY_SIZE_2 enumaration constant can be used 
+  // in this enumaration type's scope which is file scope.
+
+  int global_arr[ARRAY_SIZE_2];
+
+  void foo(void)
+  {
+    enum { ARRAY_SIZE_3 = 100 };
+    // ARRAY_SIZE_3 enumaration constant can be used 
+    // in this enumaration type's scope which is function scope.
+
+    int local_arr[ARRAY_SIZE_3];
+  }
+*/
+
+/*
+  enum Color { 
+    RED, 
+    GREEN, 
+    BLUE, 
+    NO_OF_COLORS 
+  };
+
+  // NO_OF_COLORS enumaration constant's value is 3
+  // which is the number of colors.
+
+  // when a new color is added to the enumaration type
+  // NO_OF_COLORS value will increase by one.
+
+  int main(void)
+  {
+    for (int i = 0; i < NO_OF_COLORS; ++i)
+      printf("%d\n", i);
+
+    // can be used in a loop to iterate over the colors
+
+    int arr[NO_OF_COLORS] = { 0 };
+    // can be used to create an array to store the number of colors
   }
 */
