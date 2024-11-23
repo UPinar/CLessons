@@ -5,6 +5,7 @@
 
 extern const int g_primes[];
 extern const char* p_names[];
+extern const int set_bit_arr[];
 #define PNAMES_SIZE 335
 
 #define   asize(x)          (sizeof(x) / sizeof(x[0]))

@@ -220,7 +220,14 @@
 
 ### [Bitwise Operations](https://github.com/UPinar/CLessons/tree/master/bitwise_operations)
   - bitwise operators (bitsel operatörler)
-
+    - bitwise NOT `~` operator
+    - bitwise shift operators
+      - bitwise left shift `<<` operator
+      - bitwise right shift `>>` operator
+    - bitwise AND `&` operator
+    - bitwise OR `|` operator
+    - bitwise XOR `^` operator
+  - bitwise manipulations
   
 ### [Not Related](https://github.com/UPinar/CLessons/tree/master/not_related)
   - strict aliasing rule
