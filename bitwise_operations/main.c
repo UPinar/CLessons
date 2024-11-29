@@ -1437,32 +1437,592 @@
 */
 
 /*
-  // implementation next lesson
-
-  #include <ctype.h>
-
-  #define   UPPER     0x01
-  #define   LOWER     0x02
-  #define   DIGIT     0x04
-  #define   XDIGIT    0x08
-  #define   SPACE     0x10
-  #define   PUNCT     0x20
-  #define   CNTRL     0x40
-
-  #define   IS_UPPER(c)     (ctype[(c)] & UPPER)
-  #define   IS_LOWER(c)     (ctype[(c)] & LOWER)
-  #define   IS_DIGIT(c)     (ctype[(c)] & DIGIT)
-
-  #define   IS_ALPHA        (ctype[(c)] & (IS_UPPER | IS_LOWER))
-  #define   IS_XDIGIT(c)    (ctype[(c)] & XDIGIT)
-  #define   IS_SPACE(c)     (ctype[(c)] & SPACE)
-
-  // (7 bit ascii) 0 - 128 
-  const int ctype[128] = { 0 };
-*/
-
-/*
   void foo(int x, int y, int is_a, int is_b, int is_c, int is_d);
   void better_foo(int x, int y, int is_flags);
 */
 
+/*
+  #include <ctype.h>
+  #include "ctype_impl.h"
+
+  int main(void)
+  {
+    // creating a lookup table
+    int flag = 0;
+
+    for (int i = 0; i < 128; ++i)
+    {
+      flag = 0;
+      if (i && i % 8 == 0)
+        printf("\n");
+
+      if (isupper(i)) flag |= UPPER;
+      if (islower(i)) flag |= LOWER;
+      if (isdigit(i)) flag |= DIGIT;
+      if (isxdigit(i)) flag |= XDIGIT;
+      if (ispunct(i)) flag |= PUNCT;
+      if (isspace(i)) flag |= SPACE;
+      if (isprint(i)) flag |= PRINT;
+      if (iscntrl(i)) flag |= CNTRL;
+      printf("%3d, ", flag);
+    }
+  }
+*/
+
+/*
+  #include "ctype_impl.h"
+
+  int main()
+  {
+    // ------------------------------------------------------
+
+    int ch = 65;
+    if (ISUPPER(ch))
+      printf("%c is an uppercase letter\n", ch);
+    else
+      printf("%c is not an uppercase letter\n", ch);
+    // output -> A is an uppercase letter
+
+    // ------------------------------------------------------
+
+    ch = 97;
+    if (ISDIGIT(ch))
+      printf("%c is a digit\n", ch);
+    else
+      printf("%c is not a digit\n", ch);
+    // output -> a is not a digit
+
+    // ------------------------------------------------------
+
+    ch = 70;
+    if (ISXDIGIT(ch))
+      printf("%c is an hex digit\n", ch);
+    else
+      printf("%c is not an hex digit\n", ch);
+    // output -> F is an hex digit
+
+    // ------------------------------------------------------
+
+    ch = 41;
+    if (ISPUNCT(ch))
+      printf("%c is a punctuation character\n", ch);
+    else
+      printf("%c is not a punctuation character\n", ch);
+    // output -> ) is a punctuation character
+
+    // ------------------------------------------------------
+  }
+*/
+
+/*
+                        -------------
+                        | bitfields |
+                        -------------
+*/
+
+/*
+  - bir tamsayı değişkenin belirli sayıda bitten oluşan 
+    kısmını sanki bir tam sayı değişkenmiş gibi kullanmak
+    için kullanılan bir özelliktir.
+
+  - değişkenlere hızlı erişim sağlar.
+  - bellek tasarrufu sağlar.
+*/
+
+/*
+  uint16_t x;
+
+  a, b, c, d, e are representing 5 different fields
+
+  x : edddddcccbbbbaaa
+
+  ------------------------------------------------------
+
+  to get the value of the field b (reading)
+
+  x             : edddddcccbbbbaaa
+  x >>= 3       : 000edddddcccbbbb
+  x &= 15       : 000000000000bbbb
+
+  ------------------------------------------------------
+
+  to set the value of the field b (writing)
+  int val;
+
+  x               : edddddcccbbbbaaa
+  x &= ~(15 << 3) : edddddccc0000aaa
+  x |= (val << 3) : edddddccc____aaa
+
+  ------------------------------------------------------
+*/
+
+/*
+  if a structure members will be used as a bitfield, 
+  the type of the members must be from the following list
+    - int
+    - signed int
+    - unsigned int
+    - _Bool
+
+  - `int` and `signed int` are DIFFERENT in bitfields.
+*/
+
+/*
+  int N = 5;
+  const int CN = 10;
+
+  struct Data {
+    unsigned int mb_a : 2;   
+    // mb_a is a bitfield member of Data structure holds 2 bits
+
+    unsigned int mb_b : N;   // syntax error
+    // error: bit-field 'mb_b' width not an integer constant
+    // must be a constant expression
+
+    unsigned int mb_c : CN;  // syntax error
+    // error: bit-field 'mb_c' width not an integer constant
+    // must be a constant expression
+  };
+*/
+
+/*
+  struct Data {
+    unsigned int mb_x  : 4;     // [0, 15]
+    signed int mb_y    : 4;     // [-8, 7]
+    int mb_z           : 4;     // implementation defined
+    // (signed or unsigned)  [-8, 7] or [0, 15]
+  };
+*/
+
+/*
+  struct Data {
+    _Bool mb_a : 1;  
+    // _Bool type bitfield member must be 1 bit
+  };
+*/
+
+/*
+  struct Data {
+    int m_x, m_y;   // non-bitfield member 
+    int mb_z : 4;   // bitfield member
+  };
+  // generally in production codes, 
+  // whole members are bitfield or non-bitfield members
+*/
+
+/*
+  typedef struct Data {
+    unsigned int mb_a : 6;    // [0, 63]
+    unsigned int mb_b : 6;    // [0, 63]
+    unsigned int mb_c : 6;    // [0, 63]
+  } Data_t;
+
+  int main(void)
+  {
+    Data_t d1 = { 11, 22, 33 };
+    Data_t d2 = { .mb_a = 33, .mb_b = 44, .mb_c = 55 };
+
+    Data_t* p_d = &d1;
+
+    d1.mb_a = 44;
+    p_d->mb_b = 55;
+  }
+*/
+
+/*
+  - storage(allocation) unit
+    generally its sizeof is an `int` type's sizeof
+    
+    if storage unit is 32 bit, bitfield members must be 
+    less than 32 bits.
+*/
+
+/*
+  struct Data {
+    unsigned int mb_a : 32; // VALID
+    unsigned int mb_b : 33; // syntax error
+    // error: width of 'mb_b' exceeds its type
+  };
+*/
+
+/*
+  // size of the structure type will be multiples 
+  // of storage(allocation) unit size.
+
+  typedef struct {
+    unsigned int mb_a : 2;
+    unsigned int mb_b : 1;
+    unsigned int mb_c : 4;
+  } Data_t;
+
+  typedef struct {
+    unsigned int mb_a : 7;
+    unsigned int mb_b : 7;
+    unsigned int mb_c : 7;
+    unsigned int mb_d : 7;
+    unsigned int mb_e : 4;
+  } Data2_t;
+
+  typedef struct {
+    unsigned int mb_a : 7;
+    unsigned int mb_b : 7;
+    unsigned int mb_c : 7;
+    unsigned int mb_d : 7;
+    unsigned int mb_e : 7;
+  } Data3_t;
+
+
+  int main(void)
+  {
+    // ------------------------------------------------------
+
+    // 2 + 1 + 4 = 7 bits
+    // 7 bits < 32 bits(4 bytes)
+
+    printf("sizeof(Data_t) = %zu\n", sizeof(Data_t));
+    // output -> sizeof(Data_t) = 4
+
+    // ------------------------------------------------------
+
+    // 7 + 7 + 7 + 7 + 4 = 32 bits
+    // 32 bits == 32 bits(4 bytes)
+
+    printf("sizeof(Data2_t) = %zu\n", sizeof(Data2_t));
+    // output -> sizeof(Data2_t) = 4
+
+    // ------------------------------------------------------
+
+    // 7 + 7 + 7 + 7 + 7 = 35 bits
+    // 35 bits > 32 bits(4 bytes)
+
+    printf("sizeof(Data3_t) = %zu\n", sizeof(Data3_t));
+    // output -> sizeof(Data3_t) = 8
+
+    // ------------------------------------------------------
+  }
+*/
+
+/*
+  typedef struct {
+    unsigned int mb_a : 4;    // [0, 15]
+    unsigned int mb_b : 3;    // [0, 7]
+  } Data_t;
+
+  int main(void)
+  {
+    Data_t d1;
+
+    d1.mb_a = 17;  
+    // mb_a bitfield member can not hold 17 which is out of range
+    // because of type is `unsigned int` it WILL NOT be UB
+
+    // 1111 + 0001 = 0000 (15 + 1 = 16)
+    // 0000 + 0001 = 0001 (16 + 1 = 17)
+
+    printf("d1.mb_a = %u\n", d1.mb_a);
+    // output -> d1.mb_a = 1
+  }
+*/
+
+/*
+  typedef struct {
+    unsigned int mb_a : 4;
+    unsigned int mb_b : 3;
+  } Data_t;
+
+  // where mb_a bitfield member will be stored 
+  // inside that storage(allocation) unit
+  // is dependent on the compiler. (implementation defined)
+
+  int main(void)
+  {
+    Data_t d1;
+
+    printf("sizeof(Data_t) = %zu\n", sizeof(Data_t));
+    // output -> sizeof(Data_t) = 4
+
+    d1.mb_a = 15;
+
+    // SCENARIO 1
+    // 1111 0000
+    // 0000 0000
+    // 0000 0000
+    // 0000 0000
+
+    // SCENARIO 2
+    // 0000 1111
+    // 0000 0000
+    // 0000 0000
+    // 0000 0000
+
+    // SCENARIO 3
+    // 0000 0000
+    // 0000 0000
+    // 0000 0000
+    // 0000 1111
+
+    // SCENARIO 4
+    // 0000 0000
+    // 0000 0000
+    // 0000 0000
+    // 1111 0000
+
+    // can be each of the above scenarios
+    // so portability is a problem when bitfield members are used.
+  }
+*/
+
+/*
+  typedef struct {
+    unsigned int mb_a : 4;
+    unsigned int mb_b : 5;
+  } Data_t;
+
+  // think about a scenario that mb_a bits 
+  // will be stored like below in the storage unit
+  // (implementation defined)
+
+  // aaaa 0000
+  // 0000 0000
+  // 0000 0000
+  // 0000 0000
+
+  // in this situation, mb_b bits will be store like below
+
+  // aaaa bbbb    -> 1 byte
+  // b000 0000    -> 1 byte
+  // 0000 0000
+  // 0000 0000
+
+  // for compiler to read `mb_a` bits, it should read 1 byte
+  // for compiler to read `mb_b` bits, it should read 2 byte
+  // for 5 bits, reading 2 byte will increase the cost.
+
+
+  typedef struct {
+    unsigned int mb_a : 4;
+    unsigned int      : 4;    // 4 padding bits
+    unsigned int mb_b : 5;
+  } Data2_t;
+
+  // when Data2_t is used, mb_a and mb_b bits will be stored 
+  // in different bytes like below 
+
+  // aaaa 0000
+  // bbbb b000
+  // 0000 0000
+  // 0000 0000
+*/
+
+/*
+  typedef struct {
+    unsigned int mb_a : 4;
+    unsigned int mb_b : 5;
+  } Data_t;
+
+  typedef struct {
+    unsigned int mb_a : 4;
+    unsigned int      : 0;
+    unsigned int mb_b : 5;
+  } Data2_t;
+
+  // mb_a and m_b will be stored in different allocation units.
+
+  int main(void)
+  {
+    printf("sizeof(Data_t) = %zu\n", sizeof(Data_t));
+    // output -> sizeof(Data_t) = 4
+
+    printf("sizeof(Data2_t) = %zu\n", sizeof(Data2_t));
+    // output -> sizeof(Data2_t) = 8
+  }
+*/
+
+/*
+  // examples from DOS operating system(16 bit)
+  // allocation unit is 16 bit
+
+  // ------------------------------------------------------
+
+  struct DOS_Date {
+    unsigned int mb_day   : 5;  // [0, 31]
+    unsigned int mb_mon   : 4;  // [0, 15]
+    unsigned int mb_year  : 7;  // [0, 127]
+  };
+
+  // mb_year will store 1980 + year -> [1980, 2107]
+
+  // ------------------------------------------------------
+
+  struct DOS_Time {
+    unsigned int mb_hour  : 5;    // [0, 31]
+    unsigned int mb_min   : 6;    // [0, 63]
+    unsigned int mb_sec   : 5;    // [0, 31]
+  };
+
+    // mb_sec will store 2 * sec -> [0, 58]
+
+  // ------------------------------------------------------
+*/
+
+/*
+  struct Question {
+    unsigned int mb_option  : 3;  // [0, 7]  --> (A, B, C, D, E)
+    unsigned int mb_correct : 1;  // [0, 1]  --> (false, true)
+  };
+
+  // holding 1 question in 4 bits.
+*/
+
+/*
+  typedef struct {
+    unsigned int mb_day   : 5;  // [0, 31]
+    unsigned int mb_mon   : 4;  // [0, 15]
+    unsigned int mb_year  : 7;  // [0, 127]
+    unsigned int mb_hour  : 5;  // [0, 31]
+    unsigned int mb_min   : 6;  // [0, 63]
+    unsigned int mb_sec   : 5;  // [0, 31]
+  } DateTime_t;
+
+  void print_datetime(const DateTime_t* p_dt)
+  {
+    printf("%02u/%02u/%04u %02u:%02u:%02u\n",
+      p_dt->mb_day, 
+      p_dt->mb_mon, 
+      p_dt->mb_year + 1980,
+      p_dt->mb_hour, 
+      p_dt->mb_min, 
+      p_dt->mb_sec * 2);
+  }
+
+  int main(void)
+  {
+    printf("sizeof(DateTime_t) = %zu\n", sizeof(DateTime_t));
+    // output -> sizeof(DateTime_t) = 4
+
+    // 5 + 4 + 7 + 5 + 6 + 5 = 32 bits
+
+    DateTime_t dt = { 30, 11, 2024 - 1980, 00, 14, 20 };
+    print_datetime(&dt);
+    // output -> 30/11/2024 00:14:40
+  }
+*/
+
+/*
+  #include <stdint.h> // uint32_t
+
+  typedef union {
+    struct {
+      unsigned int mb_day   : 5;  // [0, 31]
+      unsigned int mb_mon   : 4;  // [0, 15]
+      unsigned int mb_year  : 7;  // [0, 127]
+      unsigned int mb_hour  : 5;  // [0, 31]
+      unsigned int mb_min   : 6;  // [0, 63]
+      unsigned int mb_sec   : 5;  // [0, 31]
+    };
+    uint32_t m_value;
+
+  } DateTime_t;
+
+  void print_datetime(const DateTime_t* p_dt)
+  {
+    printf("%02u/%02u/%04u %02u:%02u:%02u\n",
+      p_dt->mb_day, 
+      p_dt->mb_mon, 
+      p_dt->mb_year + 1980,
+      p_dt->mb_hour, 
+      p_dt->mb_min, 
+      p_dt->mb_sec * 2);
+  }
+
+  int main(void)
+  {
+    printf("sizeof(DateTime_t) = %zu\n", sizeof(DateTime_t));
+    // output -> sizeof(DateTime_t) = 4
+
+    DateTime_t dt = { {30, 11, 2024 - 1980, 00, 14, 20} };
+
+    // ------------------------------------------------------
+
+    print_datetime(&dt);
+    // output -> 30/11/2024 00:14:40
+    printf("%u\n", dt.m_value); // output -> 2713737598
+
+    // ------------------------------------------------------
+
+    dt.m_value = 2713738293;
+    print_datetime(&dt);
+    // output -> 21/01/2026 00:14:40
+
+    // ------------------------------------------------------
+
+    dt.m_value = 2713737598;
+    print_datetime(&dt);
+    // output -> 30/11/2024 00:14:40
+
+    // ------------------------------------------------------
+  }
+*/
+
+/*
+  #include <stdint.h> // uint32_t
+
+  typedef union {
+    struct {
+      unsigned int mb_bit0   : 1;
+      unsigned int mb_bit1   : 1;
+      unsigned int mb_bit2   : 1;
+      unsigned int mb_bit3   : 1;
+      unsigned int mb_bit4   : 1;
+      unsigned int mb_bit5   : 1;
+      unsigned int mb_bit6   : 1;
+      unsigned int mb_bit7   : 1;
+      unsigned int mb_bit8   : 1;
+      unsigned int mb_bit9   : 1;
+      unsigned int mb_bit10  : 1;
+      unsigned int mb_bit11  : 1;
+      unsigned int mb_bit12  : 1;
+      unsigned int mb_bit13  : 1;
+      unsigned int mb_bit14  : 1;
+      unsigned int mb_bit15  : 1;
+      unsigned int mb_bit16  : 1;
+      unsigned int mb_bit17  : 1;
+      unsigned int mb_bit18  : 1;
+      unsigned int mb_bit19  : 1;
+      unsigned int mb_bit20  : 1;
+      unsigned int mb_bit21  : 1;
+      unsigned int mb_bit22  : 1;
+      unsigned int mb_bit23  : 1;
+      unsigned int mb_bit24  : 1;
+      unsigned int mb_bit25  : 1;
+      unsigned int mb_bit26  : 1;
+      unsigned int mb_bit27  : 1;
+      unsigned int mb_bit28  : 1;
+      unsigned int mb_bit29  : 1;
+      unsigned int mb_bit30  : 1;
+      unsigned int mb_bit31  : 1;
+    };
+    uint32_t m_value;
+  } Bits_t;
+
+  int main(void)
+  {
+    Bits_t b1 = { .m_value = 0 };
+
+    // ------------------------------------------------------
+
+    b1.mb_bit4 = 1;
+    printf("%u\n", b1.m_value); // output -> 16
+
+    // ------------------------------------------------------
+
+    b1.m_value = 15;
+    printf("%u\n", b1.mb_bit0); // output -> 1
+    printf("%u\n", b1.mb_bit1); // output -> 1
+    printf("%u\n", b1.mb_bit2); // output -> 1
+    printf("%u\n", b1.mb_bit3); // output -> 1
+    printf("%u\n", b1.mb_bit4); // output -> 0
+
+    // ------------------------------------------------------
+  }
+*/

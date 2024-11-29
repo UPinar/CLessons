@@ -228,6 +228,9 @@
     - bitwise OR `|` operator
     - bitwise XOR `^` operator
   - bitwise manipulations
+  - bitfields
+  
+### [Command Line Arguments](https://github.com/UPinar/CLessons/tree/master/command_line_arguments)
   
 ### [Not Related](https://github.com/UPinar/CLessons/tree/master/not_related)
   - strict aliasing rule
