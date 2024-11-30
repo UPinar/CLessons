@@ -231,6 +231,10 @@
   - bitfields
   
 ### [Command Line Arguments](https://github.com/UPinar/CLessons/tree/master/command_line_arguments)
+
+### [File Operations](https://github.com/UPinar/CLessons/tree/master/file_operations)
+  - `fopen`, `fclose`, `fcloseall`(non-standart)
+  - `fgetc`, `fputc`
   
 ### [Not Related](https://github.com/UPinar/CLessons/tree/master/not_related)
   - strict aliasing rule
