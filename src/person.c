@@ -2,9 +2,9 @@
 #include <stdio.h>  // printf
 #include <stdlib.h> // rand
 
-#include "person.h"
-#include "nutility.h"
-#include "date.h"
+#include "../headers/person.h"
+#include "../headers/nutility.h"
+#include "../headers/date.h"
 
 #define PUBLIC
 

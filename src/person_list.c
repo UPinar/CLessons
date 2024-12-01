@@ -1,5 +1,5 @@
-#include "person_list.h"
-#include "person.h"
+#include "../headers/person_list.h"
+#include "../headers/person.h"
 
 #include <stdlib.h> // malloc, free
 #include <stdio.h>  // printf

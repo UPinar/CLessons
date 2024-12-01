@@ -410,7 +410,7 @@
 /*
   #include <stdlib.h>   // rand
   #include <stddef.h>   // size_t
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define   UNIQUE_RAND_MAX   20
 
@@ -576,7 +576,7 @@
 
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   // "nutility.c" source file has a function called "randomize"
   // and it has external linkage
@@ -801,7 +801,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {

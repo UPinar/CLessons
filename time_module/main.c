@@ -346,7 +346,7 @@
 /*
   #include <time.h>
   #include <stdlib.h> // malloc, free, qsort
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   // clock function's prototype
   clock_t clock(void);

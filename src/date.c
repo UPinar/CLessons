@@ -1,4 +1,4 @@
-#include "date.h"
+#include "../headers/date.h"
 
 #include <stdio.h>  
 #include <stdlib.h> // atoi, rand

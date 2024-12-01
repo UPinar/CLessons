@@ -1518,7 +1518,7 @@
 */
 
 /*
-  #include "../date.h"
+  #include "../headers/date.h"
 
   int main(void)
   {
@@ -1533,7 +1533,7 @@
 */
 
 /*
-  #include "../date.h"
+  #include "../headers/date.h"
 
   int main(void)
   {
@@ -1554,7 +1554,7 @@
 */
 
 /*
-  #include "../date.h"
+  #include "../headers/date.h"
 
   int main(void)
   {
@@ -1566,8 +1566,8 @@
 */
 
 /*
-  #include "../date.h"
-  #include "../nutility.h"
+  #include "../headers/date.h"
+  #include "../headers/nutility.h"
   #include <stddef.h> // size_t
 
   #define   SIZE    10
@@ -1607,7 +1607,7 @@
 */
 
 /*
-  #include "../date.h"
+  #include "../headers/date.h"
 
   int main(void)
   {
@@ -1634,7 +1634,7 @@
 */
 
 /*
-  #include "../date.h"
+  #include "../headers/date.h"
 
   int main(void)
   {
@@ -1659,7 +1659,7 @@
 */
 
 /*
-  #include "../date.h"
+  #include "../headers/date.h"
 
   int main(void)
   {
@@ -1676,7 +1676,7 @@
 */
 
 /*
-  #include "../date.h"
+  #include "../headers/date.h"
 
   int main(void)
   {
@@ -1694,7 +1694,7 @@
 */
 
 /*
-  #include "../date.h"
+  #include "../headers/date.h"
 
   int main(void)
   {
@@ -1712,7 +1712,7 @@
 */
 
 /*
-  #include "../date.h"
+  #include "../headers/date.h"
   #include <stdlib.h> // malloc, free
   #include <time.h>   // clock
 
@@ -1768,7 +1768,7 @@
 */
 
 /*
-  #include "../date.h"
+  #include "../headers/date.h"
 
   int main(void)
   {
@@ -1787,7 +1787,7 @@
 */
 
 /*
-  #include "../date.h"
+  #include "../headers/date.h"
 
   int main(void)
   {
@@ -2075,7 +2075,7 @@
 /*
   // ---------------------------------------------------------
 
-  #include "../date.h"
+  #include "../headers/date.h"
 
   struct Employee {
     int m_id;
@@ -2108,8 +2108,8 @@
 */
 
 /*
-  #include "../person.h"
-  #include "../nutility.h"
+  #include "../headers/person.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -2134,8 +2134,8 @@
   #include <stdlib.h> // malloc, free, qsort
   #include <time.h>   // clock, CLOCKS_PER_SEC
 
-  #include "../person.h"
-  #include "../nutility.h"
+  #include "../headers/person.h"
+  #include "../headers/nutility.h"
 
   void set_person_array(Person_t* p_person, size_t size)
   {
@@ -2201,7 +2201,7 @@
   #include <limits.h> // INT_MIN
   #include <stdlib.h> // qsort
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int int_compare_qsort_UB(const void* vp1, const void* vp2)
   {
@@ -2237,8 +2237,8 @@
   #include <stddef.h> // size_t
   #include <stdlib.h> // malloc, free, qsort
 
-  #include "../person.h"
-  #include "../nutility.h"
+  #include "../headers/person.h"
+  #include "../headers/nutility.h"
 
   int person_compare_qsort(const void* vp1, const void* vp2)
   {
@@ -2362,9 +2362,9 @@
 */
 
 /*
-  #include "../person_list.h"
-  #include "../person.h"
-  #include "../nutility.h"
+  #include "../headers/person_list.h"
+  #include "../headers/person.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -2393,9 +2393,9 @@
 */
 
 /*
-  #include "../person_list.h"
-  #include "../person.h"
-  #include "../nutility.h"
+  #include "../headers/person_list.h"
+  #include "../headers/person.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -2416,9 +2416,9 @@
 */
 
 /*
-  #include "../person_list.h"
-  #include "../person.h"
-  #include "../nutility.h"
+  #include "../headers/person_list.h"
+  #include "../headers/person.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -2471,9 +2471,9 @@
 */
 
 /*
-  #include "../handle_person_list.h"
-  #include "../nutility.h"
-  #include "../person.h"
+  #include "../headers/handle_person_list.h"
+  #include "../headers/nutility.h"
+  #include "../headers/person.h"
 
   int main(void)
   {
@@ -2537,9 +2537,9 @@
 */
 
 /*
-  #include "../handle_person_list.h"
-  #include "../nutility.h"
-  #include "../person.h"
+  #include "../headers/handle_person_list.h"
+  #include "../headers/nutility.h"
+  #include "../headers/person.h"
   #include <stdlib.h> // rand
 
   #define   LIST_COUNT  1000
@@ -3531,7 +3531,7 @@
 */
 
 /*
-  #include "../date.h"
+  #include "../headers/date.h"
 
   typedef union {
     char m_name[32];
@@ -3554,8 +3554,8 @@
 
 
 /*
-  #include "../date.h"
-  #include "../nutility.h"
+  #include "../headers/date.h"
+  #include "../headers/nutility.h"
 
   #include <stdlib.h> // rand
   #include <string.h> 

@@ -1426,7 +1426,7 @@
 
 /*
   #include <string.h>  // memset
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define SIZE 10
 
@@ -1507,7 +1507,7 @@
 /*
   #include <string.h>  // memset
   #include <stddef.h>  // size_t
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define   SIZE  20
 
@@ -1563,7 +1563,7 @@
 
 /*
   #include <string.h>  // memcpy
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define   SIZE  10
 
@@ -1631,7 +1631,7 @@
 
 /*
   #include <string.h>  // memcpy, memmove
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define   SIZE  100
 
@@ -1797,7 +1797,7 @@
 /*
   #include <string.h>   // memcmp
   #include <stdlib.h>   // rand
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define   SIZE  10
 
@@ -1981,7 +1981,7 @@
 
 /*
   #include <stdlib.h> // qsort
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
   #include <math.h>   // abs
 
   #define   SIZE  20
@@ -2098,7 +2098,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
   #include <stdlib.h> // qsort
   #include <stddef.h> // size_t
 
@@ -2136,7 +2136,7 @@
   // Write a generic sort function that sorts an array
 
   #include <stddef.h> // size_t
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define  SIZE  20
 
@@ -2216,7 +2216,7 @@
 
 /*
   #include <string.h> // memcmp
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define   SIZE  20  
 
@@ -2266,7 +2266,7 @@
 
 /*
   #include <stdlib.h>   // bsearch
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define   SIZE  20  
 
@@ -2319,7 +2319,7 @@
   #include <stddef.h> // size_t
   #include <stdlib.h> // rand
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define SIZE 40
 
@@ -2365,7 +2365,7 @@
   // HOMEWORK : sort const char* array lexicographically 
   //            with qsort algorithm
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
   #include <stdlib.h> // qsort
   #include <string.h> // strcmp
 

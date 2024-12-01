@@ -134,7 +134,7 @@
   // weekday program 
 
   #include <stdlib.h> // exit, EXIT_FAILURE, atoi
-  #include "../date.h"
+  #include "../headers/date.h"
 
   int main(int argc, char** argv)
   {
@@ -167,7 +167,7 @@
   // calculate N days later 
 
   #include <stdlib.h> // exit, EXIT_FAILURE, atoi
-  #include "../date.h"
+  #include "../headers/date.h"
 
   int main(int argc, char** argv)
   {

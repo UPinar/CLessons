@@ -45,7 +45,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -102,7 +102,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -118,7 +118,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -181,7 +181,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -204,7 +204,7 @@
   // left shift by 2 means, multiply by 4
   // ...
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -223,7 +223,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -319,7 +319,7 @@
   // if left operand is UNSIGNED 
   // left feed will be done with 0's.
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -338,7 +338,7 @@
   // left feed will be done with 0's.
 
   #include <limits.h>
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -356,7 +356,7 @@
   // if left operand is SIGNED and NEGATIVE
   // left feed is --- IMPLEMENTATION DEFINED ---
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -374,7 +374,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -393,7 +393,7 @@
 
 /*
   #include <limits.h>
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -457,7 +457,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -480,7 +480,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -528,7 +528,7 @@
   // BİTSEL VE işlemine tabi tuttuğumuzda
   // sayının en sağdaki biti sıfırlanır.
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -551,7 +551,7 @@
 /*
   // to check if the number is power of 2
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -605,7 +605,7 @@
 /*
   // kernighan's algorithm (counting the set bits)
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int set_bit_count(int x)
   {
@@ -660,7 +660,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -697,7 +697,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -719,7 +719,7 @@
 /*
   // XOR'ing an integer with itself will result in 0
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -742,7 +742,7 @@
   // XOR'ing an integer with the same value twice will result 
   // in the original value
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -787,7 +787,7 @@
 /*
   // XOR swap algorithm
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -873,7 +873,7 @@
 /*
   // to set an individual bit
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -898,7 +898,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
   #include <stddef.h> // size_t
   #include <stdlib.h> // rand
 
@@ -937,7 +937,7 @@
 /*
   // to clear an individual bit 
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -962,7 +962,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
   #include <stddef.h> // size_t
   #include <stdlib.h> // rand
 
@@ -1004,7 +1004,7 @@
 /*
   // to flip an individual bit
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -1055,7 +1055,7 @@
 /*
   // to get an individual bit
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
   #include <limits.h>
 
   int main(void)
@@ -1172,7 +1172,7 @@
 /*
   // bitwise manipulation over more than one bit
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define   MASK1    0x20   // 32
   #define   MASK2    0x10   // 16
@@ -1242,7 +1242,7 @@
   // using lookup table to get the number of set bits
 
   #include <limits.h>
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   // bit count lookup table
   const int arr [] = {
@@ -1299,7 +1299,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
   #include <limits.h>
 
   #define BITCOUNT(x)                                \
@@ -1420,7 +1420,7 @@
   //  all elements have a pair except one element
   //  return the element that has no pair
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {

@@ -1743,7 +1743,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define   SIZE  100
 
@@ -1780,7 +1780,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define   SIZE  100
 
@@ -1802,7 +1802,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
   #include <math.h>
 
   #define   SIZE  100
@@ -1833,7 +1833,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define   SIZE  20
 
@@ -1864,7 +1864,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define   SIZE  20
 
@@ -1911,7 +1911,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define   SIZE  20
 
@@ -1950,7 +1950,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define  SIZE  20
 
@@ -1988,7 +1988,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define  SIZE  40
 
@@ -2026,7 +2026,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define SIZE 20
 
@@ -2074,7 +2074,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define SIZE 20
 
@@ -2299,7 +2299,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
   int main(void)
   {
     int a[2] = { 10, 20 };
@@ -2360,7 +2360,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -2403,7 +2403,7 @@
 /*
   // will copy reverse of the array to another array (reverse copy)
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define SIZE 20
 
@@ -2450,7 +2450,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -2466,7 +2466,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -2478,7 +2478,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   void foo(int* p, int size)
   {
@@ -2589,7 +2589,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define SIZE 10
 
@@ -2744,7 +2744,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define SIZE 20
 
@@ -2863,7 +2863,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int a[5] = { 10, 20, 30, 40, 50 };
 
@@ -2994,7 +2994,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int* foo(int* ptr)
   {
@@ -3033,7 +3033,7 @@
 /*
   // Change the value of the max element of the array to -1
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define SIZE 10
 
@@ -3068,7 +3068,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define SIZE 10
 
@@ -3101,7 +3101,7 @@
 /*
   // Swap the max element with the first element of the array
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define SIZE 10
 
@@ -3135,7 +3135,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define SIZE 10
 
@@ -3183,7 +3183,7 @@
 /*
   // Swap min and max elements of the array
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define SIZE 10
 
@@ -3229,7 +3229,7 @@
   // call print_array function a way that 
   // begins with max element
   // ends with the end of the array 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define SIZE 10
 
@@ -3266,7 +3266,7 @@
   // call print_array function a way that 
   // begins with the first element
   // ends with the max element
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define SIZE 10
 
@@ -3298,7 +3298,7 @@
 /*
   // call print_array function a way that 
   // prints all elements between min and max elements
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define SIZE 10
 
@@ -3361,7 +3361,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
   #define   SIZE  10
 
   int* getMinElement(const int* p, int size)
@@ -3879,7 +3879,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define SIZE 10
 
@@ -4007,7 +4007,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   // void print_array(const int* p_array, int size){
   //   for (int i = 0; i < size; ++i){
@@ -4186,7 +4186,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int g_x, g_y, g_z;
 
@@ -4276,7 +4276,7 @@
 
 /*
   #include <stddef.h> // size_t
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -4357,7 +4357,7 @@
 /*
   #include <stddef.h> // size_t
   #include <string.h> // strcmp
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   // how to check if a string is a valid day name
 
@@ -4399,7 +4399,7 @@
   // how to print the elements and their addresses one by one
 
   #include <stddef.h> // size_t
-  #include "../nutility.h"  
+  #include "../headers/nutility.h"  
 
   int main(void)
   {
@@ -4420,7 +4420,7 @@
 /*
   // write random elements
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
   #include <stdlib.h> // rand
 
   int main(void)
@@ -4437,7 +4437,7 @@
 /*
   // write elements an their lengths
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
   #include <string.h> // strlen
 
   int main(void)
@@ -4458,7 +4458,7 @@
 /*
   // write elements that have specific lengths
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
   #include <stddef.h> // size_t
   #include <string.h> // strlen
 
@@ -4477,7 +4477,7 @@
 /*
   // write element's first characters
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
   #include <stddef.h> // size_t
   #include <string.h> // strlen
 
@@ -4506,7 +4506,7 @@
 /*
   // write element's last characters
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
   #include <stddef.h> // size_t
   #include <string.h> // strlen
 
@@ -4529,7 +4529,7 @@
 /*
   // write elements that have a specific character inside of it
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
   #include <stddef.h> // size_t
   #include <string.h> // strchr
 
@@ -4555,7 +4555,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
   #include <stddef.h> // size_t
   #include <string.h> // strchr
 
@@ -4581,7 +4581,7 @@
   // print elements that have a specific substring inside of it
 
   #include <string.h> // strstr
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -4601,7 +4601,7 @@
   // any of the specific characters inside of it
 
   #include <string.h> // strpbrk
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -4620,7 +4620,7 @@
   // HOMEWORK - dizideki yazılardan içinde herhangi bir karakterden
   // birden fazla olanlar yazdırılacak.
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
   #include <string.h> // strlen, memset
   #include <stddef.h> // size_t
 
@@ -4660,7 +4660,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
   #include <string.h>
   #include <stddef.h> // size_t
 
@@ -4677,7 +4677,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
   #include <stddef.h> // size_t
   #include <stdlib.h> // rand
 
@@ -4700,7 +4700,7 @@
 /*
   // sort the array alphabetically
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
   #include <stddef.h> // size_t
   #include <string.h> // strcmp
 
@@ -4726,7 +4726,7 @@
 /*
   // sort the array by the length of the elements ascending
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
   #include <stddef.h> // size_t
   #include <string.h> // strcmp
 
@@ -4905,7 +4905,7 @@
 /*
   // copy elements of the array to a buffer as concatenated
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
   #include <stddef.h> // size_t
   #include <string.h> // strcpy, strcat
 
@@ -5098,7 +5098,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -5239,7 +5239,7 @@
   // write a function that takes an address and the size of an array
   // and will send the address of the max and min elements of the array
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define   SIZE  10 
 
@@ -5293,7 +5293,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   void foo_1(int** ptr_1, int** ptr_2)
   {
@@ -5468,7 +5468,7 @@
 /*
   #include <stddef.h>   // size_t
   #include <string.h>   // strcmp
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   void print_names_1(const char** p_arr_names, size_t size)
   {
@@ -5770,7 +5770,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   void foo(int (*p)[5])
   {
@@ -6129,7 +6129,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   // copy_T is a generic function
   void copy_T(void* vp_dest, const void* vp_src, size_t n)
@@ -6175,7 +6175,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   // swap_T is a generic function
   void swap_T(void* vp1, void* vp2, size_t size)
@@ -6239,7 +6239,7 @@
   // { 1, 2, 3, 4, 5 } ===> { 5, 4, 3, 2, 1 }
 
   #include <stddef.h> // size_t
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define   SIZE  10
 
@@ -7064,7 +7064,7 @@
   #include <ctype.h>
   #include <string.h> // strcmp
   #include <stddef.h> // size_t
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   typedef int(*FP_CTEST)(int);
 

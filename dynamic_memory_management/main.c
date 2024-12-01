@@ -101,7 +101,7 @@
 
 /*
   #include <stdlib.h>   // malloc, exit, EXIT_FAILURE, free
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -152,7 +152,7 @@
 
 /*
   #include <stdlib.h>   // malloc, exit, EXIT_FAILURE, free
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -285,7 +285,7 @@
   #include <stdlib.h>   // malloc, exit, EXIT_FAILURE, free
   #include <string.h>   // memset
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -416,7 +416,7 @@
 
 /*
   #include <stdlib.h>   // malloc, free
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -439,7 +439,7 @@
 
 /*
   #include <stdlib.h>   // malloc, free
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -461,7 +461,7 @@
 
 /*
   #include <stdlib.h>   // malloc
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -482,7 +482,7 @@
 
 /*
   #include <stdlib.h>   // malloc, free
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -530,7 +530,7 @@
 
 /*
   #include <stdlib.h>   // calloc, free, exit, EXIT_FAILURE, 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -691,7 +691,7 @@
 /*
   #include <stddef.h>   // size_t
   #include <stdlib.h>   // malloc, free, qsort
-  #include "../nutility.h"  
+  #include "../headers/nutility.h"  
 
   int fn_compare_int(const void* vp1, const void* vp2)
   {
@@ -731,7 +731,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
   #include <stdlib.h>   // malloc, free
 
   #define ARRAY_COUNT 3
@@ -793,7 +793,7 @@
   // (1) password implementation
 
   #include <stdlib.h>   // rand
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define   SIZE      100
   #define   PSW_LEN   16
@@ -823,7 +823,7 @@
   // (2) password implementation
 
   #include <stdlib.h>   // rand
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define   SIZE          100
   #define   PSW_LEN       16
@@ -884,7 +884,7 @@
 
   #include <stdlib.h>   // rand, free
   #include <string.h>   // strdup
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   #define   SIZE          100
   #define   PSW_LEN       16
@@ -990,7 +990,7 @@
 
   #include <stddef.h>   // size_t
   #include <stdlib.h>   // malloc, free
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -1053,7 +1053,7 @@
 /*
   #include <stddef.h>   // size_t
   #include <stdlib.h>   // malloc, free
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -1113,7 +1113,7 @@
 
   #include <stddef.h>   // size_t
   #include <stdlib.h>   // malloc, free
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -1176,7 +1176,7 @@
 
   #include <stddef.h>   // size_t
   #include <stdlib.h>   // malloc, free
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -1340,7 +1340,7 @@
 /*
   #include <stdlib.h>   // malloc, realloc, free
   #include <stddef.h>   // size_t
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -1391,7 +1391,7 @@
 
   #include <stdlib.h>   // malloc, realloc, free
   #include <stddef.h>   // size_t
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -1465,7 +1465,7 @@
 /*
   #include <stdlib.h>   // rand, malloc, realloc, free, 
   #include <conio.h>    // _getch
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -1564,7 +1564,7 @@
 */
 
 /*
-  #include "../nutility.h"  
+  #include "../headers/nutility.h"  
   #include <stdlib.h>   // rand, calloc
   #include <string.h>   // strcmp, strdup
 

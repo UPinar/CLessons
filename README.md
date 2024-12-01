@@ -235,6 +235,11 @@
 ### [File Operations](https://github.com/UPinar/CLessons/tree/master/file_operations)
   - `fopen`, `fclose`, `fcloseall`(non-standart)
   - `fgetc`, `fputc`
+  - text and binary mode
+  - `remove` 
+  - `rename`, `tmpnam`
+  - `fprintf`, `fscanf` formatted IO
+  - reading line by line from a file
   
 ### [Not Related](https://github.com/UPinar/CLessons/tree/master/not_related)
   - strict aliasing rule

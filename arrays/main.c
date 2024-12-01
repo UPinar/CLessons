@@ -1596,7 +1596,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -1706,7 +1706,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -1922,7 +1922,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -2001,7 +2001,7 @@
 
 /*
   #include <stddef.h> // size_t
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   int main(void)
   {
@@ -2181,7 +2181,7 @@
   #include <stddef.h>       // size_t
   #include <stdlib.h>       // rand
 
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
 
   void set_matrix20(int (*p)[20], size_t arr_size)
   {
@@ -2623,7 +2623,7 @@
 */
 
 /*
-  #include "../nutility.h"
+  #include "../headers/nutility.h"
   #include <stddef.h>   // size_t
   #include <stdlib.h>   // qsort
   #include <string.h>   // strcmp
