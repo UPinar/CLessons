@@ -1,6 +1,8 @@
 #ifndef DATE_H
 #define DATE_H
 
+#include <stdio.h>
+
 typedef struct Date {
   int m_day;
   int m_month;
@@ -36,6 +38,7 @@ Date_t* date_N_days_before(Date_t* p_dest, Date_t* p_source, int N);
 
 // formatted input/output functions
 void date_print(const Date_t* p_date);  // 1 Ocak 2001 - Pazartesi
+void date_print_file(FILE* f_dest, const Date_t* p_date);
 Date_t* date_scan(Date_t* p_date);
 
 #endif // DATE_H

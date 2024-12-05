@@ -86,9 +86,11 @@
   - randomize idiom
 
 ### [Type Conversions](https://github.com/UPinar/CLessons/tree/master/type_conversions)
-  - assignment type conversions (implicit)
-  - arithmetic type conversions (implicit)
-  - type-cast operator
+  - implicit type conversions
+    - assignment type conversions
+    - arithmetic type conversions
+  - explicit type conversions
+    - type-cast operator
 
 ### [Arrays](https://github.com/UPinar/CLessons/tree/master/arrays)
   - information about data structures, algorithms, big O notation
@@ -239,8 +241,11 @@
   - `remove` 
   - `rename`, `tmpnam`
   - `fprintf`, `fscanf` formatted IO
-  - reading line by line from a file
-  
+  - `fgets`, `fputs`
+  - `fwrite`, `fread` unformatted IO
+  - file pointer manipulation functions
+    - `fseek`, `rewind`, `ftell`, `fsetpos`, `fgetpos`
+
 ### [Not Related](https://github.com/UPinar/CLessons/tree/master/not_related)
   - strict aliasing rule
   - localization

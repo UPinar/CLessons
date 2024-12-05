@@ -293,6 +293,30 @@ void date_print(const Date_t* p_date)
 }
 
 PUBLIC
+void date_print_file(FILE* f_dest, const Date_t* p_date)
+{
+  static const char* const p_months[] = 
+      { "", "Ocak", "Subat", "Mart", "Nisan", "Mayis", "Haziran",
+        "Temmuz", "Agustos", "Eylul", "Ekim", "Kasim", "Aralik" };
+
+  static const char* const p_days[] = 
+      { "Pazar", "Pazartesi", "Sali", "Carsamba", 
+        "Persembe", "Cuma", "Cumartesi" };
+
+  int day = date_get_day_of_month(p_date);
+  int month = date_get_month(p_date);
+  int year = date_get_year(p_date);
+  int week_day = date_get_day_of_week(p_date);
+
+  fprintf(f_dest,
+          "%02d %s %d %s\n", 
+          day, 
+          p_months[month], 
+          year, 
+          p_days[week_day]);
+}
+
+PUBLIC
 Date_t* date_scan(Date_t* p_date)
 {
   int day, month, year;

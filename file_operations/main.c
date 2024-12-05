@@ -1729,12 +1729,6 @@
 */
 
 /*
-            ------------------------------------
-            | reading line by line from a file |
-            ------------------------------------
-*/
-
-/*
                     ----------------------
                     | fgets in <stdio.h> |
                     ----------------------
@@ -1854,3 +1848,988 @@
     // and adds '\0' at the end of the buffer.
   }
 */
+
+/*
+  // writing lines shorter than 30 characters to the console
+
+  #include <stdio.h>  // fopen, fgets, fclose
+  #include <string.h> // strlen
+
+  #define   BUFFER_SIZE  100
+
+  int main(void)
+  {
+    char buf[BUFFER_SIZE];
+
+    FILE* f_src = fopen("../headers/nutility.h", "r");
+    if (f_src == NULL){
+      printf("nutility.h could not be opened.\n");
+      return 1;
+    }
+
+    while (fgets(buf, BUFFER_SIZE, f_src) != NULL)
+      if (strlen(buf) < 30)
+        printf("%s", buf);
+    
+    fclose(f_src);
+
+    // output ->
+    //  #ifndef   NUTILITY_H
+    //  #define   NUTILITY_H
+    //  
+    //  
+    //  extern const int g_primes[];
+    //  #define PNAMES_SIZE 335
+    //  
+    //  
+    //  void randomize(void);
+    //  void sgets(char* pStr);
+    //  void swap(int* x, int* y);
+    //  
+    //  
+    //  
+    //  int is_prime(int val);
+    //  
+    //  
+    //  
+    //  #endif // NUTILITY_H
+  }
+*/
+
+/*
+                    ----------------------
+                    | fputs in <stdio.h> |
+                    ----------------------
+*/
+
+/*
+  // fputs function prototype
+  int fputs(const char* str, FILE* file_pointer);
+
+  - returns EOF when fails, 0 when succeeds.
+*/
+
+/*
+  #include <stdio.h>  // fopen, fputs, fclose
+
+  int main(void)
+  {
+    FILE* f = fopen("log.txt", "w");
+    if (f == NULL){
+      printf("log.txt could not be created.\n");
+      return 1;
+    }
+
+    char str[] = "hello world";
+
+    for (int i = 0; i < 5; ++i){
+      fputs(str, f);
+      fputs("\n", f);
+    }
+
+    fclose(f);
+
+    // output ->
+    //  hello world
+    //  hello world
+    //  hello world
+    //  hello world
+    //  hello world
+  }
+*/
+
+/*
+  - unformatted input/output functions 
+    will write bytes to the file as they are.
+
+  - fwrite, fread unfomatted input/output functions
+*/
+
+/*
+                ---------------------------------
+                | fwrite and fread in <stdio.h> |
+                ---------------------------------
+*/
+
+/*
+  // fwrite function prototype
+  size_t fwrite(const void* buffer, 
+                size_t      element_size, 
+                size_t      element_count,
+                FILE*       file_pointer);
+
+  - returns the number of items written to the file.
+
+
+  // fread function prototype
+  size_t fread(void*   buffer, 
+               size_t  element_size, 
+               size_t  element_count,
+               FILE*   file_pointer);
+
+  - returns the number of items read from the file.
+*/
+
+/*
+  - because of those functions are unformatted 
+    IO functions, we need to open the file in binary mode.
+*/
+
+/*
+  #include <stdio.h>  // fopen
+  #include "../headers/nutility.h"
+
+  #define   SIZE    100
+
+  int main(void)
+  {
+    int primes_count = 100000;
+
+    char filename[SIZE];
+    sprintf(filename, "primes%d.dat", primes_count);
+
+    FILE* f_dest = fopen(filename, "wb");
+    if (f_dest == NULL){
+      printf("%s could not be created.\n", filename);
+      return 1;
+    }
+
+    int x = 2;
+    int count = 0;
+
+    while (count < primes_count){
+      if (is_prime(x)){
+        fwrite(&x, sizeof(int), 1, f_dest);
+        ++count;
+      }
+      ++x;
+    }
+
+    fclose(f_dest);
+  }
+
+  // primes100000.dat -> 400'000 bytes
+*/
+
+/*
+  #include "../headers/person.h"
+  #include "../headers/nutility.h"
+  #include <stdio.h>  // fopen, fwrite, fclose, sprintf
+
+  #define   SIZE    100
+
+  int main(void)
+  {
+    int person_count = 10000;
+
+    char filename[SIZE];
+    sprintf(filename, "person%d.dat", person_count);
+
+    FILE* f_dest = fopen(filename, "wb");
+    if (f_dest == NULL){
+      printf("%s could not be created.\n", filename);
+      return 1;
+    }
+
+    randomize();
+    Person_t per;
+
+    while (person_count--){
+      person_set_random(&per);
+      fwrite(&per, sizeof(Person_t), 1, f_dest);
+    } 
+
+    fclose(f_dest);
+  }
+
+  // person10000.dat -> 800'000 bytes
+*/
+
+/*
+  #include <stdio.h>  // fopen, fread, fclose
+
+  int main(void)
+  {
+    FILE* f_src = fopen("primes100000.dat", "rb");
+
+    if (f_src == NULL){
+      printf("primes100000.dat could not be opened.\n");
+      return 1;
+    }
+
+    int x;
+
+    while (fread(&x, sizeof(int), 1, f_src) == 1)
+      printf("%d ", x);
+
+    fclose(f_src);
+
+    // output ->
+    //  ... 
+    //  1299269 1299283 1299289 1299299 1299317 1299323 1299341
+    //  1299343 1299349 1299359 1299367 1299377 1299379 1299437 
+    //  1299439 1299449 1299451 1299457 1299491 1299499 1299533
+    //  1299541 1299553 1299583 1299601 1299631 1299637 1299647 
+    //  1299653 1299673 1299689 1299709
+  }
+*/
+
+/*
+  #include <stdio.h>  // fopen, fread, fclose
+  #include "../headers/nutility.h"
+
+  #define   SIZE    12
+
+  int main(void)
+  {
+    FILE* f_src = fopen("primes100000.dat", "rb");
+
+    if (f_src == NULL){
+      printf("primes100000.dat could not be opened.\n");
+      return 1;
+    }
+
+    int arr[SIZE];
+
+    size_t N;
+
+    while ((N = fread(&arr, sizeof(int), SIZE, f_src)) != 0)
+      print_array(arr, N);
+
+
+    fclose(f_src);
+
+    // output ->
+    //  ... 
+    //  ---------------------------------------
+    //  1299317 1299323 1299341 1299343 1299349 
+    //  1299359 1299367 1299377 1299379 1299437
+    //  1299439 1299449
+    //  ---------------------------------------
+    //  1299451 1299457 1299491 1299499 1299533 
+    //  1299541 1299553 1299583 1299601 1299631
+    //  1299637 1299647
+    //  ---------------------------------------
+    //  1299653 1299673 1299689 1299709
+    //  ---------------------------------------
+
+    // 8333 * 12 = 99996 bytes
+    // 100000 - 99996 = 4 bytes (last array will have 4 elements)
+  }
+*/
+
+/*
+  #include <stdio.h>  // fopen, fread, fclose
+  #include "../headers/person.h"
+
+  int main(void)
+  {
+    FILE* f_src = fopen("person1000.dat", "rb");
+
+    if (f_src == NULL){
+      printf("primes100000.dat could not be opened.\n");
+      return 1;
+    }
+
+    Person_t per;
+
+    while (fread(&per, sizeof(Person_t), 1, f_src) != 0)
+      person_print(&per);
+
+    fclose(f_src);
+
+    // output ->
+    //  ...
+    //  26613 abdullah       maganda        02 Eylul 1950 Cumartesi
+    //  20149 naci           kucukkaya      09 Agustos 2022 Sali
+    //  6003  aynur          kilicdar       09 Mayis 1999 Pazar
+    //  10817 cebrail        tercan         02 Eylul 1964 Carsamba
+  }
+*/
+
+/*
+  #include <stdio.h>  // fopen, fread, fclose
+  #include "../headers/person.h"
+
+  int main(void)
+  {
+    FILE* f_src = fopen("person1000000.dat", "rb");
+
+    if (f_src == NULL){
+      printf("person1000.dat could not be opened.\n");
+      return 1;
+    }
+
+    Person_t per;
+    int day = 5, month = 12;
+
+    while (fread(&per, sizeof(Person_t), 1, f_src) != 0)
+    {
+      if (per.m_birth_date.m_day == day && 
+          per.m_birth_date.m_month == month)
+      {
+        person_print(&per);
+      }
+    }
+
+    fclose(f_src);
+
+    // output ->
+    //  ...
+    //  3527  arda       takes          05 Aralik 2021 Pazar
+    //  10895 gulsah     terlemez       05 Aralik 1975 Cuma
+    //  2891  mehmet     kalpsiz        05 Aralik 1985 Persembe
+    //  3067  egemen     altinisik      05 Aralik 2000 Sali
+    //  26438 ege        merdane        05 Aralik 1979 Carsamba
+  }
+*/
+
+/*
+  #include <stdio.h>  // fopen, fread, fclose
+  #include <string.h> // strchr
+  #include "../headers/person.h"
+
+  int main(void)
+  {
+    FILE* f_src = fopen("person1000000.dat", "rb");
+
+    if (f_src == NULL){
+      printf("person1000.dat could not be opened.\n");
+      return 1;
+    }
+
+    Person_t per;
+    int ch = 'z';
+
+    while (fread(&per, sizeof(Person_t), 1, f_src) != 0)
+    {
+      if (per.m_birth_date.m_year > 2010 &&
+          strchr(per.m_name, ch) && 
+          strchr(per.m_surname, ch))
+      {
+        person_print(&per);
+      }
+    }
+
+    fclose(f_src);
+
+    // output ->
+    //  ...
+    //  14822 yavuz       acgoze         31 Aralik 2022 Cumartesi
+    //  26740 muzaffer    kazanci        29 Kasim 2022 Sali
+    //  76    azmi        iliksiz        06 Temmuz 2011 Carsamba
+    //  18772 cezmi       cangoz         01 Ocak 2012 Pazar
+    //  8539  yilmaz      yagizeli       31 Agustos 2020 Pazartesi
+  }
+*/
+
+/*
+  #include <stdio.h>  // fopen, fread, fclose
+  #include <string.h> // strstr
+  #include "../headers/person.h"
+
+  int main(void)
+  {
+    FILE* f_src = fopen("person1000000.dat", "rb");
+
+    if (f_src == NULL){
+      printf("person1000.dat could not be opened.\n");
+      return 1;
+    }
+
+    Person_t per;
+    char str[20] = { "kan" };
+
+    while (fread(&per, sizeof(Person_t), 1, f_src) != 0)
+    {
+      if (strstr(per.m_name, str) && 
+          strstr(per.m_surname, str))
+      {
+        person_print(&per);
+      }
+    }
+
+    fclose(f_src);
+
+    // output ->
+    //  ...
+    //  6612  atakan      polatkan       31 Ocak 2017 Sali
+    //  9217  hakan       yurekyakan     19 Mayis 1990 Cumartesi
+    //  6137  tarkan      polatkan       10 Temmuz 2017 Pazartesi
+    //  17655 hakan       yavasakan      18 Ekim 1983 Sali
+  }
+*/
+
+/*
+  // copying a file chunk by chunk
+
+  #include <stdio.h>  // fopen, fclose, printf
+
+  #define   CHUNK_SIZE    1024
+
+  int main(int argc, char* argv[])
+  {
+    if (argc != 3){
+      printf("usage: %s <source> <destination>\n", argv[0]);
+      return 1;
+    }
+    
+    FILE* f_src = fopen(argv[1], "rb");
+    if (f_src == NULL){
+      printf("%s could not be opened.\n", argv[1]);
+      return 2;
+    }
+
+    FILE* f_dst = fopen(argv[2], "wb");
+    if (f_dst == NULL){
+      printf("%s could not be created.\n", argv[2]);
+      fclose(f_src);
+      return 3;
+    }
+
+    char buffer[CHUNK_SIZE];
+    size_t N;
+    int byte_count = 0;
+
+    while ((N = fread(buffer, 1, CHUNK_SIZE, f_src)) != 0){
+      fwrite(buffer, 1, N, f_dst);
+      byte_count += (int)N;
+    }
+
+    fclose(f_src);
+    fclose(f_dst);
+
+    printf("%d bytes copied from %s to %s\n", byte_count, 
+                                              argv[1], 
+                                              argv[2]);
+  }
+
+  // command line -> prog.exe primes100000.dat abc.dat
+  // output -> 400000 bytes copied from primes100000.dat to abc.dat
+*/
+
+/*
+  #include <string.h> // strcpy, strchr
+  #include <stdio.h>  // printf
+  #include "../headers/person.h"
+
+  #define   SIZE  100
+
+  void change_extension(char* dest, const char* source)
+  {
+    strcpy(dest, source);
+    char* p = strchr(dest, '.');
+    if (p != NULL)
+      strcpy(p, ".txt");
+  }
+
+  int main(void)
+  {
+    char src_filename[SIZE] = "person1000000.dat";
+    char dest_filename[SIZE];
+
+    change_extension(dest_filename, src_filename);
+
+    FILE* f_src = fopen(src_filename, "rb");  // read-binary mode
+    if (f_src == NULL){
+      printf("%s could not be opened.\n", src_filename);
+      return 1;
+    }
+
+    FILE* f_dst = fopen(dest_filename, "w");  // write-text mode
+    if (f_dst == NULL){
+      printf("%s could not be created.\n", dest_filename);
+      fclose(f_src);
+      return 2;
+    }
+
+    Person_t per;
+
+    while (fread(&per, sizeof(Person_t), 1, f_src) != 0)
+      person_print_file(f_dst, &per);
+  }
+*/
+
+/*
+            ---------------------------------------
+            | file pointer manipulation functions |
+            ---------------------------------------
+*/
+
+/*
+                    ----------------------
+                    | fseek in <stdio.h> |
+                    ----------------------
+*/
+
+/*
+  // fseek function prototype
+  int fseek(FILE* file_pointer, long offset, int origin);
+*/
+
+/*
+  ---------------------------------------------------------
+
+  origin parameter values:
+    - SEEK_SET (origin will be the beginning of the file)
+    - SEEK_CUR (origin will be current position of file pointer)
+    - SEEK_END (origin will be the end of the file)
+
+  ---------------------------------------------------------
+
+  fseek(f, 1000L, SEEK_SET);
+    - moves the file pointer to the 1000th byte of the file.
+  
+  fseek(f, 0L, SEEK_SET);
+    - moves the file pointer to the beginning of the file.
+
+  fseek(f, -100L, SEEK_SET);    !!!! WRONG !!!
+  if SEEK_SET macro is used, offset must be POSITIVE.
+
+  ---------------------------------------------------------
+
+  fseek(f, 0L, SEEK_END);
+    - moves the file pointer to the end of the file.
+    - append mode is using this function call.
+
+  fseek(f, -999L, SEEK_END);
+    - moves the file pointer to the 999th byte before 
+      the end of the file.
+
+  ---------------------------------------------------------
+
+  fseek(f, 0L, SEEK_CUR);
+    - moves the file pointer to the current position 
+      of the file pointer.
+
+  fseek(f, 100L, SEEK_CUR);
+    - moves the file pointer 100 bytes forward from its 
+      current position.
+
+  fseek(f, -100L, SEEK_CUR);
+    - moves the file pointer 100 bytes backward from its 
+      current position.
+
+  ---------------------------------------------------------
+
+  - before reading operation after a write operation
+  - before writing operation after a read operation
+
+  file pointer position MUST BE set.
+  if not, undefined behavior(UB) will occur.
+
+  ---------------------------------------------------------
+*/
+
+/*
+                    -----------------------
+                    | rewind in <stdio.h> |
+                    -----------------------
+*/
+
+/*
+  // rewind function prototype
+  void rewind(FILE* file_pointer);
+
+  - moves the file pointer to the beginning of the file.
+  - equivalent to fseek(f, 0L, SEEK_SET);
+*/
+
+/*
+                    ----------------------
+                    | ftell in <stdio.h> |
+                    ----------------------
+*/
+
+/*
+  // ftell function prototype
+  long ftell(FILE* file_pointer);
+
+  - returns the current position of the file pointer.
+  - returns -1L when failed.
+*/
+
+/*
+  #include <stdio.h>  // fopen, fclose, fseek, ftell
+
+  int main(void)
+  {
+    FILE* f_src = fopen("person1000000.dat", "rb");
+    if (f_src == NULL){
+      printf("person1000000.dat could not be opened.\n");
+      return 1;
+    }
+
+    fseek(f_src, 0L, SEEK_END);
+    printf("%ld\n", ftell(f_src));  // output -> 80000000
+    // returns the size of the file in bytes.
+
+    fclose(f_src);
+  }
+*/
+
+/*
+  #include <stdio.h>  // fopen, fclose, fseek, fread, printf
+
+  int main(void)
+  {
+    FILE* f_src = fopen("primes100000.dat", "rb");
+    if (f_src == NULL){
+      printf("primes100000.dat could not be opened.\n");
+      return 1;
+    }
+
+    int N = 44444;
+    int x;
+    fseek(f_src, ((N - 1) * (long)sizeof(int)), SEEK_SET);
+    fread(&x, sizeof(int), 1, f_src);
+
+    printf("%d'th prime number = %d\n", N, x);
+    // output -> 44444'th prime number = 538259
+
+    fclose(f_src);
+  }
+*/
+
+/*
+  #include <stdio.h>  // fopen, fclose, fseek, fread, printf
+  #include "../headers/person.h"
+
+  int main(void)
+  {
+    FILE* f_src = fopen("person1000000.dat", "rb");
+    if (f_src == NULL){
+      printf("primes100000.dat could not be opened.\n");
+      return 1;
+    }
+
+    int N = 33333;
+    Person_t per;
+
+    fseek(f_src, ((N - 1) * (long)sizeof(Person_t)), SEEK_SET);
+    fread(&per, sizeof(Person_t), 1, f_src);
+
+    person_print(&per);
+    // output -> 17607 sumeyye  engereke   20 Ekim 1956 Cumartesi
+
+    fclose(f_src);
+  }
+*/
+
+/*
+  #include <stdio.h>  // fopen, fclose, fread, printf
+  #include <stdlib.h>
+  #include "../headers/person.h"
+
+  void print_person_records(const char* filename)
+  {
+    FILE* f = fopen(filename, "rb");
+    if (f == NULL){
+      printf("%s could not be opened.\n", filename);
+      exit(EXIT_FAILURE);
+    }
+
+    Person_t per;
+
+    while (fread(&per, sizeof(Person_t), 1, f) != 0)
+      person_print(&per);
+
+    fclose(f);
+  }
+
+  int main(void)
+  {
+    print_person_records("person1000000.dat");
+
+    // output ->
+    //  ...
+    //  6062  nefes        gilgamis     22 Eylul 1948 Carsamba
+    //  25044 billur       temizel      09 Temmuz 1986 Carsamba
+    //  24339 tonguc       altinorak    06 Ocak 2004 Sali
+    //  20403 candan       ormanci      09 Mart 1977 Carsamba
+    //  10538 tekin        koylu        30 Agustos 1950 Carsamba
+  }
+*/
+
+/*
+  #include <stdio.h>  
+  // fopen, fclose, fread, fseek, fwrite, printf
+  #include <string.h> // strcmp, strcpy
+  #include <stdlib.h> // exit, EXIT_FAILURE
+  #include "../headers/person.h"
+
+  void print_person_records(const char* filename)
+  {
+    FILE* f = fopen(filename, "rb");
+    if (f == NULL){
+      printf("%s could not be opened.\n", filename);
+      exit(EXIT_FAILURE);
+    }
+
+    Person_t per;
+
+    while (fread(&per, sizeof(Person_t), 1, f) != 0)
+      person_print(&per);
+
+    fclose(f);
+  }
+
+  int replace_names(const char* filename,
+                    const char* old_name,
+                    const char* new_name)
+  {
+    FILE* f = fopen(filename, "r+b"); // read(+)-binary mode
+    if (f == NULL){
+      printf("%s could not be opened.\n", filename);
+      return 0;
+    }
+
+    Person_t per;
+    int replaced_count = 0;
+
+    while (fread(&per, sizeof(Person_t), 1, f) != 0)
+    {
+      if (strcmp(per.m_name, old_name) == 0)
+      {
+        strcpy(per.m_name, new_name);
+        fseek(f, -((long)sizeof(Person_t)), SEEK_CUR);
+        fwrite(&per, sizeof(Person_t), 1, f);
+        fseek(f, 0L, SEEK_CUR);
+
+        ++replaced_count;
+      }
+    }
+
+    fclose(f);
+
+    return replaced_count;
+  }
+
+  int main(void)
+  {
+    int N = replace_names("person10000.dat", "ahmet", "XXXXXXXX");
+    printf("%d names replaced.\n", N);
+    // output -> 34 names replaced.
+
+    print_person_records("person10000.dat");
+
+    // output ->
+    //  ...
+    //  2378  figen        elmali       01 Mart 1976 Pazartesi
+    //  22370 abdi         canbay       29 Agustos 1971 Pazar
+    //  1939  cemile       beyaz        11 Ocak 1942 Pazar
+    //  22967 eda          korukcu      10 Kasim 1965 Carsamba
+    //  5868  XXXXXXXX     elkizi       12 Agustos 2009 Carsamba
+    //  4021  tunc         kelleci      11 Subat 2011 Cuma
+    //  ...
+  }
+*/
+
+/*
+  dosyadan silmek denilen bir işlem yoktur.
+    - dosyanın kopyası çıkartılır, silinecek bytelar yazılmaz.
+    - eski dosya sikinir kopya olan dosyanın ismi değiştirilir.
+*/
+
+/*
+  #include <stdio.h>  
+  // fopen, fclose, tmpnam, L_tmpnam, fread, fwrite
+  #include <stdlib.h> // exit, EXIT_FAILURE
+  #include "../headers/person.h"
+
+  int delete_records( const char* filename, int day)
+  {
+    FILE* f_src = fopen(filename, "rb");
+    if (f_src == NULL){
+      printf("%s could not be opened.\n", filename);
+      exit(EXIT_FAILURE);
+    }
+
+    char dest_filename[L_tmpnam];
+    tmpnam(dest_filename);
+
+    FILE* f_dst = fopen(dest_filename, "wb");
+    if (f_dst == NULL){
+      printf("%s could not be created.\n", dest_filename);
+      fclose(f_src);
+      exit(EXIT_FAILURE);
+    }
+
+    Person_t per;
+    int record_count = 0;
+    int copy_count = 0;
+
+    while (fread(&per, sizeof(Person_t), 1, f_src) != 0)
+    {
+      ++record_count;
+
+      if (per.m_birth_date.m_day != day){
+        fwrite(&per, sizeof(Person_t), 1, f_dst);
+        ++copy_count;
+      }
+    }
+
+    fclose(f_dst);
+    fclose(f_src);
+
+    if (remove(filename) != 0){
+      printf("%s could not be deleted.\n", filename);
+      exit(EXIT_FAILURE);
+    }
+
+    if (rename(dest_filename, filename) != 0){
+      printf("%s could not be renamed.\n", dest_filename);
+      exit(EXIT_FAILURE);
+    }
+
+    return record_count - copy_count;
+  }
+
+  void print_person_records(const char* filename)
+  {
+    FILE* f = fopen(filename, "rb");
+    if (f == NULL){
+      printf("%s could not be opened.\n", filename);
+      exit(EXIT_FAILURE);
+    }
+
+    Person_t per;
+
+    while (fread(&per, sizeof(Person_t), 1, f) != 0)
+      person_print(&per);
+
+    fclose(f);
+  }
+
+  int main(void)
+  {
+    for (int i = 1; i <= 30; ++i){
+      printf( "i = %d, %d records deleted.\n", 
+              i, delete_records("person10000.dat", i));
+    }
+    
+    print_person_records("person10000.dat");
+
+    // output ->
+    //  i = 1, 334 records deleted.
+    //  i = 2, 321 records deleted.
+    //  i = 3, 312 records deleted.
+    //  i = 4, 308 records deleted.
+    //  i = 5, 325 records deleted.
+    //  i = 6, 355 records deleted.
+    //  i = 7, 326 records deleted.
+    //  i = 8, 342 records deleted.
+    //  i = 9, 304 records deleted.
+    //  i = 10, 315 records deleted.
+    //  i = 11, 328 records deleted.
+    //  i = 12, 330 records deleted.
+    //  i = 13, 340 records deleted.
+    //  i = 14, 365 records deleted.
+    //  i = 15, 337 records deleted.
+    //  i = 16, 309 records deleted.
+    //  i = 17, 333 records deleted.
+    //  i = 18, 347 records deleted.
+    //  i = 19, 337 records deleted.
+    //  i = 20, 344 records deleted.
+    //  i = 21, 328 records deleted.
+    //  i = 22, 343 records deleted.
+    //  i = 23, 321 records deleted.
+    //  i = 24, 366 records deleted.
+    //  i = 25, 314 records deleted.
+    //  i = 26, 283 records deleted.
+    //  i = 27, 321 records deleted.
+    //  i = 28, 319 records deleted.
+    //  i = 29, 268 records deleted.
+    //  i = 30, 321 records deleted.
+    //  16156 cetin        fakir        31 Ekim 1957 Persembe
+    //  18    bekir        sonmez       31 Ocak 1999 Pazar
+    //  24954 nuri         cuhadar      31 Aralik 2017 Pazar
+    //  11139 lamia        cangoz       31 Temmuz 1941 Persembe
+    //  ...
+  }
+*/
+
+/*
+  #include <stdio.h>  
+  // fopen, fclose, fseek, ftell
+  #include <stdlib.h>   // exit, EXIT_FAILURE
+  #include "../headers/person.h"
+
+  int person_cmp_qsort(const void* vp1, const void* vp2)
+  {
+    return 
+      person_compare((const Person_t*)vp1, (const Person_t*)vp2);
+  }
+
+  void sort_records(const char* filename)
+  {
+    FILE* f = fopen(filename, "r+b"); // read(+)-binary mode
+    if (f == NULL){
+      printf("%s could not be opened.\n", filename);
+      return;
+    }
+
+    fseek(f, 0L, SEEK_END);
+    long file_size = ftell(f);
+    size_t person_count = (size_t)file_size / sizeof(Person_t);
+
+    Person_t* mem_records = (Person_t*)malloc((size_t)file_size);
+    if (mem_records == NULL){
+      printf("Memory allocation failed.\n");
+      fclose(f);
+      exit(EXIT_FAILURE);
+    }
+
+    rewind(f);
+    fread(mem_records, sizeof(Person_t), person_count, f);
+
+    qsort(mem_records, 
+          person_count, 
+          sizeof(Person_t), 
+          person_cmp_qsort);
+
+    rewind(f);
+    fwrite(mem_records, sizeof(Person_t), person_count, f);
+
+    free(mem_records);
+    fclose(f);
+  }
+
+  void print_person_records(const char* filename)
+  {
+    FILE* f = fopen(filename, "rb");
+    if (f == NULL){
+      printf("%s could not be opened.\n", filename);
+      exit(EXIT_FAILURE);
+    }
+
+    Person_t per;
+
+    while (fread(&per, sizeof(Person_t), 1, f) != 0)
+      person_print(&per);
+
+    fclose(f);
+  }
+
+  int main(void)
+  {
+    sort_records("person10000.dat");
+    print_person_records("person10000.dat");
+
+    // output ->
+    //  11233 yeliz        dumbuk       10 Haziran 1992 Carsamba
+    //  21828 yurdanur     dumbuk       17 Kasim 1953 Sali
+    //  26356 zarife       dumbuk       23 Agustos 1979 Persembe
+    //  3720  adnan        dunyalik     25 Mayis 2022 Carsamba
+    //  19271 alev         dunyalik     29 Agustos 2011 Pazartes
+    //  ...
+    //  12468 candan       zalim        22 Haziran 1962 Cuma
+    //  15476 candan       zalim        13 Mart 2001 Sali
+    //  13132 cemre        zalim        19 Aralik 1941 Cuma
+    //  ...
+  }
+*/
+
+
+// siralamanin dosyanin ustunde yapilacagi ornek 
+// bir sonraki derste.

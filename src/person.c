@@ -22,11 +22,22 @@ Person_t* person_set_random(Person_t* p_p1)
 PUBLIC
 void person_print(const Person_t* p_cp1)
 {
-  printf("%-5d %-14s %-14s ", 
+  printf("%-5d %-12s %-12s ", 
           p_cp1->m_id, 
           p_cp1->m_name, 
           p_cp1->m_surname);
   date_print(&p_cp1->m_birth_date);
+}
+
+PUBLIC
+void person_print_file(FILE* f_dest, const Person_t* p_cp1)
+{
+  fprintf(f_dest,
+          "%-5d %-12s %-12s ", 
+          p_cp1->m_id, 
+          p_cp1->m_name, 
+          p_cp1->m_surname);
+  date_print_file(f_dest, &p_cp1->m_birth_date);
 }
 
 PUBLIC
