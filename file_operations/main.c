@@ -23,10 +23,10 @@
   FILE* fopen(const char* filename, const char* open_mode);
 
   - fclose will close the file.
-  int fclose(FILE* file_pointer);
+  int fclose(FILE* file_handle);
 
-  - fprintf(FILE* file_pointer, const char* format, ...);
-  - fputc(int character, FILE* file_pointer);
+  - fprintf(FILE* file_handle, const char* format, ...);
+  - fputc(int character, FILE* file_handle);
 */
 
 /*
@@ -236,7 +236,7 @@
 
 /*
   // fclose function prototype
-  int fclose(FILE* file_pointer);
+  int fclose(FILE* file_handle);
 
   - returns 0 when succeeds, non-zero when fails.
   - generally fopen is tested but fclose is not tested in code.
@@ -365,7 +365,7 @@
 
 /*
   // fgets function prototype
-  int fgetc(FILE* file_pointer);
+  int fgetc(FILE* file_handle);
 
   - returns character's ASCII value when succeeds.
   - returns EOF(End of File) when fails.
@@ -655,7 +655,7 @@
 
 /*
   // fputc function prototype
-  int fputc(int character, FILE* file_pointer);
+  int fputc(int character, FILE* file_handle);
 */
 
 /*
@@ -1398,14 +1398,14 @@
 
 /*
   // fprintf function prototype
-  int fprintf(FILE* file_pointer, const char* format, ...);
+  int fprintf(FILE* file_handle, const char* format, ...);
 
   - returns the number of characters written to the file.
 
   ---------------------------------------------------------
 
   // fscanf function prototype
-  int fscanf(FILE* file_pointer, const char* format, ...);
+  int fscanf(FILE* file_handle, const char* format, ...);
 
   - returns the number of items read from the file.
 */
@@ -1736,7 +1736,7 @@
 
 /*
   // fgets function prototype
-  char* fgets(char* buffer, int size, FILE* file_pointer);
+  char* fgets(char* buffer, int size, FILE* file_handle);
 
   - buffer : address of the buffer where the line will be written.
               guaranteed to be NTBS.
@@ -1904,7 +1904,7 @@
 
 /*
   // fputs function prototype
-  int fputs(const char* str, FILE* file_pointer);
+  int fputs(const char* str, FILE* file_handle);
 
   - returns EOF when fails, 0 when succeeds.
 */
@@ -1956,7 +1956,7 @@
   size_t fwrite(const void* buffer, 
                 size_t      element_size, 
                 size_t      element_count,
-                FILE*       file_pointer);
+                FILE*       file_handle);
 
   - returns the number of items written to the file.
 
@@ -1965,7 +1965,7 @@
   size_t fread(void*   buffer, 
                size_t  element_size, 
                size_t  element_count,
-               FILE*   file_pointer);
+               FILE*   file_handle);
 
   - returns the number of items read from the file.
 */
@@ -2364,7 +2364,7 @@
 
 /*
   // fseek function prototype
-  int fseek(FILE* file_pointer, long offset, int origin);
+  int fseek(FILE* file_handle, long offset, int origin);
 */
 
 /*
@@ -2429,7 +2429,7 @@
 
 /*
   // rewind function prototype
-  void rewind(FILE* file_pointer);
+  void rewind(FILE* file_handle);
 
   - moves the file pointer to the beginning of the file.
   - equivalent to fseek(f, 0L, SEEK_SET);
@@ -2443,7 +2443,7 @@
 
 /*
   // ftell function prototype
-  long ftell(FILE* file_pointer);
+  long ftell(FILE* file_handle);
 
   - returns the current position of the file pointer.
   - returns -1L when failed.
@@ -2830,6 +2830,614 @@
   }
 */
 
+/*
+                ---------------------------------
+                | fsetpos, fgetpos in <stdio.h> |
+                ---------------------------------
+*/
 
-// siralamanin dosyanin ustunde yapilacagi ornek 
-// bir sonraki derste.
+/*
+  // fsetpos function prototype
+  int fsetpos(FILE* file_handle, const fpos_t* position);
+
+  // fgetpos function prototype
+  int fgetpos(FILE* file_handle, fpos_t* position);
+
+  - fpos_t is an alias for an implementation-defined type.
+
+  -----------------------------------------------------------
+
+  fseek function's parameter type is 'long' 
+  long is 4 bytes, so maximum distance is 2^31 - 1
+
+  but fsetpos, fgetpos functions use 'fpos_t' type
+  which is generally biggest integer type. 
+  so it can handle bigger distances.
+
+  -----------------------------------------------------------
+*/
+
+/*
+  #include <stdio.h>  // fopen, fclose, fsetpos, fpos_t
+
+  int main(void)
+  {
+    FILE* f = fopen("primes100000.dat", "rb");
+    if (f == NULL){
+      printf("primes100000.dat could not be opened.\n");
+      return 1;
+    }
+
+    fpos_t pos = (fpos_t)(1000 * sizeof(int));
+    fsetpos(f, &pos);
+
+    fclose(f);
+  }
+*/
+
+/*
+  #include <stdio.h>  // fopen, fclose, fseek, fgetpos
+
+  int main(void)
+  {
+    FILE* f = fopen("primes100000.dat", "rb");
+    if (f == NULL){
+      printf("primes100000.dat could not be opened.\n");
+      return 1;
+    }
+
+    fseek(f, 0, SEEK_END);
+
+    fpos_t pos;
+    fgetpos(f, &pos);
+
+    printf("pos = %lld\n", pos);  // output -> pos = 400000
+
+    fclose(f);
+  }
+*/
+
+/*
+                    -----------------------
+                    | 'feof' in <stdio.h> |
+                    -----------------------
+*/
+
+/*
+  - dosyadan okunacak byte kalmadığında,
+    (file pointer'ın değeri dosyadaki byte sayısına eşit olduğunda)
+    eğer file pointer(dosya konum gösterici) set edilmez ise
+    bir sonraki okuma işlemi başarısız olur.
+
+  - eğer OKUMA YAPILIP, OKUMA BAŞARISIZ olursa,
+    EOF bayrağı set edilir.
+
+  - bütün okuma fonksiyonları, okuma işlemine başlamadan önce 
+    EOF bayrağını kontrol ederler.
+    eğer EOF bayrağı set edilmiş ise, yapılacak olan okuma 
+    başarısız olacağı için okuma işlemine başlamazlar.
+
+  - EOF bayrağının set edilip edilmediğini sınayan fonksiyon,
+    feof fonksiyonudur.
+*/
+
+/*
+  // feof function prototype
+  int feof(FILE* file_handle);
+
+  - returns 0, when EOF flag is NOT SET 
+  - returns non-zero when EOF flag is SET
+*/
+
+/*
+  #include <stdio.h>  // fopen, fclose, printf, feof
+
+  int main(void)
+  {
+    FILE* f = fopen("primes100000.dat", "rb");
+    if (f == NULL){
+      printf("primes100000.dat could not be opened.\n");
+      return 1;
+    }
+
+    printf("EOF flag is %s\n", feof(f) ? "SET" : "NOT SET");
+    // output -> EOF flag is NOT SET
+
+    fclose(f);
+  }
+*/
+
+/*
+  #include <stdio.h>  // fopen, fclose, printf, fseek, feof
+
+  int main(void)
+  {
+    FILE* f = fopen("primes100000.dat", "rb");
+    if (f == NULL){
+      printf("primes100000.dat could not be opened.\n");
+      return 1;
+    }
+
+    fseek(f, 0, SEEK_END);
+
+    printf("EOF flag is %s\n", feof(f) ? "SET" : "NOT SET");
+    // output -> EOF flag is NOT SET
+
+    fclose(f);
+  }
+
+  // dosya konum göstericisi dosyanın sonuna taşındı.
+  // fakat herhangi bir okuma yapılmadı.
+*/
+
+/*
+  #include <stdio.h>  
+  // fopen, fclose, printf, fseek, fgetc feof
+
+  int main(void)
+  {
+    FILE* f = fopen("primes100000.dat", "rb");
+    if (f == NULL){
+      printf("primes100000.dat could not be opened.\n");
+      return 1;
+    }
+
+    fseek(f, 0, SEEK_END);
+
+    int ch = fgetc(f);
+    printf("ch = %d\n", ch);    // output -> ch = -1
+    printf("EOF = %d\n", EOF);  // output -> EOF = 1
+
+    printf("EOF flag is %s\n", feof(f) ? "SET" : "NOT SET");
+    // output -> EOF flag is SET
+
+    fclose(f);
+  }
+
+  // dosya konum göstericisi dosyanın sonuna taşındı.
+  // fgetc fonksiyonu ile okuma yapıldı.
+*/
+
+/*
+  // out.txt ->
+  //  world
+  //  galaxy
+  //  universe
+
+  #include <stdio.h>  // fopen, fclose, printf, feof
+
+  #define   SIZE    100
+
+  int main(void)
+  {
+    FILE* f = fopen("out.txt", "r"); // read-text mode
+    if (f == NULL){
+      printf("out.txt could not be opened.\n");
+      return 1;
+    }
+    
+    char str[SIZE];
+
+    // ------------------------------------------------
+
+    while (!feof(f))
+    {
+      fgets(str, SIZE, f);
+      printf("%s", str);
+    }
+    // output ->
+    //  world
+    //  galaxy
+    //  universe
+    //  universe    ---> 2. kez yazdırıldı.
+
+    // ------------------------------------------------
+
+    fseek(f, 0, SEEK_SET);
+
+    while(fgets(str, SIZE, f) != NULL)
+      printf("%s", str);
+    // output ->
+    //  world
+    //  galaxy
+    //  universe
+
+    // ------------------------------------------------
+
+    fclose(f);
+  }
+*/
+
+/*
+                    ------------------------
+                    | ferror  in <stdio.h> |
+                    ------------------------
+*/
+
+/*
+  - okuma işlemi başarısız oldu, neden?
+    - dosyada okunacak byte kalmadı.
+    - formatlı okuma fonksiyonunda formatlama hatası alındı.
+    - işletim sistemi kaynaklı bir hata oluştu.
+
+  - dosyadan okunacak byte kalıp kalmadığı kontrolü 
+    "feof" fonksiyonu ile yapılır.
+
+  - işletim sistemi kaynaklı bir hata oluşup oluşmadığı kontrolü
+    "ferror" fonksiyonu ile yapılır.
+
+  // ferror function prototype
+  int ferror(FILE* file_handle);
+*/
+
+/*
+  // out.txt ->
+  //  11 22 33 44 hello 
+  //  55 66 77 88 world
+  //  99 00 11 22 galaxy
+
+  #include <stdio.h>  
+  // fopen, fclose, fscanf, printf, feof, ferror
+  #include <stdlib.h> // exit, EXIT_FAILURE
+
+  #define   SIZE  100
+
+  int main(void)
+  {
+    FILE* f = fopen("out.txt", "r"); // read-text mode
+    if (f == NULL){
+      printf("out.txt could not be opened.\n");
+      return 1;
+    }
+
+    int val;
+    char str[100];
+
+    while(1)
+    {
+      int n = fscanf(f, "%d", &val);
+      if (n == 1){
+        printf("%d\n", val);
+        continue;
+      }
+
+      if (feof(f)){
+        printf("EOF flag is SET, no bytes to read\n");
+        break;
+      }
+
+      if (ferror(f)){
+        printf("OS error occured while reading\n");
+        exit(EXIT_FAILURE);
+      }
+
+      fscanf(f, "%s", str);
+      printf("[%s] not a valid integer\n", str);
+    }
+
+    // output ->
+    //  11
+    //  22
+    //  33
+    //  44
+    //  [hello] not a valid integer
+    //  55
+    //  66
+    //  77
+    //  88
+    //  [world] not a valid integer
+    //  99
+    //  0
+    //  11
+    //  22
+    //  [galaxy] not a valid integer
+    //  EOF flag is SET, no bytes to read
+  }
+*/
+
+/*
+                    -------------------------
+                    | clearerr in <stdio.h> |
+                    -------------------------
+*/
+
+/*
+  Those 3 operation will reset the EOF flag.
+
+  // operation 1
+  fseek(f, 0, SEEK_SET);
+
+  // operation 2
+  rewind(f);
+
+  // operation 3
+  fpos_t pos = 0ll;
+  fsetpos(f, &pos);
+
+  - if we want to clear error flags without setting
+    the file pointer, we can use clearerr function.
+
+  // clearerr function prototype
+  void clearerr(FILE* file_handle);
+*/
+
+/*
+  #include <stdio.h>  
+  // fopen, fclose, fseek, fgetc, printf clearerr
+
+  int main(void)
+  {
+    FILE* f = fopen("primes100000.dat", "rb");
+    if (f == NULL){
+      printf("primes100000.dat could not be opened.\n");
+      return 1;
+    }
+
+    // ------------------------------------------------
+
+    fseek(f, 0, SEEK_END);
+    int ch = fgetc(f);
+
+    printf("EOF flag is %s\n", feof(f) ? "SET" : "NOT SET");
+    // output -> EOF flag is SET
+
+    // ------------------------------------------------
+
+    clearerr(f);
+
+    printf("EOF flag is %s\n", feof(f) ? "SET" : "NOT SET");
+    // output -> EOF flag is NOT SET
+
+    // ------------------------------------------------
+  }
+*/
+
+/*
+  - flush, dosyanın buffer'ına yazılmış byte'ların dosyaya yazılması 
+    işlemidir.
+
+  - hangi koşullarda flush işlemi yapılır? 
+    - buffer dolduğunda
+    - "fflush" fonksiyonu çağrıldığında
+    - eğer sistem destekliyor ise, flush işlemleri 
+      line-buffered olarak yapılabilir.
+      ('\n' (new line) karakteri ile karşılaşıldığında
+      flush işlemi yapılır.)
+    - program normal terminate olduğunda("exit" fonksiyonu ile)
+    - bufferlama tamamen kapatılmışsa (her yazma işlemi 
+      dosyaya yazar(her yazma işlemi flush işlemi yapar))
+*/
+
+/*
+                    -----------------------
+                    | fflush in <stdio.h> |
+                    -----------------------
+*/
+
+/*
+  // fflush function prototype
+  int fflush(FILE* file_handle);
+
+  - when NULL is passed, all open files' buffers are flushed.
+
+  - using fflush with read-only mode file pointers 
+    is undefined behavior(UB).
+*/
+
+/*
+  #include <stdio.h>  // BUFSIZ macro
+
+  int main(void)
+  {
+    printf("BUFSIZ = %d\n", BUFSIZ);
+    // output -> BUFSIZ = 512 (gcc and MSVC are same)
+  }
+*/
+
+/*
+                --------------------------------
+                | setvbuf, setbuf in <stdio.h> |
+                --------------------------------
+*/
+
+/*
+  "setvbuf" fonksiyonu,
+  - bufferlama stratejisini değiştirmek,
+  - buffer size'ını değiştirmek,
+  - kullanılacak buffer'ı belirlemek
+  amacıyla kullanılır.
+
+  ----------------------------------------------------------------
+
+  // setvbuf function prototype
+  int setvbuf(FILE* file_handle, 
+              char* buffer_address, 
+              int mode_macro, 
+              size_t buffer_size);
+
+  - mode_macro values(3rd parameter variable):
+    _IOFBF -> full buffering
+    _IOLBF -> line buffering
+    _IONBF -> no buffering (close buffering)
+
+  - if NULL is passed to buffer_address(2nd parameter variable) 
+    a buffer will be allocated by the system.
+    else buffer_address will be the address of a buffer.
+
+  ----------------------------------------------------------------
+
+  setvbuf(f, NULL, _IONBF, 0);
+    - because of mode_macro is _IONBF, buffer_size is ignored.
+      there won't be any buffering for this file pointer.
+      directly write operation will be done to the file.
+
+
+  setvbuf(f, NULL, _IOFBF, 1024); 
+    - because of mode_macro is _IOFBF, and NULL is passed to 
+      buffer_address, a buffer will be allocated by the system
+      and its size will be 1024 bytes.
+
+
+  char buffer_arr[1024];
+  setvbuf(f, buffer_arr, _IOFBF, 1024);
+    - because of an array address is passed to 2nd parameter,
+      "buffer_arr" array will be used as buffer 
+      for this file pointer and its size is 1024 bytes.
+
+    - that "buffer_arr" array must be alive until the file 
+      pointer is closed else undefined behavior(UB) will occur.
+      (global array(static storage duration) is generally used)
+
+    - if buffer_arr is tried to change or read, 
+      undefined behavior(UB) will occur.
+
+  ----------------------------------------------------------------
+*/
+
+/*
+  // setbuf function prototype
+  void setbuf(FILE* file_handle, char* buffer_address);
+
+  setbuf(f, NULL);
+    - equivalent to setvbuf(f, NULL, _IONBF, 0);
+
+  char buffer_arr[512];
+  setbuf(f, buffer_arr);
+    - equivalent to setvbuf(f, buffer_arr, _IOFBF, BUF_SIZ);
+*/
+
+/*
+        --------------------------------------------------
+        | stdout, stderr, stdin identifiers in <stdio.h> |
+        --------------------------------------------------
+*/
+
+/*
+  - stdout    -> handle for standard output stream
+  - stdin     -> handle for standard input stream  
+  - stderr    -> handle for standard error stream
+    are identifiers which are defined in <stdio.h> header file.
+    they are variables of type FILE*
+*/
+
+/*
+  // default 'stdout' and 'stderr' are bind to the console.
+
+  #include <stdio.h>  // stdout, stderr, fprintf, fputc
+
+  int main(void)
+  {
+    fprintf(stdout, "writing to stdout file handle\n");
+    // output -> writing to stdout file handle
+    fprintf(stderr, "writing to stderr file handle\n");
+    // output -> writing to stderr file handle
+
+    fputc('A', stdout);
+    fputc('B', stderr);
+    // output -> AB
+  }
+*/
+
+/*
+  #include <stdio.h>  // stdout, stderr, fprintf, fputc
+  #include "../headers/person.h"
+
+  int main(void)
+  {
+    Person_t p1, p2, p3;
+    
+    person_set_random(&p1);
+    person_set_random(&p2);
+
+    person_print(&p1);
+    person_print_file(stdout, &p2);
+    // output ->
+    //  41    kazim        yangin       05 Haziran 2005 Pazar
+    //  11478 belgin       yurekyakan   06 Haziran 2009 Cumartesi
+  }
+*/
+
+/*
+  - when 'stdout' is directed to a file, it does not mean 
+    that 'stderr' is also directed to the same file.
+*/
+
+/*
+  #include <math.h>   // sqrt
+  #include <stdio.h>  // printf
+
+  int main(void)
+  {
+    for (int i = 0; i < 5; ++i)
+      printf("%f\n", sqrt(i));
+
+    if (1)
+      printf("error occured...\n");
+  }
+  // command line -> prog.exe > out.txt
+  // out.txt ->
+  //  0.000000
+  //  1.000000
+  //  1.414214
+  //  1.732051
+  //  2.000000
+  //  error occured...
+*/
+
+/*
+  #include <math.h>   // sqrt
+  #include <stdio.h>  // printf, fprintf, stderr
+
+  int main(void)
+  {
+    for (int i = 0; i < 5; ++i)
+      printf("%f\n", sqrt(i));
+
+    if (1)
+      fprintf(stderr, "error occured...\n");
+  }
+
+  // command line -> prog.exe > out.txt
+  // console output -> error occured...
+
+  // out.txt ->
+  //  0.000000
+  //  1.000000
+  //  1.414214
+  //  1.732051
+  //  2.000000
+*/
+
+/*
+                    ------------------------
+                    | tmpfile in <stdio.h> |
+                    ------------------------
+*/
+
+/*
+  // tmpfile function prototype
+  FILE* tmpfile(void);
+
+  - opens a temporary file in "rb+" mode.
+  - its name is unique.
+  - when fclose(f) is called, temp file will be closed and deleted.
+
+  - when a program will read from and write to a file 
+    in programs life cycle, and that file will not be used 
+    by the user, 'tmpfile' function can be used.
+*/
+
+/*
+  #include <stdio.h>  // tmpfile, fprintf, fputc
+
+  int main(void)
+  {
+    FILE* f_temp = tmpfile();
+    if (f_temp == NULL){
+      fprintf(stderr, "temp file could not be created.\n");
+      return 1;
+    }
+
+    fclose(f_temp);
+  }
+*/

@@ -245,6 +245,13 @@
   - `fwrite`, `fread` unformatted IO
   - file pointer manipulation functions
     - `fseek`, `rewind`, `ftell`, `fsetpos`, `fgetpos`
+  - `feof`, `ferror`, `clearerr`, 
+  - `fflush`
+  - `setvbuf`, `setbuf`
+  - `stdout`, `stdin`, `stderr`
+  - `tmpfile`
+  
+### [Exception Handling](https://github.com/UPinar/CLessons/tree/master/exception_handling)
 
 ### [Not Related](https://github.com/UPinar/CLessons/tree/master/not_related)
   - strict aliasing rule
