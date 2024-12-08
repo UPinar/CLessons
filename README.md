@@ -27,6 +27,7 @@
   - `<ctype.h>` module
   - function prototype(s) | function declaration
   - function wrappers
+  - variadic functions
 
 ### [Input Output](https://github.com/UPinar/CLessons/tree/master/input_output)
   - standart C library
@@ -252,7 +253,14 @@
   - `tmpfile`
   
 ### [Exception Handling](https://github.com/UPinar/CLessons/tree/master/exception_handling)
+  - static assertions
+  - dynamic assertions
+  - `errno` macro in `<errno.h>`
+  - `perror` in `<stdio.h>` module
+  - `strerror` in `<string.h>`
+  - non-local jumps, `setjmp`, `longjmp` in `<setjmp.h>`
 
 ### [Not Related](https://github.com/UPinar/CLessons/tree/master/not_related)
   - strict aliasing rule
   - localization
+  - default argument conversion

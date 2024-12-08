@@ -13,9 +13,9 @@
 */
 
 /*
-                  ------------------------
-                  | strict aliasing rule |
-                  ------------------------
+                      ------------------------
+                      | strict aliasing rule |
+                      ------------------------
 */
 
 /*
@@ -51,7 +51,8 @@
 
     char* p_char = (char*)&dval;  // VALID
     // this code IS NOT violating strict aliasing rule.
-    // functions like `memcpy` and `memmove` are using this technique.
+    // functions like `memcpy` and `memmove` 
+    // are using this technique.
   }
 */
 
@@ -160,6 +161,34 @@
 
     // input  -> Enter a double value: 2374,1982
     // output -> dval = 2374,1982
+  }
+*/
+
+/*
+                -------------------------------
+                | default argument conversion |
+                -------------------------------
+*/
+
+/*
+  void foo(int elem_size, ...);
+
+  int main(void)
+  {
+    char c    = 3;
+    short s   = 12;
+    float f   = 3.14f;
+    int i     = 123;
+    long l    = 1234L;
+    double d  = 3.1415;
+
+    foo(6, c, s, f, i, l, d);
+
+    // char   ---> int (integral promotion)
+    // short  ---> int (integral promotion)
+    // float  ---> double (floating-point promotion)
+
+    // other types will be passed as they are.
   }
 */
 

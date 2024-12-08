@@ -326,10 +326,10 @@
 */
 
 /*
-                  -----------------
-                  | function call |
-                  -----------------
-          function call is an expression (ifade)
+                        -----------------
+                        | function call |
+                        -----------------
+            function call is an expression (ifade)
 */
 
 /*
@@ -587,9 +587,9 @@
 */
 
 /*
-                -------------------------------------
-                | test functions (query, predicate) |
-                -------------------------------------
+              -------------------------------------
+              | test functions (query, predicate) |
+              -------------------------------------
 */
 
 /*
@@ -662,9 +662,9 @@
 */
 
 /*
-                  --------------------------
-                  | ctype <ctype.h> module |
-                  --------------------------
+                    --------------------------
+                    | ctype <ctype.h> module |
+                    --------------------------
 */
 
 /*
@@ -1186,5 +1186,342 @@
     puts(buffer_2);  // output -> 99999
 
     // ---------------------------------------------------------
+  }
+*/
+
+/*
+                    ----------------------
+                    | variadic functions |
+                    ----------------------
+*/
+
+/*
+  void func(int x, ...);              // VALID
+  void func(int x, int y, ...);       // VALID
+  void func(int x, ..., int y);       // syntax error
+  void func(int x, int y, ..., ...);  // syntax error
+
+  void func(...);                     // VALID with C23
+*/
+
+/*
+  void func(int x, int y, ...);
+
+  int main(void)
+  {
+    func();               // syntax error
+    // error: too few arguments to function 'func'
+    func(1);              // syntax error
+    // error: too few arguments to function 'func'
+
+    func(1, 2);           // VALID
+    func(1, 2, 3);        // VALID
+    func(1, 2, 3, 4, 5);  // VALID
+  }
+*/
+
+/*
+  <stdarg.h> header file
+
+    - va_list   type  
+    - va_start  function macro
+    - va_end    function macro
+    - va_arg    function macro
+    - va_copy   function macro
+*/
+
+/*
+  void foo(int elem_size, ...);
+  // getting argument count from elem_size parameter
+
+  void bar(const char* p_format, ...);
+  // getting argument count from p_format string parameter
+
+  void baz(...);  // C23
+  void baz_2(int first_elem, ...);
+  // getting argument count from sentinel value
+
+  int main(void)
+  {
+    foo(3, 11, 22, 33);
+    foo(2, 11, 22);
+    foo(1, 11);
+
+    bar("***", 11, 22, 33);
+
+    baz(11, 22, 33, -1);      // -1 is a sentinel value
+    baz_2(11, 22, 33, -1);    // -1 is a sentinel value
+  }
+*/
+
+/*
+  #include <stdarg.h>   
+  // va_list, va_start, va_arg, va_end
+
+  int calculate_sum(int elem_count, ...)
+  {
+    va_list args;
+    va_start(args, elem_count);
+
+    int sum = 0;
+
+    for (int i = 0; i < elem_count; ++i)
+      sum += va_arg(args, int);
+    
+    va_end(args);
+
+    return sum;
+  }
+
+  int main(void)
+  {
+    int i1 = 11, i2 = 22, i3 = 33, i4 = 44, i5 = 55;
+
+    int sum = calculate_sum(3, i1, i2, i3);
+    printf("sum = %d\n", sum);  // output -> sum = 66
+
+    sum = calculate_sum(4, i1, i2, i3, i4);
+    printf("sum = %d\n", sum);  // output -> sum = 110
+
+    sum = calculate_sum(5, i1, i2, i3, i4, i5);
+    printf("sum = %d\n", sum);  // output -> sum = 165
+  }
+*/
+
+/*
+            <--- check not_related/main.c - 
+              default argument conversion --->
+*/
+
+/*
+  #include <limits.h>  // INT_MAX, INT_MIN
+  #include <stdarg.h>  // va_list, va_start, va_arg, va_end
+
+  int get_max_value(int first_elem, ...)
+  {
+    va_list args;
+    va_start(args, first_elem);
+    
+    int max = first_elem;
+
+    int val;
+    while ((val = va_arg(args, int)) != -1) 
+    {
+      if (val > max)
+        max = val;
+    }
+
+    va_end(args);
+
+    return max;
+  }
+
+  int main(void)
+  {
+    printf("max = %d\n", get_max_value(10, 30, 20, 5, 80, -1));
+    // output -> max = 80
+  }
+*/
+
+/*
+  #include <stdarg.h> // va_list, va_start, va_arg, va_end
+  #include <ctype.h>  // toupper
+
+  int printf_clone(const char* p_format, ...)
+  {
+    va_list args;
+    va_start(args, p_format);
+
+    int char_count = 0;
+
+    while (*p_format)
+    {
+      int ch = toupper(*p_format);
+
+      if (ch == 'I')
+        char_count += printf("%d ", va_arg(args, int));
+      else if (ch == 'F' || ch == 'D')
+        char_count += printf("%f ", va_arg(args, double));
+      else if (ch == 'L')
+        char_count += printf("%ld ", va_arg(args, long));
+      else if (ch == 'C')
+        char_count += printf("%c ", va_arg(args, int));
+      else if (ch == 'U')
+        char_count += printf("%u ", va_arg(args, unsigned int));
+      else if (ch == 'S')
+        char_count += printf("%s ", va_arg(args, const char*));
+
+      ++p_format;
+    }
+
+    va_end(args);
+
+    return char_count;
+  }
+
+  int main(void)
+  {
+    int ival    = 45;
+    double dval = 3.14;
+    float fval  = 2.71f;
+    char cval   = 'Z';
+    char str[]  = "hello world";
+
+    // int          (iI)
+    // float        (fF)
+    // double       (dD)
+    // long         (lL)
+    // char         (cC)
+    // unsigned int (uU)
+    // const char*  (sS)
+
+    int N = printf_clone("ScFdi", str, cval, fval, dval, ival);
+    // output -> hello world Z 2.710000 3.140000 45
+    
+    printf("\nprinted character count = %d\n", N);
+    // output -> printed character count = 35
+  }
+*/
+
+/*
+  #include <stdarg.h> 
+  // va_list, va_start, va_arg, va_copy, va_end
+  #include <stddef.h> // size_t
+  #include <string.h> // strcpy
+  #include <stdlib.h> // malloc, free
+
+  char* concat(const char* first_str, ...)
+  {
+    va_list args1;
+    va_list args2;
+
+    va_start(args1, first_str);
+    va_copy(args2, args1);  // va_start(args2, first_str);
+
+    // calculate total string length for memory allocation
+
+    const char* p;
+    size_t total_len = strlen(first_str);
+
+    while ((p = va_arg(args1, const char*)) != NULL)
+      total_len += strlen(p);
+
+    va_end(args1);
+    
+    char* p_str = (char*)malloc(total_len + 1);
+    if (!p_str){
+      fprintf(stderr, "Memory allocation failed!\n");
+      return NULL;
+    }
+
+    // copy strings to allocated memory
+
+    strcpy(p_str, first_str);
+    while ((p = va_arg(args2, const char*)) != NULL)
+      strcat(p_str, p);
+
+    va_end(args2);
+
+    return p_str;
+  }
+
+  int main(void)
+  {
+    char s1[] = "world_";
+    char s2[] = "galaxy_";
+    char s3[] = "universe_";
+
+    char* p_str = concat(s1, s2, s3, "istanbul_", "ankara", NULL);
+    puts(p_str);
+    // output -> world_galaxy_universe_istanbul_ankara
+
+    free(p_str);
+  }
+*/
+
+/*
+  #include <stdarg.h> 
+  // va_list, va_start, va_arg, va_end
+  #include <stdio.h>  // fopen, vsnprintf, perror
+
+  #define   STR_SIZE  100
+
+  void print_error(const char* p_format, ...)
+  {
+    char buffer[STR_SIZE];
+
+    va_list args;
+    va_start(args, p_format);
+    vsnprintf(buffer, STR_SIZE, p_format, args);
+
+    perror(buffer);
+    va_end(args);
+  }
+
+  int main(void)
+  {
+    char filename[] = "output.txt";
+
+    FILE* f = fopen(filename, "r");
+    if (!f){
+      print_error("file open error %s", filename);
+      return 1;
+    }
+
+    fclose(f);
+
+    // output ->
+    //  file open error output.txt: No such file or directory
+  }
+*/
+
+/*
+  #include <stdarg.h> // va_list, va_start, va_arg, va_end
+  #include <stdio.h>  // vprintf
+
+  void func(const char* p_format, ...)
+  {
+    va_list args;
+    va_start(args, p_format);
+
+    vprintf(p_format, args);
+
+    va_end(args);
+  }
+
+  int main(void)
+  {
+    func("%d hello world %f\n", 44, 3.14);
+  }
+*/
+
+/*
+  #include <time.h>   // time, localtime, strftime
+  #include <stdarg.h> // va_list, va_start, va_arg, va_end
+
+  void log_values(const char* p_format, ...)
+  {
+    time_t cln_tm;
+    time(&cln_tm);
+
+    char msg[100];
+    strftime(msg, sizeof msg, "%F %T", localtime(&cln_tm));
+    printf("[%s] ", msg);
+
+    va_list args;
+    va_start(args, p_format);
+    vprintf(p_format, args);
+    va_end(args);
+  }
+
+  int main(void)
+  {
+    int ival = 44;
+    double dval = 3.14;
+    char str[] = "hello world";
+
+    log_values("log %d %f %s", ival, dval, str);
+    // output -> 
+    //  [2024-12-08 14:54:04] log 44 3.140000 hello world
   }
 */
