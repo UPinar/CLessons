@@ -195,9 +195,9 @@
   - `extern`
 
 ### [Type Qualifiers](https://github.com/UPinar/CLessons/tree/master/type_qualifiers)
-  - `const`
-  - `volatile`
-  - `restrict`
+  - `const` keyword
+  - `volatile` keyword
+  - `restrict` keyword
   
 ### [User-Defined Types](https://github.com/UPinar/CLessons/tree/master/user_defined_types)
   - structures
@@ -259,6 +259,11 @@
   - `perror` in `<stdio.h>` module
   - `strerror` in `<string.h>`
   - non-local jumps, `setjmp`, `longjmp` in `<setjmp.h>`
+  
+### [C99 Changes](https://github.com/UPinar/CLessons/tree/master/c99_changes)
+  - variable length array (VLA)
+  - compound literals
+  - flexible array member
 
 ### [Not Related](https://github.com/UPinar/CLessons/tree/master/not_related)
   - strict aliasing rule
