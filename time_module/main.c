@@ -314,6 +314,30 @@
 */
 
 /*
+  #include <time.h> // time, localtime, asctime, strftime
+
+  #define   BUFFER_SIZE   256
+
+  int main(void)
+  {
+    // ---------------------------------------------------------
+
+    struct tm* p_tm = localtime(&(time_t){ time(NULL) });
+    printf("%s", asctime(p_tm));
+    // output -> Mon Dec 16 18:35:20 2024
+
+    // ---------------------------------------------------------
+
+    char str[BUFFER_SIZE];
+    strftime(str, BUFFER_SIZE, "%a %b %d %H:%M:%S %Y", p_tm);
+    printf("%s\n", str);
+    // output -> Mon Dec 16 18:35:20 2024
+
+    // ---------------------------------------------------------
+  }
+*/
+
+/*
   // "setlocale" is locale dependent function
 
   #include <time.h>
@@ -340,6 +364,36 @@
 
     printf("%s\n", buffer); // output -> 14 Kasim Persembe 2024
     printf("N = %zu\n", N); // output -> N = 24
+  }
+*/
+
+/*
+  #include <time.h>   // time, localtime, asctime, strftime
+  #include <locale.h> // setlocale, LC_ALL
+
+  #define   BUFFER_SIZE   256
+
+  int main(void)
+  {
+    if (setlocale(LC_ALL, "turkish") == NULL) {
+      printf("locale setting failed\n");
+      return 1;
+    }
+
+    // ---------------------------------------------------------
+
+    struct tm* p_tm = localtime(&(time_t){ time(NULL) });
+    printf("%s", asctime(p_tm));
+    // output -> Mon Dec 16 18:35:20 2024
+
+    // ---------------------------------------------------------
+
+    char str[BUFFER_SIZE];
+    strftime(str, BUFFER_SIZE, "%a %b %d %H:%M:%S %Y", p_tm);
+    printf("%s\n", str);
+    // output -> Pzt Ara 16 18:38:08 2024
+
+    // ---------------------------------------------------------
   }
 */
 
@@ -396,4 +450,114 @@
 
     free(p);
   }
+*/
+
+/*
+  // mktime function's prototype
+  time_t mktime(struct tm*);
+  IN_OUT param
+
+  - localtime function converts calendar time to broken-down time
+  - mktime function converts broken-down time to calendar time
+*/
+
+/*
+  // printing N days before current time
+
+  #include <time.h> // time, localtime, asctime, mktime
+
+  int main(void)
+  {
+    struct tm tm_var = *localtime(&(time_t){ time(NULL) });
+    printf("current time : %s", asctime(&tm_var));
+    // output -> current time : Mon Dec 16 18:04:07 2024
+
+    int N_day = 12;
+
+    tm_var.tm_mday -= N_day;
+    mktime(&tm_var);
+    // "mktime" will normalize th struct tm object(tm_var)
+
+    printf("%d days before : %s", N_day, asctime(&tm_var));
+    // output -> 12 days before : Wed Dec  4 18:04:07 2024
+  }
+*/
+
+/*
+  #include <time.h>   // mktime
+
+  const char* const days[] = { "Pazar", "Pazartesi", 
+    "Sali", "Carsamba", "Persembe", "Cuma", "Cumartesi" };
+
+  int main(void)
+  {
+    struct tm tm_var = {
+      .tm_year = 2013 - 1900,
+      .tm_mon = 0,
+      .tm_mday = 1,
+      .tm_isdst = -1
+    };
+
+    time_t sec = mktime(&tm_var);
+    struct tm* p_tm = localtime(&sec);
+
+    printf("%s\n", days[p_tm->tm_wday]);  // output -> Sali
+  }
+*/
+
+/*
+  #include <time.h>   // time, mktime, difftime, localtime
+
+  int main(void)
+  {
+    struct tm tm_var = {
+      .tm_year  = 1999 - 1900,
+      .tm_mon   = 7,
+      .tm_mday  = 17,
+      .tm_hour  = 3,
+      .tm_min   = 2,
+      .tm_isdst = -1
+    };
+
+    time_t now;
+    time(&now);
+
+    time_t earthquake = mktime(&tm_var);
+    time_t diff = (time_t)difftime(now, earthquake);
+
+    struct tm* p_tm = localtime(&diff);
+
+    printf("after earthquake %d year, %d month, " 
+          "%d day, %d hour, %d minute has passed\n",
+            p_tm->tm_year - 70, 
+            p_tm->tm_mon + 1, 
+            p_tm->tm_mday, 
+            p_tm->tm_hour, 
+            p_tm->tm_min);
+    // output ->
+    //  after earthquake 25 year, 5 month, 3 day, 18 hour, 
+    //  24 minute has passed
+  }
+*/
+
+/*
+  #include <time.h>   // time, localtime, asctime
+
+  int main(void)
+  {
+    time_t current_time = time(NULL);
+    struct tm tm_var = *localtime(&current_time);
+
+    tm_var.tm_mon = 0;
+    tm_var.tm_mday = 1;
+    tm_var.tm_hour = 0;
+    tm_var.tm_min = 0;
+    tm_var.tm_sec = 0;
+    tm_var.tm_isdst = -1;
+
+    double sec_diff = difftime(current_time, mktime(&tm_var));
+
+    printf("seconds passed since year start : %.f\n", sec_diff);
+    // output -> seconds passed since year start : 30306645
+  } 
 */

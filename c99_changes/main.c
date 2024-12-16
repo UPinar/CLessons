@@ -651,3 +651,203 @@
     free(p_s2); 
   }
 */
+
+/*
+                      --------------------
+                      | inline functions |
+                      --------------------
+*/
+
+/*
+  inline expansion : (derleyici optimizasyon tekniği)
+    derleyicinin, tanımını gördüğü bir fonksiyonu, 
+    linker'ın kullanabilmesi için object code'a 
+    bir referans olarak yazmak yerine fonksiyonun işlevini 
+    gerçekleştirmek için kullanacağı makina komutlarını
+    fonksiyon çağrısının yapıldığı yere yerleştirmesidir.
+
+    - fonksiyona giriş çıkış kodları için maliyet oluşmaz.
+    - fonksiyon çağrısı sebebiyle akışın bölünmemesi
+      derleyicinin daha geniş kod alanında optimizasyon 
+      yapabilmesine olanak sağlar.
+
+  - "inline" keyword (function specifier) 
+
+  - fonksiyon "inline" specifier'ı ile betimlenmese bile
+    derleyici inline expansion optimizasyonunu yapabilir. 
+  - fonksiyon "inline" specifier'ı ile betimlense bile
+    derleyici inline expansion optimizasyonunu yapmak zorunde 
+    değildir.
+
+  - inline fonksiyonlar başlık dosyasında tanımlanabilirler.
+*/
+
+/*
+  // file1.h
+  // -------
+  inline int func_1(int x, int y)
+  {
+    return x * x + y * y;
+  }
+
+  // file2.h
+  // -------
+  extern int func_1(int x, int y);
+
+  // file2.c
+  // -------
+  int func_1(int x, int y)
+  {
+    return x * x + y * y;
+  }
+
+  // main.c
+  // ------
+  // #include "file1.h"
+  // #include "file2.h"
+
+  int main(void)
+  {
+    func_1(3, 4);
+    // function's definition inside file1.h 
+    // is for compiler to do inline expansion
+
+    // if compiler doesn't do inline expansion
+    // compiler will assume that "func_1" is defined externally
+    // in another module and will generate a call to it.
+    // will not call the "func_1" inside file1.h 
+  }
+*/
+
+/*
+  // file1.h
+  // -------
+  static inline func_1(int x, int y)
+  {
+    return x * x + y * y;
+  }
+
+  // main.c
+  // ------
+  // #include "file1.h"
+
+  int main(void)
+  {
+    func_1(3, 4);
+    // if compiler doesn't do inline expansion
+    // "func_1" function which is defined in file1.h
+    // will be an internal linkage function
+
+    // if "main.c", "first.c" and "second.c" source files
+    // includes "file1.h" header file,
+    // "func_1" function will be defined in each source file
+    // internally.
+  }
+*/
+
+/*
+  // file1.h
+  // -------
+  extern inline func_1(int x, int y)
+  {
+    return x * x + y * y;
+  }
+
+  // main.c
+  // ------
+  // #include "file1.h"
+
+  int main(void)
+  {
+    func_1(3, 4);
+    // if compiler doesn't do inline expansion
+    // every source file that includes "file1.h" header file
+    // will have a definition of "func_1" function externally.
+
+    // if all source files that includes "file.h"
+    // are calling "func_1" 
+    // and compiler did not do inline expansion
+    // linker will generate a multiple definition error !!
+  }
+*/
+
+/*
+                      -------------------
+                      | variadic macros |
+                      -------------------
+*/
+
+/*
+  #include <stdio.h>    // fprintf
+
+  #define   e_printf(...)   fprintf(stderr, __VA_ARGS__)
+
+  int main(void)
+  {
+    int x = 10, y = 20;
+    double d = 3.14;
+
+    e_printf("x = %d, y = %d, d = %f\n", x, y, d);
+    fprintf(stderr, "x = %d, y = %d, d = %f\n", x, y, d);
+    // Those 2 lines are equivalent.
+
+    // output -> x = 10, y = 20, d = 3.140000
+  }
+*/
+
+/*
+  #include <stdio.h>    // puts
+
+  #define   print_list(...)   puts(#__VA_ARGS__)
+
+  int main(void)
+  {
+    print_list();   
+    puts("");
+
+    print_list(world, galaxy, universe);
+    puts("world, galaxy, universe");
+
+    print_list(istanbul, "ankara", "izmir");
+    puts("istanbul, \"ankara\", \"izmir\"");
+  }
+*/
+
+// -----------------------------------------------------
+// -----------------------------------------------------
+// -----------------------------------------------------
+// -----------------------------------------------------
+// -----------------------------------------------------
+
+/*
+  void func1(const int arr[]);
+  void func2(const int* arr);
+  // Those 2 lines are equivalent. (low level const)
+
+  void foo1(int arr[const]);
+  void foo2(int* const arr);
+  // Those 2 lines are equivalent. (top level const)
+*/
+
+/*
+  // "func" is expecting minimum 10 element array address
+  // to passed as an argument.
+  void func(const int arr[static 10])
+  {
+    for (int i = 0; i < 10; ++i)
+      printf("%d ", arr[i]);
+    printf("\n");
+  }
+
+  int main(void)
+  {
+    int i_arr1[5]  = { 11, 22, 33, 44, 55 };
+    int i_arr2[20] = { 11, 22, 33, 44, 55 };
+
+    func(i_arr1);   // undefined behaviour(UB)
+    // warning: 'func' reading 40 bytes from a region of size 20 
+
+    func(i_arr2);   // VALID
+    // output -> 11 22 33 44 55 0 0 0 0 0
+  }
+*/

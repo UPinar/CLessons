@@ -3441,3 +3441,99 @@
     fclose(f_temp);
   }
 */
+
+/*
+                    ------------------------
+                    | freopen in <stdio.h> |
+                    ------------------------
+*/
+
+/*
+  // freopen function's prototype
+  FILE* freopen(const char* file_name, 
+                const char* file_open_mode, 
+                FILE* file_handle);
+
+  - freopen will close the file "file_handle" argument 
+    points to and open a new file with the name "file_name"
+    and mode "file_open_mode" with the "file_handle"
+    and return the "file_handle".
+
+  - if fails it will return NULL
+
+  - function is being used to redirect the standart input and 
+    output streams.
+*/
+
+/*
+  #include <stdio.h>  // freopen, stdout, perror, fclose
+  #include <stdlib.h> // exit, EXIT_FAILURE
+
+  int main(void)
+  {
+    puts("standart output directed to console");
+    // console output -> standart output directed to console
+
+    FILE* f = freopen("out.txt", "w", stdout);
+    if (f != NULL)
+      printf("%p %p\n", (void*)f, (void*)stdout);
+    else {
+      perror("freopen failed");
+      exit(EXIT_FAILURE);
+    }
+    // out.txt -> 00007FFB20867C98 00007FFB20867C98
+
+    fclose(f);
+  }
+*/
+
+/*
+  #include <stdio.h>  
+  // freopen, stdin, fprintf, stderr, getchar, putchar
+  #include <stdlib.h> // exit, EXIT_FAILURE
+
+  int main(void)
+  {
+    if (!freopen("out.txt", "r", stdin)) {
+      fprintf(stderr, "can not redirected");
+      exit(EXIT_FAILURE);
+    }
+
+    int ch;
+    while ((ch = getchar()) != '\n')
+      putchar(ch);
+
+    // constole output -> 00007FFB20867C98 00007FFB20867C98
+  }
+*/
+
+/*
+  // out.txt ->
+  //  istanbul 
+  //  11 22
+  //  3.4
+
+  #include <stdio.h>  
+  // freopen, scanf, printf, fprintf, stderr
+  #include <stdlib.h> // exit, EXIT_FAILURE
+
+  int main(void)
+  {
+    if (!freopen("out.txt", "r", stdin)) {
+      fprintf(stderr, "can not redirected");
+      exit(EXIT_FAILURE);
+    }
+
+    char str[100];
+    int x, y;
+    double d;
+
+    int N = scanf("%s%d%d%lf", str, &x, &y, &d);
+
+    if (N == 4)
+      printf("%s %d %d %f\n", str, x, y, d);
+    else
+      fprintf(stderr, "format error\n");
+    // output -> istanbul 11 22 3.400000
+  }
+*/

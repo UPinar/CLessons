@@ -130,6 +130,7 @@
   - `void` pointers
   - function pointers
   - function pointer arrays
+  - pointer errors
   
 ### [`const` Keyword](https://github.com/UPinar/CLessons/tree/master/const_keyword)
   - why using `const` keyword
@@ -220,6 +221,14 @@
   - enumarations
   
 ### [`<time.h>` module](https://github.com/UPinar/CLessons/tree/master/time_module)
+  - `time`
+  - `localtime`
+  - `ctime`, `asctime`
+  - `strftime`
+  - `setlocale`
+  - `clock`
+  - `mktime`
+  - `difftime`
 
 ### [Bitwise Operations](https://github.com/UPinar/CLessons/tree/master/bitwise_operations)
   - bitwise operators (bitsel operatörler)
@@ -251,6 +260,7 @@
   - `setvbuf`, `setbuf`
   - `stdout`, `stdin`, `stderr`
   - `tmpfile`
+  - `freopen`
   
 ### [Exception Handling](https://github.com/UPinar/CLessons/tree/master/exception_handling)
   - static assertions
@@ -264,6 +274,10 @@
   - variable length array (VLA)
   - compound literals
   - flexible array member
+  - `inline` functions
+  - variadic macros
+  
+### [Environment Variables](https://github.com/UPinar/CLessons/tree/master/environment_variables)
 
 ### [Not Related](https://github.com/UPinar/CLessons/tree/master/not_related)
   - strict aliasing rule

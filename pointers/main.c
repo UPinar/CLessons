@@ -7212,3 +7212,84 @@
     //  f1 function is called
   }
 */
+
+/*
+                        ------------------
+                        | pointer errors |
+                        ------------------
+*/
+
+/*
+  int main(void)
+  {
+    int* p;   // wild(invalid) pointer
+    *p = 110; // undefined behavior(ub)
+  }
+*/
+
+/*
+  int main(void)
+  {
+    int* p1, p2;
+    // p1's type is int*
+    // p2's type is int
+
+    int x = 10;
+    p1 = &x;
+    p2 = p1;  // implicit conversion from int* to int
+    // error: assignment to 'int' from 'int *' 
+    // makes integer from pointer without a cast
+
+    int* p3, *p4;
+    // p3's type is int*
+    // p4's type is int*
+  }
+*/
+
+/*
+  #define   IPTR  int*   
+
+  int main(void)
+  {
+    int x = 10;
+
+    IPTR p3, p4;      
+    // preprocessor replaces IPTR with int* --> int* p3, p4
+    // p3's type is int*
+    // p4's type is int
+
+    p3 = &x;
+    p4 = p3;  // implicit conversion from int* to int
+    // error: assignment to 'int' from 'int *' 
+    // makes integer from pointer without a cast
+  }
+*/
+
+/*
+  typedef int* IPTR;
+
+  int main(void)
+  {
+    int x = 10;
+
+    IPTR p3, p4;
+    // p3's type is int*
+    // p4's type is int*
+
+    p3 = &x;
+    p4 = p3;
+  }
+*/
+
+/*
+  typedef int* IPTR;
+
+  int main(void)
+  {
+    int x = 10;
+
+    const IPTR p1 = &x;    // top level const
+    int* const p2 = &x;
+    // Those 2 lines are equivalent.
+  }
+*/
